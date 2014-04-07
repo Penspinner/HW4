@@ -8,6 +8,11 @@ import mini_game.MiniGame;
  */
 public class pathXMiniGame extends MiniGame
 {
+    private pathXErrorHandler errorHandler;
+    public pathXErrorHandler getErrorHandler()
+    {
+        return errorHandler;
+    }
     @Override
     public void initAudioContent()
     {

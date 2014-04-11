@@ -35,11 +35,16 @@ public class pathX
             // THEN WE'LL LOAD THE GAME FLAVOR AS SPECIFIED BY THE PROPERTIES FILE
             String gameFlavorFile = props.getProperty(pathXPropertyType.FILE_GAME_PROPERTIES);
             props.loadProperties(gameFlavorFile, PROPERTIES_SCHEMA_FILE_NAME);
+            miniGame.initMiniGame(APP_TITLE, 30, WINDOW_WIDTH, WINDOW_HEIGHT);
+            
+            // GET THE PROPER WINDOW DIMENSIONS
+            miniGame.startGame();
         } 
         // CATCH THE ESCEPTION IF THERE WAS AN ERROR WITH THE XML FILE
         catch (InvalidXMLFileFormatException ixmlffe)
         {
-            
+            pathXErrorHandler errorHandler = miniGame.getErrorHandler();
+            System.out.println("ixmlffe");
         }
     }
     
@@ -61,6 +66,11 @@ public class pathX
         // LOADED FROM THE GAME FLAVOR PROPERTIES XML FILE
             // pathX_properties.xml
         IMAGE_BACKGROUND_MENU,
+        IMAGE_BACKGROUND_GAME,
+        IMAGE_BACKGROUND_SETTINGS,
+        IMAGE_BACKGROUND_HELP,
+        IMAGE_BACKGROUND_LEVEL_SELECT,
+        IMAGE_MAP_USA,
         IMAGE_BUTTON_HOME,
         IMAGE_BUTTON_HOME_MOUSE_OVER,
         IMAGE_BUTTON_HELP,
@@ -71,6 +81,10 @@ public class pathX
         IMAGE_BUTTON_RESET_GAME_MOUSE_OVER,
         IMAGE_BUTTON_SETTINGS,
         IMAGE_BUTTON_SETTINGS_MOUSE_OVER,
+        IMAGE_BUTTON_EXIT,
+        IMAGE_BUTTON_EXIT_MOUSE_OVER,
+        IMAGE_BUTTON_START,
+        IMAGE_BUTTON_START_MOUSE_OVER,
         
         // AUDIO CUES
         AUDIO_CUE_LOSE,
@@ -81,5 +95,9 @@ public class pathX
         AUDIO_CUE_POLICE,
         SONG_CUE_MENU_SCREEN,
         SONG_CUE_GAME_SCREEN,
+        
+        //
+        MENU_BUTTON_OPTIONS,
+        MENU_MOUSE_OVER_OPTIONS,
     }
 }

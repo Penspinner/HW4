@@ -5,18 +5,30 @@
 <properties>
     <property_list>
         <!-- ALL THE IMAGES TO BE USED IN THE GAME -->
-        <property name="IMAGE_BACKGROUND_GAME"              value="./pathX/BackgroundGame.png"></property>
-        <property name="IMAGE_BACKGROUND_MENU"              value="./pathX/BackgroundMenu.png"></property>
-        <property name="IMAGE_BACKGROUND_SETTINGS"          value="./pathX/BackgroundSettings.png"></property>
-        <property name="IMAGE_BACKGROUND_HELP"              value="./pathX/BackgroundHelp.png"></property>
-        <property name="IMAGE_BACKGROUND_LEVEL_SELECT"      value="./pathX/BackgroundLevelSelect.png"></property>
-        <property name="IMAGE_MAP_USA"                      value="./pathX/MapUSA.png"></property>
-        <property name="IMAGE_BUTTON_HOME"                  value="./pathX/ButtonHome.png"></property>
-        <property name="IMAGE_BUTTON_HOME_MOUSE_OVER"       value="./pathX/ButtonHomeMouseOver.png"></property>
-        <property name="IMAGE_BUTTON_EXIT"                  value="./pathX/ButtonExit.png"></property>
-        <property name="IMAGE_BUTTON_EXIT_MOUSE_OVER"       value="./pathX/ButtonExitMouseOver.png"></property>
-        <property name="IMAGE_BUTTON_START"                 value="./pathX/ButtonStart.png"></property>
-        <property name="IMAGE_BUTTON_START_MOUSE_OVER"      value="./pathX/ButtonStartMouseOver.png"></property>
+        <property name="IMAGE_BACKGROUND_GAME"                  value="./pathX/BackgroundGame.png"></property>
+        <property name="IMAGE_BACKGROUND_MENU"                  value="./pathX/BackgroundMenu.png"></property>
+        <property name="IMAGE_BACKGROUND_SETTINGS"              value="./pathX/BackgroundSettings.png"></property>
+        <property name="IMAGE_BACKGROUND_HELP"                  value="./pathX/BackgroundHelp.png"></property>
+        <property name="IMAGE_BACKGROUND_LEVEL_SELECT"          value="./pathX/BackgroundLevelSelect.png"></property>
+        <property name="IMAGE_MAP_USA"                          value="./pathX/MapUSA.png"></property>
+        <property name="IMAGE_HELP_DESCRIPTION"                 value="./pathX/HelpDescription.png"></property>
+        <property name="IMAGE_LOCKED_LOCATION"                  value="./pathX/LockedLocation.png"></property>
+        <property name="IMAGE_SUCCESSFUL_LOCATION"              value="./pathX/SuccessfulLocation.png"></property>
+        <property name="IMAGE_UNSUCCESSFUL_LOCATION"            value="./pathX/UnsuccessfulLocation.png"></property>
+        <property name="IMAGE_BUTTON_SCROLL_UP"                 value="./pathX/ButtonScrollUp.png"></property>
+        <property name="IMAGE_BUTTON_SCROLL_UP_MOUSE_OVER"      value="./pathX/ButtonScrollUpMouseOver.png"></property>
+        <property name="IMAGE_BUTTON_SCROLL_DOWN"               value="./pathX/ButtonScrollDown.png"></property>
+        <property name="IMAGE_BUTTON_SCROLL_DOWN_MOUSE_OVER"    value="./pathX/BUttonScrollDownMouseOver.png"></property>
+        <property name="IMAGE_BUTTON_SCROLL_LEFT"               value="./pathX/ButtonScrollLeft.png"></property>
+        <property name="IMAGE_BUTTON_SCROLL_LEFT_MOUSE_OVER"    value="./pathX/ButtonScrollLeftMouseOver.png"></property>
+        <property name="IMAGE_BUTTON_SCROLL_RIGHT"              value="./pathX/ButtonScrollRight.png"></property>
+        <property name="IMAGE_BUTTON_SCROLL_RIGHT_MOUSE_OVER"   value="./pathX/ButtonScrollRightMouseOver.png"></property>
+        <property name="IMAGE_BUTTON_HOME"                      value="./pathX/ButtonHome.png"></property>
+        <property name="IMAGE_BUTTON_HOME_MOUSE_OVER"           value="./pathX/ButtonHomeMouseOver.png"></property>
+        <property name="IMAGE_BUTTON_EXIT"                      value="./pathX/ButtonExit.png"></property>
+        <property name="IMAGE_BUTTON_EXIT_MOUSE_OVER"           value="./pathX/ButtonExitMouseOver.png"></property>
+        <property name="IMAGE_BUTTON_START"                     value="./pathX/ButtonStart.png"></property>
+        <property name="IMAGE_BUTTON_START_MOUSE_OVER"          value="./pathX/ButtonStartMouseOver.png"></property>
     </property_list>
     
     <!-- PLAYABLE LEVELS CREATED WITH THE LEVEL EDITOR -->

@@ -3,11 +3,14 @@ package pathX.ui;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.TreeMap;
 import java.util.Vector;
 import javax.swing.JFrame;
 import mini_game.MiniGame;
@@ -103,7 +106,9 @@ public class pathXMiniGame extends MiniGame
     {
         // CHANGE THE BACKGROUND
         guiDecor.get(BACKGROUND_TYPE).setState(LEVEL_SELECT_SCREEN_STATE);
-        guiDecor.get(MAP_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
+        //guiDecor.get(MAP_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
+        
+        currentScreenState = LEVEL_SELECT_SCREEN_STATE;
         
         // DEACTIVATE ALL MENU CONTROLS
         disableMenuButtons();
@@ -111,6 +116,14 @@ public class pathXMiniGame extends MiniGame
         // ACTIVATE THE HOME BUTTON
         guiButtons.get(HOME_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
         guiButtons.get(HOME_BUTTON_TYPE).setEnabled(true);
+        guiButtons.get(SCROLL_UP_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
+        guiButtons.get(SCROLL_UP_BUTTON_TYPE).setEnabled(true);
+        guiButtons.get(SCROLL_DOWN_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
+        guiButtons.get(SCROLL_DOWN_BUTTON_TYPE).setEnabled(true);
+        guiButtons.get(SCROLL_LEFT_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
+        guiButtons.get(SCROLL_LEFT_BUTTON_TYPE).setEnabled(true);
+        guiButtons.get(SCROLL_RIGHT_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
+        guiButtons.get(SCROLL_RIGHT_BUTTON_TYPE).setEnabled(true);
     }
     
     /**
@@ -121,6 +134,8 @@ public class pathXMiniGame extends MiniGame
     {
         // CHANGE THE BACKGROUND
         guiDecor.get(BACKGROUND_TYPE).setState(SETTINGS_SCREEN_STATE);
+        
+        currentScreenState = SETTINGS_SCREEN_STATE;
         
         // DEACTIVATE ALL MENU CONTROLS
         disableMenuButtons();
@@ -138,6 +153,12 @@ public class pathXMiniGame extends MiniGame
     {
         // CHANGE THE BACKGROUND
         guiDecor.get(BACKGROUND_TYPE).setState(GAME_SCREEN_STATE);
+        guiDecor.get(MAP_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+        
+        currentScreenState = GAME_SCREEN_STATE;
+        
+        guiButtons.get(LOCATION_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+        disableScrollButtons();
     }
     
     /**
@@ -150,9 +171,11 @@ public class pathXMiniGame extends MiniGame
         guiDecor.get(BACKGROUND_TYPE).setState(MENU_SCREEN_STATE);
         guiDecor.get(MAP_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
         
+        currentScreenState = MENU_SCREEN_STATE;
+        
         // DEACTIVATE THE HOME BUTTON
         guiButtons.get(HOME_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-        guiButtons.get(HELP_BUTTON_TYPE).setEnabled(false);
+        disableScrollButtons();
         
         // ACTIVATE THE MENU CONTROLS
         guiButtons.get(PLAY_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
@@ -175,6 +198,8 @@ public class pathXMiniGame extends MiniGame
         // CHANGE THE BACKGROUND
         guiDecor.get(BACKGROUND_TYPE).setState(HELP_SCREEN_STATE);
         
+        currentScreenState = HELP_SCREEN_STATE;
+        
         // DEACTIVATE ALL MENU CONTROLS
         disableMenuButtons();
         
@@ -194,6 +219,18 @@ public class pathXMiniGame extends MiniGame
         guiButtons.get(SETTINGS_BUTTON_TYPE).setEnabled(false);
         guiButtons.get(HELP_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
         guiButtons.get(HELP_BUTTON_TYPE).setEnabled(false);
+    }
+    
+    public void disableScrollButtons()
+    {
+        guiButtons.get(SCROLL_UP_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+        guiButtons.get(SCROLL_UP_BUTTON_TYPE).setEnabled(false);
+        guiButtons.get(SCROLL_DOWN_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+        guiButtons.get(SCROLL_DOWN_BUTTON_TYPE).setEnabled(false);
+        guiButtons.get(SCROLL_LEFT_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+        guiButtons.get(SCROLL_LEFT_BUTTON_TYPE).setEnabled(false);
+        guiButtons.get(SCROLL_RIGHT_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+        guiButtons.get(SCROLL_RIGHT_BUTTON_TYPE).setEnabled(false);
     }
     
     @Override
@@ -255,6 +292,12 @@ public class pathXMiniGame extends MiniGame
         s = new Sprite(sT, 0, MAP_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
         guiDecor.put(MAP_TYPE, s);
         
+        sT = new SpriteType(HELP_DESCRIPTION_TYPE);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_HELP_DESCRIPTION));
+        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
+        s = new Sprite(sT, HELP_DESCRIPTION_X, HELP_DESCRIPTION_Y, 0, 0, pathXTileState.VISIBLE_STATE.toString());
+        guiDialogs.put(HELP_DESCRIPTION_TYPE, s);
+        
         // ADD EACH MENU BUTTON
         ArrayList<String> menuButtons = props.getPropertyOptionsList(pathXPropertyType.MENU_BUTTON_OPTIONS);
         ArrayList<String> menuMouseOverButtons = props.getPropertyOptionsList(pathXPropertyType.MENU_MOUSE_OVER_OPTIONS);
@@ -301,6 +344,55 @@ public class pathXMiniGame extends MiniGame
         sT.addState(pathXTileState.MOUSE_OVER_STATE.toString(), img);
         s = new Sprite(sT, START_BUTTON_X, START_BUTTON_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
         guiButtons.put(START_BUTTON_TYPE, s);
+        
+        // ADD THE SCROLLING BUTTONS
+        
+        // ADD THE SCROLL UP BUTTON
+        sT = new SpriteType(SCROLL_UP_BUTTON_TYPE);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_SCROLL_UP));
+        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_SCROLL_UP_MOUSE_OVER));
+        sT.addState(pathXTileState.MOUSE_OVER_STATE.toString(), img);
+        s = new Sprite(sT, SCROLL_UP_BUTTON_X, SCROLL_UP_BUTTON_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
+        guiButtons.put(SCROLL_UP_BUTTON_TYPE, s);
+        
+        // ADD THE SCROLL DOWN BUTTON
+        sT = new SpriteType(SCROLL_DOWN_BUTTON_TYPE);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_SCROLL_DOWN));
+        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_SCROLL_DOWN_MOUSE_OVER));
+        sT.addState(pathXTileState.MOUSE_OVER_STATE.toString(), img);
+        s = new Sprite(sT, SCROLL_DOWN_BUTTON_X, SCROLL_DOWN_BUTTON_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
+        guiButtons.put(SCROLL_DOWN_BUTTON_TYPE, s);
+        
+        // ADD THE SCROLL LEFT BUTTON
+        sT = new SpriteType(SCROLL_LEFT_BUTTON_TYPE);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_SCROLL_LEFT));
+        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_SCROLL_LEFT_MOUSE_OVER));
+        sT.addState(pathXTileState.MOUSE_OVER_STATE.toString(), img);
+        s = new Sprite(sT, SCROLL_LEFT_BUTTON_X, SCROLL_LEFT_BUTTON_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
+        guiButtons.put(SCROLL_LEFT_BUTTON_TYPE, s);
+        
+        // ADD THE SCROLL RIGHT BUTTON
+        sT = new SpriteType(SCROLL_RIGHT_BUTTON_TYPE);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_SCROLL_RIGHT));
+        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_SCROLL_RIGHT_MOUSE_OVER));
+        sT.addState(pathXTileState.MOUSE_OVER_STATE.toString(), img);
+        s = new Sprite(sT, SCROLL_RIGHT_BUTTON_X, SCROLL_RIGHT_BUTTON_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
+        guiButtons.put(SCROLL_RIGHT_BUTTON_TYPE, s);
+        
+        // ADD THE LOCATION WITH STATUS
+        sT = new SpriteType(LOCATION_BUTTON_TYPE);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_LOCKED_LOCATION));
+        sT.addState(pathXTileState.LOCKED_STATE.toString(), img);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_SUCCESSFUL_LOCATION));
+        sT.addState(pathXTileState.SUCCESSFUL_STATE.toString(), img);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_UNSUCCESSFUL_LOCATION));
+        sT.addState(pathXTileState.UNSUCCESSFUL_STATE.toString(), img);
+        s = new Sprite(sT, 150, 120, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
+        guiButtons.put(LOCATION_BUTTON_TYPE, s);
     }
     
     /**
@@ -378,6 +470,59 @@ public class pathXMiniGame extends MiniGame
             public void actionPerformed(ActionEvent e)
             {
                 eventHandler.respondToExitRequest();
+            }
+        });
+        
+        guiButtons.get(SCROLL_UP_BUTTON_TYPE).setActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                eventHandler.scroll("UP");
+            }
+        });
+        
+        guiButtons.get(SCROLL_DOWN_BUTTON_TYPE).setActionListener(new ActionListener() 
+        {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                eventHandler.scroll("DOWN");
+            }
+        });
+        
+        guiButtons.get(SCROLL_LEFT_BUTTON_TYPE).setActionListener(new ActionListener() 
+        {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                eventHandler.scroll("LEFT");
+            }
+        });     
+        
+        guiButtons.get(SCROLL_RIGHT_BUTTON_TYPE).setActionListener(new ActionListener() 
+        {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                eventHandler.scroll("RIGHT");
+            }
+        });
+        
+        guiButtons.get(LOCATION_BUTTON_TYPE).setActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                eventHandler.respondToLevelSelectRequest();
+            }
+        });
+        
+        this.setKeyListener(new KeyAdapter()
+        {
+            public void keyPressed(KeyEvent ke)
+            {
+                eventHandler.respondToKeyPress(ke.getKeyCode());
             }
         });
     }

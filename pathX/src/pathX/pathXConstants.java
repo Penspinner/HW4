@@ -27,8 +27,9 @@ public class pathXConstants
     
     //
     public static final String MAP_TYPE = "MAP_TYPE";
+    public static final String HELP_DESCRIPTION_TYPE = "HELP_DESCRIPTION_TYPE";
     
-    // IN GAME USER INTERFACE CONTROLS
+    // IN GAME MENU SCREEN USER INTERFACE CONTROLS
     public static final String[] MENU_BUTTON_TYPE = {"PLAY_BUTTON_TYPE",
                                                      "RESET_BUTTON_TYPE",
                                                      "SETTINGS_BUTTON_TYPE",
@@ -41,6 +42,19 @@ public class pathXConstants
     public static final String SETTINGS_BUTTON_TYPE = "SETTINGS_BUTTON_TYPE";
     public static final String HELP_BUTTON_TYPE = "HELP_BUTTON_TYPE";
     public static final String EXIT_BUTTON_TYPE = "EXIT_BUTTON>TYPE";
+    
+    // LEVEL SELECT SCREEN USER INTERFACE CONTROLS
+    public static final String[] SCROLL_BUTTON_TYPE = {"SCROLL_UP_BUTTON_TYPE",
+                                                        "SCROLL_DOWN_BUTTON_TYPE",
+                                                        "SCROLL_LEFT_BUTTON_TYPE",
+                                                        "SCROLL_RIGHT_BUTTON_TYPE"};
+    public static final String SCROLL_UP_BUTTON_TYPE = "SCROLL_UP_BUTTON_TYPE";
+    public static final String SCROLL_DOWN_BUTTON_TYPE = "SCROLL_DOWN_BUTTON_TYPE";
+    public static final String SCROLL_LEFT_BUTTON_TYPE = "SCROLL_LEFT_BUTTON_TYPE";
+    public static final String SCROLL_RIGHT_BUTTON_TYPE = "SCROLL_RIGHT_BUTTON_TYPE";
+    public static final String LOCATION_BUTTON_TYPE = "LOCATION_BUTTON_TYPE";
+    
+    // GAMEPLAY BUTTONS
     public static final String START_BUTTON_TYPE = "START_BUTTON_TYPE";
     
     // STATES TO SWITCH BETWEEN SCREENS
@@ -50,8 +64,7 @@ public class pathXConstants
     public static final String GAME_SCREEN_STATE = "GAME_SCREEN_STATE";
     public static final String SETTINGS_SCREEN_STATE = "SETTINGS_SCREEN_STATE";
     
-    
-    // UI CONTROL SIZE
+    // UI CONTROL SIZE AND OFFSETS
     public static final int WINDOW_WIDTH = 900;
     public static final int WINDOW_HEIGHT = 553;
     public static final int MENU_BUTTON_WIDTH = 128;
@@ -63,6 +76,21 @@ public class pathXConstants
     public static final int START_BUTTON_X = 20;
     public static final int START_BUTTON_Y = 120;
     public static final int MAP_Y = 80;
+    public static final int SCROLL_UP_BUTTON_X = 50;
+    public static final int SCROLL_UP_BUTTON_Y = WINDOW_HEIGHT - 128;
+    public static final int SCROLL_DOWN_BUTTON_X = 50;
+    public static final int SCROLL_DOWN_BUTTON_Y = WINDOW_HEIGHT - 78;
+    public static final int SCROLL_LEFT_BUTTON_X = 25;
+    public static final int SCROLL_LEFT_BUTTON_Y = WINDOW_HEIGHT - 103;
+    public static final int SCROLL_RIGHT_BUTTON_X = 75;
+    public static final int SCROLL_RIGHT_BUTTON_Y = WINDOW_HEIGHT - 103;
+    
+    // HELP SCREEN OFFSET AND DESCRIPTION
+    public static final int HELP_DESCRIPTION_X = 50;
+    public static final int HELP_DESCRIPTION_Y = 95;
+    
+    // SCROLLING CONSTANT
+    public static final int SCROLL_PIXELS = 5;
     
     // PRICES OF SPECIALS
     public static final int COST_CHANGE_LIGHTS = 5;

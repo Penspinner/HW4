@@ -50,10 +50,21 @@ public class pathXPanel extends JPanel
             // RENDER THE BACKGROUND, WHICHEVER SCREEN WE'RE ON
             renderBackground(g);
             
+            // IF CURRENT SCREEN IS HELP SCREEN
+            if (((pathXMiniGame)game).isCurrentScreenState(HELP_SCREEN_STATE))
+            {
+                renderHelp(g);
+            }
+            
+            // IF CURRENT SCREEN IS LEVEL SELECT SCREEN
+            if (((pathXMiniGame)game).isCurrentScreenState(LEVEL_SELECT_SCREEN_STATE))
+            {
+                renderMap(g);
+                renderNodeLocation(g);
+            }
+            
             // AND THE BUTTONS AND DECOR
             renderGUIControls(g);
-            
-            // RENDER MAP FIRST AND THEN OTHER NODES AFTER
         } 
         finally
         {
@@ -123,5 +134,27 @@ public class pathXPanel extends JPanel
         {
             renderSprite(g, s);
         }
+    }
+    
+    public void renderHelp(Graphics g)
+    {
+        g.drawRect(40, 90, WINDOW_WIDTH - 80, WINDOW_HEIGHT - 60);
+        Sprite helpSprite = game.getGUIDialogs().get(HELP_DESCRIPTION_TYPE);
+        renderSprite(g, helpSprite);
+    }
+    
+    public void renderMap(Graphics g)
+    {
+        Sprite map = game.getGUIDecor().get(MAP_TYPE);
+        map.setState(pathXTileState.VISIBLE_STATE.toString());
+    }
+    
+    public void renderNodeLocation(Graphics g)
+    {
+        Sprite location = game.getGUIButtons().get(LOCATION_BUTTON_TYPE);
+        location.setState(pathXTileState.UNSUCCESSFUL_STATE.toString());
+        SpriteType sTLocation = location.getSpriteType();
+        Image img = sTLocation.getStateImage(location.getState());
+        g.drawImage(img, (int) location.getX(), (int) location.getY(), sTLocation.getWidth(), sTLocation.getHeight(), null);
     }
 }

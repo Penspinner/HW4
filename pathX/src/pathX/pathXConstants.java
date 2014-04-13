@@ -55,6 +55,10 @@ public class pathXConstants
     public static final String SCROLL_RIGHT_BUTTON_TYPE = "SCROLL_RIGHT_BUTTON_TYPE";
     public static final String LOCATION_BUTTON_TYPE = "LOCATION_BUTTON_TYPE";
     
+    // SETTINGS BUTTONS
+    public static final String SOUND_MUTE_BOX_BUTTON_TYPE = "SOUND_MUTE_BOX_TYPE";
+    public static final String MUSIC_MUTE_BOX_BUTTON_TYPE = "MUSIC_MUTE_BOX_TYPE";
+    
     // GAMEPLAY BUTTONS
     public static final String START_BUTTON_TYPE = "START_BUTTON_TYPE";
     public static final String CLOSE_BUTTON_TYPE = "CLOSE_BUTTON_TYPE";
@@ -90,6 +94,10 @@ public class pathXConstants
     public static final int INFO_DIALOG_BOX_Y = 50;
     public static final int CLOSE_BUTTON_X = 350;
     public static final int CLOSE_BUTTON_Y = 400;
+    public static final int SOUND_MUTE_BOX_BUTTON_X = 400;
+    public static final int SOUND_MUTE_BOX_BUTTON_Y = 160;
+    public static final int MUSIC_MUTE_BOX_BUTTON_X = SOUND_MUTE_BOX_BUTTON_X;
+    public static final int MUSIC_MUTE_BOX_BUTTON_Y = SOUND_MUTE_BOX_BUTTON_Y + 80;
     
     // HELP SCREEN OFFSET AND DESCRIPTION
     public static final int HELP_DESCRIPTION_X = 50;
@@ -120,5 +128,5 @@ public class pathXConstants
     public static final Color COLOR_TEXT = Color.BLACK;
     
     // FONTS FOR DISPLAYING TEXT
-    public static final Font FONT_TEXT_DISPLAY = new Font(Font.MONOSPACED, Font.BOLD, 16);
+    public static final Font FONT_TEXT_DISPLAY = new Font("Candara", Font.BOLD, 22);
 }

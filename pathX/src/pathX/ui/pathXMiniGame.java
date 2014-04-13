@@ -104,6 +104,12 @@ public class pathXMiniGame extends MiniGame
      */
     public void switchToLevelSelectScreen()
     {
+        if (isCurrentScreenState(GAME_SCREEN_STATE))
+        {
+            guiDecor.get(INFO_DIALOG_BOX_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+            guiButtons.get(CLOSE_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+            guiButtons.get(CLOSE_BUTTON_TYPE).setEnabled(false);
+        }
         // CHANGE THE BACKGROUND
         guiDecor.get(BACKGROUND_TYPE).setState(LEVEL_SELECT_SCREEN_STATE);
         //guiDecor.get(MAP_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
@@ -124,6 +130,7 @@ public class pathXMiniGame extends MiniGame
         guiButtons.get(SCROLL_LEFT_BUTTON_TYPE).setEnabled(true);
         guiButtons.get(SCROLL_RIGHT_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
         guiButtons.get(SCROLL_RIGHT_BUTTON_TYPE).setEnabled(true);
+        //guiButtons.get(LOCATION_BUTTON_TYPE).setEnabled(true);
     }
     
     /**
@@ -159,6 +166,10 @@ public class pathXMiniGame extends MiniGame
         
         guiButtons.get(LOCATION_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
         disableScrollButtons();
+        
+        guiDecor.get(INFO_DIALOG_BOX_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
+        guiButtons.get(CLOSE_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
+        guiButtons.get(CLOSE_BUTTON_TYPE).setEnabled(true);
     }
     
     /**
@@ -170,11 +181,18 @@ public class pathXMiniGame extends MiniGame
         // CHANGE THE BACKGROUND
         guiDecor.get(BACKGROUND_TYPE).setState(MENU_SCREEN_STATE);
         guiDecor.get(MAP_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+        guiDecor.get(HELP_DESCRIPTION_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+        guiDecor.get(INFO_DIALOG_BOX_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
         
         currentScreenState = MENU_SCREEN_STATE;
         
         // DEACTIVATE THE HOME BUTTON
         guiButtons.get(HOME_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+        guiButtons.get(HOME_BUTTON_TYPE).setEnabled(false);
+        guiButtons.get(CLOSE_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+        guiButtons.get(CLOSE_BUTTON_TYPE).setEnabled(false);
+        guiButtons.get(LOCATION_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+        guiButtons.get(LOCATION_BUTTON_TYPE).setEnabled(false);
         disableScrollButtons();
         
         // ACTIVATE THE MENU CONTROLS
@@ -197,6 +215,7 @@ public class pathXMiniGame extends MiniGame
     {
         // CHANGE THE BACKGROUND
         guiDecor.get(BACKGROUND_TYPE).setState(HELP_SCREEN_STATE);
+        guiDecor.get(HELP_DESCRIPTION_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
         
         currentScreenState = HELP_SCREEN_STATE;
         
@@ -286,17 +305,26 @@ public class pathXMiniGame extends MiniGame
         s = new Sprite(sT, 0, 0, 0, 0, MENU_SCREEN_STATE);
         guiDecor.put(BACKGROUND_TYPE, s);
         
+        // ADD THE MAP
         sT = new SpriteType(MAP_TYPE);
         img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_MAP_USA));
         sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
         s = new Sprite(sT, 0, MAP_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
         guiDecor.put(MAP_TYPE, s);
         
+        // ADD THE HELP DESCRIPTION
         sT = new SpriteType(HELP_DESCRIPTION_TYPE);
         img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_HELP_DESCRIPTION));
         sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
-        s = new Sprite(sT, HELP_DESCRIPTION_X, HELP_DESCRIPTION_Y, 0, 0, pathXTileState.VISIBLE_STATE.toString());
-        guiDialogs.put(HELP_DESCRIPTION_TYPE, s);
+        s = new Sprite(sT, HELP_DESCRIPTION_X, HELP_DESCRIPTION_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
+        guiDecor.put(HELP_DESCRIPTION_TYPE, s);
+        
+        // ADD THE INFO DIALOG BOX
+        sT = new SpriteType(INFO_DIALOG_BOX_TYPE);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_INFO_DIALOG_BOX));
+        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
+        s = new Sprite(sT, INFO_DIALOG_BOX_X, INFO_DIALOG_BOX_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
+        guiDecor.put(INFO_DIALOG_BOX_TYPE, s);
         
         // ADD EACH MENU BUTTON
         ArrayList<String> menuButtons = props.getPropertyOptionsList(pathXPropertyType.MENU_BUTTON_OPTIONS);
@@ -393,6 +421,15 @@ public class pathXMiniGame extends MiniGame
         sT.addState(pathXTileState.UNSUCCESSFUL_STATE.toString(), img);
         s = new Sprite(sT, 150, 120, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
         guiButtons.put(LOCATION_BUTTON_TYPE, s);
+        
+        // ADD THE CLOSE BUTTON
+        sT = new SpriteType(CLOSE_BUTTON_TYPE);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_CLOSE));
+        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_CLOSE_MOUSE_OVER));
+        sT.addState(pathXTileState.MOUSE_OVER_STATE.toString(), img);
+        s = new Sprite(sT, CLOSE_BUTTON_X, CLOSE_BUTTON_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
+        guiButtons.put(CLOSE_BUTTON_TYPE, s);
     }
     
     /**
@@ -518,6 +555,16 @@ public class pathXMiniGame extends MiniGame
             }
         });
         
+        guiButtons.get(CLOSE_BUTTON_TYPE).setActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                guiDecor.get(INFO_DIALOG_BOX_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+                guiButtons.get(CLOSE_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+            }
+        });
+        
         this.setKeyListener(new KeyAdapter()
         {
             public void keyPressed(KeyEvent ke)
@@ -530,7 +577,7 @@ public class pathXMiniGame extends MiniGame
     @Override
     public void reset()
     {
-        
+        data.reset(this);
     }
     @Override
     public void updateGUI()

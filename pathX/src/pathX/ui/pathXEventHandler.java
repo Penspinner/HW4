@@ -30,6 +30,12 @@ public class pathXEventHandler
         {
             game.getDataModel().endGameAsLoss();
         }
+        else if (game.isCurrentScreenState(GAME_SCREEN_STATE))
+        {
+            game.reset();
+            game.switchToLevelSelectScreen();
+            return;
+        }
         // AND CLOSE THE ALL
         System.exit(0);        
     }

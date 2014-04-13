@@ -25,9 +25,10 @@ public class pathXConstants
     // EACH SCREEN HAS ITS OWN BACKGROUND TYPE
     public static final String BACKGROUND_TYPE = "BACKGROUND_TYPE";
     
-    //
+    // GAME DESCORATIONS
     public static final String MAP_TYPE = "MAP_TYPE";
     public static final String HELP_DESCRIPTION_TYPE = "HELP_DESCRIPTION_TYPE";
+    public static final String INFO_DIALOG_BOX_TYPE = "INFO_DIALOG_BOX_TYPE";
     
     // IN GAME MENU SCREEN USER INTERFACE CONTROLS
     public static final String[] MENU_BUTTON_TYPE = {"PLAY_BUTTON_TYPE",
@@ -56,6 +57,7 @@ public class pathXConstants
     
     // GAMEPLAY BUTTONS
     public static final String START_BUTTON_TYPE = "START_BUTTON_TYPE";
+    public static final String CLOSE_BUTTON_TYPE = "CLOSE_BUTTON_TYPE";
     
     // STATES TO SWITCH BETWEEN SCREENS
     public static final String MENU_SCREEN_STATE = "MENU_SCREEN_STATE";
@@ -84,6 +86,10 @@ public class pathXConstants
     public static final int SCROLL_LEFT_BUTTON_Y = WINDOW_HEIGHT - 103;
     public static final int SCROLL_RIGHT_BUTTON_X = 75;
     public static final int SCROLL_RIGHT_BUTTON_Y = WINDOW_HEIGHT - 103;
+    public static final int INFO_DIALOG_BOX_X = 150;
+    public static final int INFO_DIALOG_BOX_Y = 50;
+    public static final int CLOSE_BUTTON_X = 350;
+    public static final int CLOSE_BUTTON_Y = 400;
     
     // HELP SCREEN OFFSET AND DESCRIPTION
     public static final int HELP_DESCRIPTION_X = 50;

@@ -51,10 +51,11 @@ public class pathXPanel extends JPanel
             renderBackground(g);
             
             // IF CURRENT SCREEN IS HELP SCREEN
+            /**
             if (((pathXMiniGame)game).isCurrentScreenState(HELP_SCREEN_STATE))
             {
                 renderHelp(g);
-            }
+            }*/
             
             // IF CURRENT SCREEN IS LEVEL SELECT SCREEN
             if (((pathXMiniGame)game).isCurrentScreenState(LEVEL_SELECT_SCREEN_STATE))
@@ -152,6 +153,7 @@ public class pathXPanel extends JPanel
     public void renderNodeLocation(Graphics g)
     {
         Sprite location = game.getGUIButtons().get(LOCATION_BUTTON_TYPE);
+        location.setEnabled(true);
         location.setState(pathXTileState.UNSUCCESSFUL_STATE.toString());
         SpriteType sTLocation = location.getSpriteType();
         Image img = sTLocation.getStateImage(location.getState());

@@ -47,7 +47,7 @@ public class pathXDataModel extends MiniGameDataModel
     /**
      * Called each frame, this method updates all the game objects.
      *
-     * @param game The Sorting Hat game to be updated.
+     * @param game The pathX game to be updated.
      */
     @Override
     public void updateAll(MiniGame game)
@@ -60,7 +60,7 @@ public class pathXDataModel extends MiniGameDataModel
      * graphical application like this it's sometimes useful to display data in
      * the GUI.
      *
-     * @param game The Sorting Hat game about which to display info.
+     * @param game The pathX game about which to display info.
      */
     @Override
     public void updateDebugText(MiniGame game)

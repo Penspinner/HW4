@@ -2,6 +2,8 @@ package pathX.ui;
 
 import java.awt.event.KeyEvent;
 import mini_game.Sprite;
+import mini_game.Viewport;
+import pathX.data.pathXDataModel;
 import static pathX.pathXConstants.*;
 /**
  *
@@ -65,7 +67,7 @@ public class pathXEventHandler
     
     public void respondToResetGameRequest()
     {
-        
+        game.reset();
     }
     
     
@@ -87,6 +89,10 @@ public class pathXEventHandler
     
     public void scroll(String direction)
     {
+//        Viewport viewport = game.getDataModel().getViewport();
+//        viewport.setViewportSize(WINDOW_WIDTH, WINDOW_HEIGHT - 80);
+//        viewport.updateViewportBoundaries();
+//        int x = viewport.getViewportWidth();
         Sprite map = game.getGUIDecor().get(MAP_TYPE);
         Sprite node = game.getGUIButtons().get(LOCATION_BUTTON_TYPE);
         switch (direction)

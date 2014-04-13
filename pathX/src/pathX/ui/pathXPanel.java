@@ -1,5 +1,7 @@
 package pathX.ui;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.Collection;
@@ -22,7 +24,7 @@ public class pathXPanel extends JPanel
 
     // AND HERE IS ALL THE GAME DATA THAT WE NEED TO RENDER
     private pathXDataModel data;
-        
+    
     public pathXPanel(MiniGame initGame, pathXDataModel initData)
     {
         game = initGame;
@@ -57,15 +59,21 @@ public class pathXPanel extends JPanel
                 renderHelp(g);
             }*/
             
+            if (((pathXMiniGame)game).isCurrentScreenState(SETTINGS_SCREEN_STATE))
+            {
+                renderSettings(g);
+            }
+            
             // IF CURRENT SCREEN IS LEVEL SELECT SCREEN
             if (((pathXMiniGame)game).isCurrentScreenState(LEVEL_SELECT_SCREEN_STATE))
             {
                 renderMap(g);
                 renderNodeLocation(g);
             }
-            
+             
             // AND THE BUTTONS AND DECOR
             renderGUIControls(g);
+            
         } 
         finally
         {
@@ -106,7 +114,9 @@ public class pathXPanel extends JPanel
     public void renderSprite(Graphics g, Sprite s)
     {
         // ONLY RENDER THE VISIBLE ONES
-        if (!s.getState().equals(pathXTileState.INVISIBLE_STATE.toString()))
+        if (!s.getState().equals(pathXTileState.INVISIBLE_STATE.toString()) &&
+            !s.getSpriteType().getSpriteTypeID().contains(LOCATION_BUTTON_TYPE) &&
+                !s.getSpriteType().getSpriteTypeID().contains(MAP_TYPE))
         {
             SpriteType bgST = s.getSpriteType();
             Image img = bgST.getStateImage(s.getState());
@@ -148,6 +158,9 @@ public class pathXPanel extends JPanel
     {
         Sprite map = game.getGUIDecor().get(MAP_TYPE);
         map.setState(pathXTileState.VISIBLE_STATE.toString());
+        SpriteType bgST = map.getSpriteType();
+        Image img = bgST.getStateImage(map.getState());
+        g.drawImage(img, (int) map.getX(), (int) map.getY(), 1200, 1000, null);
     }
     
     public void renderNodeLocation(Graphics g)
@@ -157,6 +170,14 @@ public class pathXPanel extends JPanel
         location.setState(pathXTileState.UNSUCCESSFUL_STATE.toString());
         SpriteType sTLocation = location.getSpriteType();
         Image img = sTLocation.getStateImage(location.getState());
+        //g.setColor(Color.WHITE);
+        //g.fillOval(100, 200, 30, 30);
         g.drawImage(img, (int) location.getX(), (int) location.getY(), sTLocation.getWidth(), sTLocation.getHeight(), null);
+    }
+    
+    public void renderSettings(Graphics g)
+    {
+        g.setFont(FONT_TEXT_DISPLAY);
+        g.drawString("Speed: ", 400, 440);
     }
 }

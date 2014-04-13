@@ -16,6 +16,11 @@
         <property name="IMAGE_SUCCESSFUL_LOCATION"              value="./pathX/SuccessfulLocation.png"></property>
         <property name="IMAGE_UNSUCCESSFUL_LOCATION"            value="./pathX/UnsuccessfulLocation.png"></property>
         <property name="IMAGE_INFO_DIALOG_BOX"                  value="./pathX/InfoDialogBox.png"></property>
+        <property name="IMAGE_BUTTON_MUTE_BOX"                  value="./pathX/MuteBox.png"></property>
+        <property name="IMAGE_BUTTON_MUTE_BOX_SELECTED"         value="./pathX/MuteBoxSelected.png"></property>
+        <property name="IMAGE_GAME_SPEED_SLIDER"                value="./pathX/GameSpeedSlider.png"></property>
+        
+        <!-- SCROLLING BUTTONS -->
         <property name="IMAGE_BUTTON_SCROLL_UP"                 value="./pathX/ButtonScrollUp.png"></property>
         <property name="IMAGE_BUTTON_SCROLL_UP_MOUSE_OVER"      value="./pathX/ButtonScrollUpMouseOver.png"></property>
         <property name="IMAGE_BUTTON_SCROLL_DOWN"               value="./pathX/ButtonScrollDown.png"></property>
@@ -24,6 +29,8 @@
         <property name="IMAGE_BUTTON_SCROLL_LEFT_MOUSE_OVER"    value="./pathX/ButtonScrollLeftMouseOver.png"></property>
         <property name="IMAGE_BUTTON_SCROLL_RIGHT"              value="./pathX/ButtonScrollRight.png"></property>
         <property name="IMAGE_BUTTON_SCROLL_RIGHT_MOUSE_OVER"   value="./pathX/ButtonScrollRightMouseOver.png"></property>
+        
+        <!-- OTHER BUTTONS -->
         <property name="IMAGE_BUTTON_HOME"                      value="./pathX/ButtonHome.png"></property>
         <property name="IMAGE_BUTTON_HOME_MOUSE_OVER"           value="./pathX/ButtonHomeMouseOver.png"></property>
         <property name="IMAGE_BUTTON_EXIT"                      value="./pathX/ButtonExit.png"></property>
@@ -32,6 +39,10 @@
         <property name="IMAGE_BUTTON_START_MOUSE_OVER"          value="./pathX/ButtonStartMouseOver.png"></property>
         <property name="IMAGE_BUTTON_CLOSE"                     value="./pathX/ButtonClose.png"></property>
         <property name="IMAGE_BUTTON_CLOSE_MOUSE_OVER"          value="./pathX/ButtonCloseMouseOver.png"></property>
+        <property name="IMAGE_WINDOW_ICON"                      value="./pathX/WindowIcon.png"></property>
+        
+        <!-- AUDIO AND SONG CUES -->
+        <property name="AUDIO_CUE_SELECT"                       value="./pathX/Select.wav"></property>
     </property_list>
     
     <!-- PLAYABLE LEVELS CREATED WITH THE LEVEL EDITOR -->

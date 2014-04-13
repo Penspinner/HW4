@@ -8,10 +8,15 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TreeMap;
 import java.util.Vector;
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
 import mini_game.MiniGame;
 import mini_game.SpriteType;
@@ -45,6 +50,12 @@ public class pathXMiniGame extends MiniGame
     
     // THE SCREEN CURRENTLY BEING PLAYED
     private String currentScreenState;
+    
+    // THE SOUND IS MUTED OR NOT
+    private boolean soundMuted;
+    
+    // THE MUSIC IS MUTED OR NOT
+    private boolean musicMuted;
     
     // ACCESSOR METHODS
         // - getPlayerRecord
@@ -99,6 +110,26 @@ public class pathXMiniGame extends MiniGame
     }
     
     /**
+     * Used to set the state of the sound mute box.
+     * 
+     * @return true if the sound is muted, false otherwise
+     */
+    public boolean isSoundMuted()
+    {
+        return soundMuted;
+    }
+    
+    /**
+     * Used to set the state of the music mute box.
+     * 
+     * @return true if the music is muted, false otherwise
+     */
+    public boolean isMusicMuted()
+    {
+        return musicMuted;
+    }
+    
+    /**
      * This method switches the application to the level select screen, making
      * all the appropriate UI controls visible & invisible.
      */
@@ -109,7 +140,8 @@ public class pathXMiniGame extends MiniGame
             guiDecor.get(INFO_DIALOG_BOX_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
             guiButtons.get(CLOSE_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
             guiButtons.get(CLOSE_BUTTON_TYPE).setEnabled(false);
-        }
+        } 
+        
         // CHANGE THE BACKGROUND
         guiDecor.get(BACKGROUND_TYPE).setState(LEVEL_SELECT_SCREEN_STATE);
         //guiDecor.get(MAP_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
@@ -150,6 +182,10 @@ public class pathXMiniGame extends MiniGame
         // ACTIVATE THE HOME BUTTON
         guiButtons.get(HOME_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
         guiButtons.get(HOME_BUTTON_TYPE).setEnabled(true);
+        guiButtons.get(SOUND_MUTE_BOX_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
+        guiButtons.get(SOUND_MUTE_BOX_BUTTON_TYPE).setEnabled(true);
+        guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
+        guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE).setEnabled(true);
     }
     
     /**
@@ -180,20 +216,35 @@ public class pathXMiniGame extends MiniGame
     {
         // CHANGE THE BACKGROUND
         guiDecor.get(BACKGROUND_TYPE).setState(MENU_SCREEN_STATE);
-        guiDecor.get(MAP_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-        guiDecor.get(HELP_DESCRIPTION_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-        guiDecor.get(INFO_DIALOG_BOX_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
         
-        currentScreenState = MENU_SCREEN_STATE;
+        // DISABLE DECORATIONS OR BUTTONS DEPENDING ON SCREEN FOR EFFICIENCY
+        if (isCurrentScreenState(SETTINGS_SCREEN_STATE))
+        {
+            guiButtons.get(SOUND_MUTE_BOX_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+            guiButtons.get(SOUND_MUTE_BOX_BUTTON_TYPE).setEnabled(false);
+            guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+            guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE).setEnabled(false);
+        } else if (isCurrentScreenState(LEVEL_SELECT_SCREEN_STATE))
+        {
+            guiDecor.get(MAP_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+            guiButtons.get(LOCATION_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+            guiButtons.get(LOCATION_BUTTON_TYPE).setEnabled(false);
+            disableScrollButtons();
+        } else if (isCurrentScreenState(GAME_SCREEN_STATE))
+        {
+            guiDecor.get(INFO_DIALOG_BOX_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+            guiButtons.get(CLOSE_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+            guiButtons.get(CLOSE_BUTTON_TYPE).setEnabled(false);
+        } else if (isCurrentScreenState(HELP_SCREEN_STATE))
+        {
+            guiDecor.get(HELP_DESCRIPTION_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+        }
         
         // DEACTIVATE THE HOME BUTTON
         guiButtons.get(HOME_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
         guiButtons.get(HOME_BUTTON_TYPE).setEnabled(false);
-        guiButtons.get(CLOSE_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-        guiButtons.get(CLOSE_BUTTON_TYPE).setEnabled(false);
-        guiButtons.get(LOCATION_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-        guiButtons.get(LOCATION_BUTTON_TYPE).setEnabled(false);
-        disableScrollButtons();
+        
+        currentScreenState = MENU_SCREEN_STATE;
         
         // ACTIVATE THE MENU CONTROLS
         guiButtons.get(PLAY_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
@@ -253,9 +304,40 @@ public class pathXMiniGame extends MiniGame
     }
     
     @Override
+    /**
+     * Initializes the sound and music to be used by the application.
+     */
     public void initAudioContent()
     {
-        
+        try
+        {
+            PropertiesManager props = PropertiesManager.getPropertiesManager();
+            String audioPath = props.getProperty(pathXPropertyType.PATH_AUDIO);
+
+            // LOAD ALL THE AUDIO
+            loadAudioCue(pathXPropertyType.AUDIO_CUE_SELECT);
+
+            // PLAY THE WELCOME SCREEN SONG
+            
+        }
+        catch(UnsupportedAudioFileException | IOException | LineUnavailableException | InvalidMidiDataException | MidiUnavailableException e)
+        {
+//            errorHandler.processError(SortingHatPropertyType.TEXT_ERROR_LOADING_AUDIO);
+        }        
+    }
+
+    /**
+     * This helper method loads the audio file associated with audioCueType,
+     * which should have been specified via an XML properties file.
+     */
+    private void loadAudioCue(pathXPropertyType audioCueType) 
+            throws  UnsupportedAudioFileException, IOException, LineUnavailableException, 
+                    InvalidMidiDataException, MidiUnavailableException
+    {
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
+        String audioPath = props.getProperty(pathXPropertyType.PATH_AUDIO);
+        String cue = props.getProperty(audioCueType.toString());
+        audio.loadAudio(audioCueType.toString(), audioPath + cue);        
     }
     
     @Override
@@ -285,6 +367,8 @@ public class pathXMiniGame extends MiniGame
         
         PropertiesManager props = PropertiesManager.getPropertiesManager();
         String imgPath = props.getProperty(pathXPropertyType.PATH_IMG);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_WINDOW_ICON));
+        window.setIconImage(img);
         
         // CONSTRUCT THE PANEL WHERE WE'LL DRAW EVERYTHING
         canvas = new pathXPanel(this, (pathXDataModel) data);
@@ -430,6 +514,26 @@ public class pathXMiniGame extends MiniGame
         sT.addState(pathXTileState.MOUSE_OVER_STATE.toString(), img);
         s = new Sprite(sT, CLOSE_BUTTON_X, CLOSE_BUTTON_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
         guiButtons.put(CLOSE_BUTTON_TYPE, s);
+        
+        // ADD SOUND AND MUSIC MUTE BOX -- THEY BOTH USE THE SAME IMAGE
+        
+        // ADD THE SOUND MUTE BOX
+        sT = new SpriteType(SOUND_MUTE_BOX_BUTTON_TYPE);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_MUTE_BOX));
+        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_MUTE_BOX_SELECTED));
+        sT.addState(pathXTileState.SELECTED_STATE.toString(), img);
+        s = new Sprite(sT, SOUND_MUTE_BOX_BUTTON_X, SOUND_MUTE_BOX_BUTTON_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
+        guiButtons.put(SOUND_MUTE_BOX_BUTTON_TYPE, s);
+        
+        // ADD THE MUSIC MUTE BOX
+        sT = new SpriteType(MUSIC_MUTE_BOX_BUTTON_TYPE);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_MUTE_BOX));
+        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_MUTE_BOX_SELECTED));
+        sT.addState(pathXTileState.SELECTED_STATE.toString(), img);
+        s = new Sprite(sT, MUSIC_MUTE_BOX_BUTTON_X, MUSIC_MUTE_BOX_BUTTON_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
+        guiButtons.put(MUSIC_MUTE_BOX_BUTTON_TYPE, s);
     }
     
     /**
@@ -448,7 +552,7 @@ public class pathXMiniGame extends MiniGame
         {
             public void windowClosing(WindowEvent we) 
             { 
-                eventHandler.respondToExitRequest(); 
+                System.exit(0);
             }
         });
         
@@ -579,6 +683,7 @@ public class pathXMiniGame extends MiniGame
     {
         data.reset(this);
     }
+    
     @Override
     public void updateGUI()
     {

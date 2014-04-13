@@ -76,6 +76,9 @@ public class pathX
         IMAGE_SUCCESSFUL_LOCATION,
         IMAGE_UNSUCCESSFUL_LOCATION,
         IMAGE_INFO_DIALOG_BOX,
+        IMAGE_BUTTON_MUTE_BOX,
+        IMAGE_BUTTON_MUTE_BOX_SELECTED,
+        IMAGE_GAME_SPEED_SLIDER,
         IMAGE_BUTTON_SCROLL_UP,
         IMAGE_BUTTON_SCROLL_UP_MOUSE_OVER,
         IMAGE_BUTTON_SCROLL_DOWN,
@@ -100,6 +103,7 @@ public class pathX
         IMAGE_BUTTON_START_MOUSE_OVER,
         IMAGE_BUTTON_CLOSE,
         IMAGE_BUTTON_CLOSE_MOUSE_OVER,
+        IMAGE_WINDOW_ICON,
         
         // AUDIO CUES
         AUDIO_CUE_LOSE,
@@ -111,7 +115,7 @@ public class pathX
         SONG_CUE_MENU_SCREEN,
         SONG_CUE_GAME_SCREEN,
         
-        //
+        // MENU BUTTONS
         MENU_BUTTON_OPTIONS,
         MENU_MOUSE_OVER_OPTIONS,
     }

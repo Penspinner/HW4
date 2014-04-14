@@ -65,28 +65,55 @@ public class pathXEventHandler
         game.switchToGameScreen();
     }
     
+    /**
+     * Called when the user clicks on the reset button.
+     */
     public void respondToResetGameRequest()
     {
         game.reset();
     }
     
-    
+    /**
+     * Called when the user clicks on the settings button.
+     */
     public void respondToSettingsRequest()
     {
         game.switchToSettingsScreen();
     }
     
-    
+    /**
+     * Called when the user clicks on the help button.
+     */
     public void respondToHelpRequest()
     {
         game.switchToHelpScreen();
     }
     
+    /**
+     * Called when the user clicks on the Home button.
+     */
     public void respondToHomeRequest()
     {
         game.switchToMenuScreen();
     }
     
+    public void respondToMuteRequest(Sprite muteButton)
+    {
+        if (!muteButton.getState().equals(pathXTileState.SELECTED_STATE.toString()))
+        {
+            muteButton.setState(pathXTileState.SELECTED_STATE.toString());
+        } else
+        {
+            muteButton.setState(pathXTileState.VISIBLE_STATE.toString());
+        }
+    }
+    
+    /**
+     * Called when the user clicks on the scroll buttons. This will scroll 
+     * the map according to the direction being clicked.
+     * 
+     * @param direction 
+     */
     public void scroll(String direction)
     {
 //        Viewport viewport = game.getDataModel().getViewport();

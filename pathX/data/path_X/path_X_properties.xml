@@ -16,8 +16,9 @@
         <property name="IMAGE_SUCCESSFUL_LOCATION"              value="./pathX/SuccessfulLocation.png"></property>
         <property name="IMAGE_UNSUCCESSFUL_LOCATION"            value="./pathX/UnsuccessfulLocation.png"></property>
         <property name="IMAGE_INFO_DIALOG_BOX"                  value="./pathX/InfoDialogBox.png"></property>
-        <property name="IMAGE_BUTTON_MUTE_BOX"                  value="./pathX/MuteBox.png"></property>
-        <property name="IMAGE_BUTTON_MUTE_BOX_SELECTED"         value="./pathX/MuteBoxSelected.png"></property>
+        <property name="IMAGE_BUTTON_MUTE_BOX"                  value="./pathX/ButtonMuteBox.png"></property>
+        <property name="IMAGE_BUTTON_MUTE_BOX_MOUSE_OVER"       value="./pathX/ButtonMuteBoxMouseOver.png"></property>
+        <property name="IMAGE_BUTTON_MUTE_BOX_SELECTED"         value="./pathX/ButtonMuteBoxSelected.png"></property>
         <property name="IMAGE_GAME_SPEED_SLIDER"                value="./pathX/GameSpeedSlider.png"></property>
         
         <!-- SCROLLING BUTTONS -->

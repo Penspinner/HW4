@@ -182,10 +182,26 @@ public class pathXMiniGame extends MiniGame
         // ACTIVATE THE HOME BUTTON
         guiButtons.get(HOME_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
         guiButtons.get(HOME_BUTTON_TYPE).setEnabled(true);
-        guiButtons.get(SOUND_MUTE_BOX_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
-        guiButtons.get(SOUND_MUTE_BOX_BUTTON_TYPE).setEnabled(true);
-        guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
-        guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE).setEnabled(true);
+        if (soundMuted)
+        {
+            guiButtons.get(SOUND_MUTE_BOX_BUTTON_TYPE).setState(pathXTileState.SELECTED_STATE.toString());
+            guiButtons.get(SOUND_MUTE_BOX_BUTTON_TYPE).setEnabled(true);
+        } else
+        {
+            guiButtons.get(SOUND_MUTE_BOX_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
+            guiButtons.get(SOUND_MUTE_BOX_BUTTON_TYPE).setEnabled(true);
+        }
+        if (musicMuted)
+        {
+            guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE).setState(pathXTileState.SELECTED_STATE.toString());
+            guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE).setEnabled(true);
+        } else
+        {
+            guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
+            guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE).setEnabled(true);
+        }
+        guiDecor.get(GAME_SPEED_SLIDER_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
+        guiDecor.get(GAME_SPEED_SLIDER_TYPE).setEnabled(true);
     }
     
     /**
@@ -224,6 +240,8 @@ public class pathXMiniGame extends MiniGame
             guiButtons.get(SOUND_MUTE_BOX_BUTTON_TYPE).setEnabled(false);
             guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
             guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE).setEnabled(false);
+            guiDecor.get(GAME_SPEED_SLIDER_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+            guiDecor.get(GAME_SPEED_SLIDER_TYPE).setEnabled(false);
         } else if (isCurrentScreenState(LEVEL_SELECT_SCREEN_STATE))
         {
             guiDecor.get(MAP_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
@@ -419,9 +437,9 @@ public class pathXMiniGame extends MiniGame
         for (int i = 0; i < menuButtons.size(); i++)
         {
             sT = new SpriteType(MENU_BUTTON_TYPE[i]);
-            img = loadImageWithColorKey(imgPath + menuButtons.get(i), Color.BLACK);
+            img = loadImage(imgPath + menuButtons.get(i));
             sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
-            img = loadImageWithColorKey(imgPath + menuMouseOverButtons.get(i), Color.BLACK);
+            img = loadImage(imgPath + menuMouseOverButtons.get(i));
             sT.addState(pathXTileState.MOUSE_OVER_STATE.toString(), img);
             s = new Sprite(sT, x, MENU_BUTTON_Y, 0, 0, pathXTileState.VISIBLE_STATE.toString());
             guiButtons.put(MENU_BUTTON_TYPE[i], s);
@@ -521,6 +539,8 @@ public class pathXMiniGame extends MiniGame
         sT = new SpriteType(SOUND_MUTE_BOX_BUTTON_TYPE);
         img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_MUTE_BOX));
         sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_MUTE_BOX_MOUSE_OVER));
+        sT.addState(pathXTileState.MOUSE_OVER_STATE.toString(), img);
         img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_MUTE_BOX_SELECTED));
         sT.addState(pathXTileState.SELECTED_STATE.toString(), img);
         s = new Sprite(sT, SOUND_MUTE_BOX_BUTTON_X, SOUND_MUTE_BOX_BUTTON_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
@@ -530,10 +550,19 @@ public class pathXMiniGame extends MiniGame
         sT = new SpriteType(MUSIC_MUTE_BOX_BUTTON_TYPE);
         img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_MUTE_BOX));
         sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_MUTE_BOX_MOUSE_OVER));
+        sT.addState(pathXTileState.MOUSE_OVER_STATE.toString(), img);
         img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_MUTE_BOX_SELECTED));
         sT.addState(pathXTileState.SELECTED_STATE.toString(), img);
         s = new Sprite(sT, MUSIC_MUTE_BOX_BUTTON_X, MUSIC_MUTE_BOX_BUTTON_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
         guiButtons.put(MUSIC_MUTE_BOX_BUTTON_TYPE, s);
+        
+        // ADD THE GAME SPEED SLIDER
+        sT = new SpriteType(GAME_SPEED_SLIDER_TYPE);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_GAME_SPEED_SLIDER));
+        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
+        s = new Sprite(sT, GAME_SPEED_SLIDER_X, GAME_SPEED_SLIDER_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
+        guiDecor.put(GAME_SPEED_SLIDER_TYPE, s);
     }
     
     /**
@@ -666,6 +695,32 @@ public class pathXMiniGame extends MiniGame
             {
                 guiDecor.get(INFO_DIALOG_BOX_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
                 guiButtons.get(CLOSE_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+            }
+        });
+        
+        guiButtons.get(SOUND_MUTE_BOX_BUTTON_TYPE).setActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                eventHandler.respondToMuteRequest(guiButtons.get(SOUND_MUTE_BOX_BUTTON_TYPE));
+                if (soundMuted)
+                    soundMuted = false;
+                else
+                    soundMuted = true;
+            }
+        });
+        
+        guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE).setActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                eventHandler.respondToMuteRequest(guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE));
+                if (musicMuted)
+                    musicMuted = false;
+                else
+                    musicMuted = true;
             }
         });
         

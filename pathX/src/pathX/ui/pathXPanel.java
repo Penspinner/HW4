@@ -49,31 +49,36 @@ public class pathXPanel extends JPanel
             // CLEAR THE PANEL
             super.paintComponent(g);
             
-            // RENDER THE BACKGROUND, WHICHEVER SCREEN WE'RE ON
-            renderBackground(g);
-            
-            // IF CURRENT SCREEN IS HELP SCREEN
-            /**
-            if (((pathXMiniGame)game).isCurrentScreenState(HELP_SCREEN_STATE))
-            {
-                renderHelp(g);
-            }*/
-            
-            if (((pathXMiniGame)game).isCurrentScreenState(SETTINGS_SCREEN_STATE))
-            {
-                renderSettings(g);
-            }
-            
-            // IF CURRENT SCREEN IS LEVEL SELECT SCREEN
             if (((pathXMiniGame)game).isCurrentScreenState(LEVEL_SELECT_SCREEN_STATE))
             {
                 renderMap(g);
-                renderNodeLocation(g);
+                renderBackground(g);
+            } else
+            {
+                // RENDER THE BACKGROUND, WHICHEVER SCREEN WE'RE ON
+                renderBackground(g);
+
+                // IF CURRENT SCREEN IS HELP SCREEN
+                /**
+                if (((pathXMiniGame)game).isCurrentScreenState(HELP_SCREEN_STATE))
+                {
+                    renderHelp(g);
+                }*/
+
+                if (((pathXMiniGame)game).isCurrentScreenState(SETTINGS_SCREEN_STATE))
+                {
+                    renderSettings(g);
+                }
+
+                // IF CURRENT SCREEN IS LEVEL SELECT SCREEN
+                if (((pathXMiniGame)game).isCurrentScreenState(LEVEL_SELECT_SCREEN_STATE))
+                {
+                    renderMap(g);
+                    renderNodeLocation(g);
+                }
             }
-             
             // AND THE BUTTONS AND DECOR
             renderGUIControls(g);
-            
         } 
         finally
         {
@@ -116,11 +121,17 @@ public class pathXPanel extends JPanel
         // ONLY RENDER THE VISIBLE ONES
         if (!s.getState().equals(pathXTileState.INVISIBLE_STATE.toString()) &&
             !s.getSpriteType().getSpriteTypeID().contains(LOCATION_BUTTON_TYPE) &&
-                !s.getSpriteType().getSpriteTypeID().contains(MAP_TYPE))
+            !s.getSpriteType().getSpriteTypeID().contains(MAP_TYPE) &&
+            !s.getState().equals(LEVEL_SELECT_SCREEN_STATE))
         {
             SpriteType bgST = s.getSpriteType();
             Image img = bgST.getStateImage(s.getState());
             g.drawImage(img, (int)s.getX(), (int)s.getY(), bgST.getWidth(), bgST.getHeight(), null); 
+        } else if (s.getState().contains(LEVEL_SELECT_SCREEN_STATE))
+        {
+            SpriteType bgST = s.getSpriteType();
+            Image img = bgST.getStateImage(s.getState());
+            g.drawImage(img, (int)s.getX(), (int)s.getY(), img.getWidth(null), img.getHeight(null), null); 
         }
     }
     
@@ -160,7 +171,7 @@ public class pathXPanel extends JPanel
         map.setState(pathXTileState.VISIBLE_STATE.toString());
         SpriteType bgST = map.getSpriteType();
         Image img = bgST.getStateImage(map.getState());
-        g.drawImage(img, (int) map.getX(), (int) map.getY(), 1200, 1000, null);
+        g.drawImage(img, (int) map.getX(), (int) map.getY(), bgST.getWidth(), bgST.getHeight(), null);
     }
     
     public void renderNodeLocation(Graphics g)

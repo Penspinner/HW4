@@ -9,11 +9,21 @@ import pathX.ui.pathXMiniGame;
  */
 public class pathXDataModel extends MiniGameDataModel 
 {
-    pathXMiniGame game;
+    // THIS CLASS HAS A REFERERENCE TO THE MINI GAME SO THAT IT
+    // CAN NOTIFY IT TO UPDATE THE DISPLAY WHEN THE DATA MODEL CHANGES
+    private pathXMiniGame game;
+    
+    private int gameSpeed;
     
     public pathXDataModel(pathXMiniGame initGame)
     {
         game = initGame;
+    }
+    
+    // ACCESSOR METHODS
+    public int getGameSpeed()
+    {
+        return gameSpeed;
     }
     
     /**

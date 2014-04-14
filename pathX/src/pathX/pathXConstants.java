@@ -58,6 +58,7 @@ public class pathXConstants
     // SETTINGS BUTTONS
     public static final String SOUND_MUTE_BOX_BUTTON_TYPE = "SOUND_MUTE_BOX_TYPE";
     public static final String MUSIC_MUTE_BOX_BUTTON_TYPE = "MUSIC_MUTE_BOX_TYPE";
+    public static final String GAME_SPEED_SLIDER_TYPE = "GAME_SPEED_SLIDER_TYPE";
     
     // GAMEPLAY BUTTONS
     public static final String START_BUTTON_TYPE = "START_BUTTON_TYPE";
@@ -98,6 +99,8 @@ public class pathXConstants
     public static final int SOUND_MUTE_BOX_BUTTON_Y = 160;
     public static final int MUSIC_MUTE_BOX_BUTTON_X = SOUND_MUTE_BOX_BUTTON_X;
     public static final int MUSIC_MUTE_BOX_BUTTON_Y = SOUND_MUTE_BOX_BUTTON_Y + 80;
+    public static final int GAME_SPEED_SLIDER_X = 450;
+    public static final int GAME_SPEED_SLIDER_Y = 370;
     
     // HELP SCREEN OFFSET AND DESCRIPTION
     public static final int HELP_DESCRIPTION_X = 50;

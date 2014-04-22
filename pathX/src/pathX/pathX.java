@@ -39,6 +39,8 @@ public class pathX
             
             // GET THE PROPER WINDOW DIMENSIONS
             miniGame.startGame();
+            
+            ((pathXMiniGame)miniGame).initMapViewport();
         } 
         // CATCH THE ESCEPTION IF THERE WAS AN ERROR WITH THE XML FILE
         catch (InvalidXMLFileFormatException ixmlffe)
@@ -88,6 +90,8 @@ public class pathX
         IMAGE_BUTTON_SCROLL_LEFT_MOUSE_OVER,
         IMAGE_BUTTON_SCROLL_RIGHT,
         IMAGE_BUTTON_SCROLL_RIGHT_MOUSE_OVER,
+        IMAGE_BUTTON_PAUSE,
+        IMAGE_BUTTON_PAUSE_MOUSE_OVER,
         IMAGE_BUTTON_HOME,
         IMAGE_BUTTON_HOME_MOUSE_OVER,
         IMAGE_BUTTON_HELP,
@@ -105,6 +109,7 @@ public class pathX
         IMAGE_BUTTON_CLOSE,
         IMAGE_BUTTON_CLOSE_MOUSE_OVER,
         IMAGE_WINDOW_ICON,
+        IMAGE_GUN_CURSOR,
         
         // AUDIO CUES
         AUDIO_CUE_LOSE,

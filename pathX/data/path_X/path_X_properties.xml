@@ -20,6 +20,8 @@
         <property name="IMAGE_BUTTON_MUTE_BOX_MOUSE_OVER"       value="./pathX/ButtonMuteBoxMouseOver.png"></property>
         <property name="IMAGE_BUTTON_MUTE_BOX_SELECTED"         value="./pathX/ButtonMuteBoxSelected.png"></property>
         <property name="IMAGE_GAME_SPEED_SLIDER"                value="./pathX/GameSpeedSlider.png"></property>
+        <property name="IMAGE_WINDOW_ICON"                      value="./pathX/WindowIcon.png"></property>
+        <property name="IMAGE_GUN_CURSOR"                       value="./pathX/GunCursor.png"></property>
         
         <!-- SCROLLING BUTTONS -->
         <property name="IMAGE_BUTTON_SCROLL_UP"                 value="./pathX/ButtonScrollUp.png"></property>
@@ -40,7 +42,8 @@
         <property name="IMAGE_BUTTON_START_MOUSE_OVER"          value="./pathX/ButtonStartMouseOver.png"></property>
         <property name="IMAGE_BUTTON_CLOSE"                     value="./pathX/ButtonClose.png"></property>
         <property name="IMAGE_BUTTON_CLOSE_MOUSE_OVER"          value="./pathX/ButtonCloseMouseOver.png"></property>
-        <property name="IMAGE_WINDOW_ICON"                      value="./pathX/WindowIcon.png"></property>
+        <property name="IMAGE_BUTTON_PAUSE"                     value="./pathX/ButtonPause.png"></property>
+        <property name="IMAGE_BUTTON_PAUSE_MOUSE_OVER"          value="./pathX/ButtonPauseMouseOver.png"></property>
         
         <!-- AUDIO AND SONG CUES -->
         <property name="AUDIO_CUE_SELECT"                       value="./pathX/Select.wav"></property>
@@ -51,17 +54,17 @@
         <property_options name="SPECIALS_BUTTON_OPTION">
             
         </property_options>
-        <property_options name="MENU_BUTTON_OPTIONS">
-            <option>./pathX/ButtonPlayGame.png</option>
-            <option>./pathX/ButtonResetGame.png</option>
-            <option>./pathX/ButtonSettings.png</option>
-            <option>./pathX/ButtonHelp.png</option>
-        </property_options>
         <property_options name="LEVEL_OPTIONS">
             
         </property_options>
         <property_options name="LEVEL_IMAGE_OPTIONS">
             
+        </property_options>
+        <property_options name="MENU_BUTTON_OPTIONS">
+            <option>./pathX/ButtonPlayGame.png</option>
+            <option>./pathX/ButtonResetGame.png</option>
+            <option>./pathX/ButtonSettings.png</option>
+            <option>./pathX/ButtonHelp.png</option>
         </property_options>
         <property_options name="MENU_MOUSE_OVER_OPTIONS">
             <option>./pathX/ButtonPlayGameMouseOver.png</option>

@@ -1,17 +1,23 @@
 package pathX.ui;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Stroke;
+import java.awt.geom.Ellipse2D;
 import java.util.Collection;
+import java.util.Iterator;
 import javax.swing.JPanel;
 import mini_game.MiniGame;
 import mini_game.Sprite;
 import mini_game.SpriteType;
+import mini_game.Viewport;
 import pathX.data.pathXDataModel;
+import pathX.data.pathXLevel;
 import static pathX.pathXConstants.*;
-import pathX.ui.pathXTileState;
 /**
  *
  * @author Steven Liao
@@ -25,10 +31,14 @@ public class pathXPanel extends JPanel
     // AND HERE IS ALL THE GAME DATA THAT WE NEED TO RENDER
     private pathXDataModel data;
     
+    // LEVEL TO BE RENDERED
+    Ellipse2D.Double levelCircle;
+    
     public pathXPanel(MiniGame initGame, pathXDataModel initData)
     {
         game = initGame;
         data = initData;
+        levelCircle = new Ellipse2D.Double(0, 0, 30, 30);
     }
     
     /**
@@ -46,17 +56,20 @@ public class pathXPanel extends JPanel
             // MAKE SURE WE HAVE EXCLUSIVE ACCESS TO THE GAME DATA
             game.beginUsingData();
             
+            Graphics2D g2 = (Graphics2D) g;
+            
             // CLEAR THE PANEL
             super.paintComponent(g);
             
             if (((pathXMiniGame)game).isCurrentScreenState(LEVEL_SELECT_SCREEN_STATE))
             {
-                renderMap(g);
-                renderBackground(g);
+                renderMap(g2);
+                renderLevel(g2);
+                renderBackground(g2);
             } else
             {
                 // RENDER THE BACKGROUND, WHICHEVER SCREEN WE'RE ON
-                renderBackground(g);
+                renderBackground(g2);
 
                 // IF CURRENT SCREEN IS HELP SCREEN
                 /**
@@ -67,18 +80,11 @@ public class pathXPanel extends JPanel
 
                 if (((pathXMiniGame)game).isCurrentScreenState(SETTINGS_SCREEN_STATE))
                 {
-                    renderSettings(g);
-                }
-
-                // IF CURRENT SCREEN IS LEVEL SELECT SCREEN
-                if (((pathXMiniGame)game).isCurrentScreenState(LEVEL_SELECT_SCREEN_STATE))
-                {
-                    renderMap(g);
-                    renderNodeLocation(g);
+                    renderGameSpeed(g2);
                 }
             }
             // AND THE BUTTONS AND DECOR
-            renderGUIControls(g);
+            renderGUIControls(g2);
         } 
         finally
         {
@@ -101,11 +107,11 @@ public class pathXPanel extends JPanel
      * 
      * @param g the Graphics context of this panel.
      */
-    public void renderBackground(Graphics g)
+    public void renderBackground(Graphics2D g2)
     {
         // THERE IS ONLY ONE CURRENTLY SET
         Sprite bg = game.getGUIDecor().get(BACKGROUND_TYPE);
-        renderSprite(g, bg);
+        renderSprite(g2, bg);
     }
     
     /**
@@ -127,7 +133,7 @@ public class pathXPanel extends JPanel
             SpriteType bgST = s.getSpriteType();
             Image img = bgST.getStateImage(s.getState());
             g.drawImage(img, (int)s.getX(), (int)s.getY(), bgST.getWidth(), bgST.getHeight(), null); 
-        } else if (s.getState().contains(LEVEL_SELECT_SCREEN_STATE))
+        } else if (s.getState().equals(LEVEL_SELECT_SCREEN_STATE))
         {
             SpriteType bgST = s.getSpriteType();
             Image img = bgST.getStateImage(s.getState());
@@ -140,55 +146,86 @@ public class pathXPanel extends JPanel
      * 
      * @param g this panel's rendering context.
      */
-    public void renderGUIControls(Graphics g)
+    public void renderGUIControls(Graphics2D g2)
     {
         // GET EACH DECOR IMAGE ONE AT A TIME
         Collection<Sprite> decorSprites = game.getGUIDecor().values();
         for (Sprite s : decorSprites)
         {
             if (s.getSpriteType().getSpriteTypeID() != BACKGROUND_TYPE)
-                renderSprite(g, s);
+                renderSprite(g2, s);
         }
         
         // AND NOW RENDER THE BUTTONS
         Collection<Sprite> buttonSprites = game.getGUIButtons().values();
         for (Sprite s : buttonSprites)
         {
-            renderSprite(g, s);
+            renderSprite(g2, s);
         }
     }
     
-    public void renderHelp(Graphics g)
+    public void renderHelp(Graphics2D g2)
     {
-        g.drawRect(40, 90, WINDOW_WIDTH - 80, WINDOW_HEIGHT - 60);
+        g2.drawRect(40, 90, WINDOW_WIDTH - 80, WINDOW_HEIGHT - 60);
         Sprite helpSprite = game.getGUIDialogs().get(HELP_DESCRIPTION_TYPE);
-        renderSprite(g, helpSprite);
+        //renderSprite(g, helpSprite);
     }
     
-    public void renderMap(Graphics g)
+    public void renderMap(Graphics2D g2)
     {
         Sprite map = game.getGUIDecor().get(MAP_TYPE);
         map.setState(pathXTileState.VISIBLE_STATE.toString());
         SpriteType bgST = map.getSpriteType();
         Image img = bgST.getStateImage(map.getState());
-        g.drawImage(img, (int) map.getX(), (int) map.getY(), bgST.getWidth(), bgST.getHeight(), null);
+        //g.drawImage(img, (int) map.getX(), (int) map.getY(), bgST.getWidth(), bgST.getHeight(), null);
+        Viewport viewport = ((pathXMiniGame)game).getMapViewport();
+        int viewportX = viewport.getViewportX();
+        int viewportY = viewport.getViewportY();
+        g2.drawImage(img, 0, NORTH_PANEL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT,
+                viewportX, viewportY, WINDOW_WIDTH + viewportX, WINDOW_HEIGHT + viewportY, null);
     }
     
-    public void renderNodeLocation(Graphics g)
+    public void renderLevel(Graphics2D g2)
     {
         Sprite location = game.getGUIButtons().get(LOCATION_BUTTON_TYPE);
         location.setEnabled(true);
         location.setState(pathXTileState.UNSUCCESSFUL_STATE.toString());
         SpriteType sTLocation = location.getSpriteType();
         Image img = sTLocation.getStateImage(location.getState());
-        //g.setColor(Color.WHITE);
-        //g.fillOval(100, 200, 30, 30);
-        g.drawImage(img, (int) location.getX(), (int) location.getY(), sTLocation.getWidth(), sTLocation.getHeight(), null);
+        Viewport viewport = ((pathXMiniGame)game).getMapViewport();
+        if (location.getY() <= 50)
+            location.setEnabled(false);
+        else
+            location.setEnabled(true);
+        g2.drawImage(img, (int) location.getX(), (int) location.getY(), sTLocation.getWidth(), sTLocation.getHeight(), null);
+        
+        
+        Iterator<pathXLevel> it = data.getLevelsIterator();
+        while (it.hasNext())
+        {
+            pathXLevel p = it.next();
+            if (p.getState().equals("LOCKED_STATE"))
+            {
+                g2.setColor(Color.WHITE);
+            } else if (p.getState().equals("UNSUCCESSFUL_STATE"))
+            {
+                g2.setColor(Color.RED);
+            } else
+            {
+                g2.setColor(Color.GREEN);
+            }
+            g2.fill(levelCircle);
+            
+            g2.setColor(Color.BLACK);
+            Stroke s = new BasicStroke(3);
+            g2.setStroke(s);
+            g2.draw(levelCircle);
+        }
     }
     
-    public void renderSettings(Graphics g)
+    public void renderGameSpeed(Graphics2D g2)
     {
-        g.setFont(FONT_TEXT_DISPLAY);
-        g.drawString("Speed: ", 400, 440);
+        g2.setFont(FONT_TEXT_DISPLAY);
+        g2.drawString("Speed: ", 400, 440);
     }
 }

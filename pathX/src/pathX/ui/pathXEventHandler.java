@@ -78,7 +78,8 @@ public class pathXEventHandler
      */
     public void respondToSettingsRequest()
     {
-        game.switchToSettingsScreen();
+        if (!game.isCurrentScreenState(SETTINGS_SCREEN_STATE))
+            game.switchToSettingsScreen();
     }
     
     /**
@@ -86,7 +87,8 @@ public class pathXEventHandler
      */
     public void respondToHelpRequest()
     {
-        game.switchToHelpScreen();
+        if (!game.isCurrentScreenState(HELP_SCREEN_STATE))
+            game.switchToHelpScreen();
     }
     
     /**
@@ -116,49 +118,62 @@ public class pathXEventHandler
      */
     public void scroll(String direction)
     {
-//        Viewport viewport = game.getDataModel().getViewport();
-//        viewport.setViewportSize(WINDOW_WIDTH, WINDOW_HEIGHT - 80);
-//        viewport.updateViewportBoundaries();
-//        int x = viewport.getViewportWidth();
-        Sprite map = game.getGUIDecor().get(MAP_TYPE);
-        Sprite node = game.getGUIButtons().get(LOCATION_BUTTON_TYPE);
-        switch (direction)
+        if (game.isCurrentScreenState(LEVEL_SELECT_SCREEN_STATE))
         {
-            case "UP":
+            Viewport viewport = game.getMapViewport();
+            Sprite map = game.getGUIDecor().get(MAP_TYPE);        
+    //        viewport.setNorthPanelHeight(80);
+    //        viewport.setGameWorldSize((int) map.getAABBwidth(), (int) map.getAABBheight());
+    //        viewport.setViewportSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+    //        viewport.updateViewportBoundaries();
+    //        viewport.initViewportMargins();
+            Sprite node = game.getGUIButtons().get(LOCATION_BUTTON_TYPE);
+            switch (direction)
             {
-                if (map.getY() + WINDOW_HEIGHT - map.getAABBheight() < WINDOW_HEIGHT - map.getAABBheight() + MAP_Y)
+                case "UP":
                 {
-                    map.setY(map.getY() + SCROLL_PIXELS);
-                    node.setY(node.getY() + SCROLL_PIXELS);
-                }
-            } break;
-                
-            case "DOWN":
-            {
-                if (map.getY() >= WINDOW_HEIGHT - map.getAABBheight() - 23)
+                    //if (map.getY() + WINDOW_HEIGHT - map.getAABBheight() < WINDOW_HEIGHT - map.getAABBheight() + MAP_Y)
+                    if (viewport.getMinViewportY() < viewport.getViewportY())
+                    {
+    //                    map.setY(map.getY() + SCROLL_PIXELS);
+                        viewport.scroll(0, -SCROLL_PIXELS);
+                        node.setY(node.getY() + SCROLL_PIXELS);
+                    }
+                } break;
+
+                case "DOWN":
                 {
-                    map.setY(map.getY() - SCROLL_PIXELS);
-                    node.setY(node.getY() - SCROLL_PIXELS);
-                }
-            } break;
-                
-            case "LEFT":
-            {
-                if (map.getX() + WINDOW_WIDTH - map.getAABBwidth() < WINDOW_WIDTH - map.getAABBwidth())
+    //                if (map.getY() >= WINDOW_HEIGHT - map.getAABBheight() - 23)
+                    if (viewport.getMaxViewportY() > viewport.getViewportY())
+                    {
+    //                    map.setY(map.getY() - SCROLL_PIXELS);
+                        viewport.scroll(0, SCROLL_PIXELS);
+                        node.setY(node.getY() - SCROLL_PIXELS);
+                    }
+                } break;
+
+                case "LEFT":
                 {
-                    map.setX(map.getX() + SCROLL_PIXELS);
-                    node.setX(node.getX() + SCROLL_PIXELS);
-                }
-            } break;
-                
-            case "RIGHT":
-            {
-                if (map.getX() >= WINDOW_WIDTH - map.getAABBwidth())
+    //                if (map.getX() + WINDOW_WIDTH - map.getAABBwidth() < WINDOW_WIDTH - map.getAABBwidth())
+                    if (viewport.getMinViewportX() < viewport.getViewportX())
+                    {
+    //                    map.setX(map.getX() + SCROLL_PIXELS);
+                        viewport.scroll(-SCROLL_PIXELS, 0);
+                        node.setX(node.getX() + SCROLL_PIXELS);
+                    }
+                } break;
+
+                case "RIGHT":
                 {
-                    map.setX(map.getX() - SCROLL_PIXELS);
-                    node.setX(node.getX() - SCROLL_PIXELS);
-                }
-            } break;
+    //                if (map.getX() >= WINDOW_WIDTH - map.getAABBwidth())
+                    if (viewport.getMaxViewportX() > viewport.getViewportX())
+                    {
+    //                    map.setX(map.getX() - SCROLL_PIXELS);
+                        viewport.scroll(SCROLL_PIXELS, 0);
+                        node.setX(node.getX() - SCROLL_PIXELS);
+                    }
+                } break;
+            }
         }
     }
     

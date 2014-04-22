@@ -53,6 +53,7 @@ public class pathXConstants
     public static final String SCROLL_DOWN_BUTTON_TYPE = "SCROLL_DOWN_BUTTON_TYPE";
     public static final String SCROLL_LEFT_BUTTON_TYPE = "SCROLL_LEFT_BUTTON_TYPE";
     public static final String SCROLL_RIGHT_BUTTON_TYPE = "SCROLL_RIGHT_BUTTON_TYPE";
+    public static final String PAUSE_BUTTON_TYPE = "PAUSE_BUTTON_TYPE";
     public static final String LOCATION_BUTTON_TYPE = "LOCATION_BUTTON_TYPE";
     
     // SETTINGS BUTTONS
@@ -74,6 +75,7 @@ public class pathXConstants
     // UI CONTROL SIZE AND OFFSETS
     public static final int WINDOW_WIDTH = 900;
     public static final int WINDOW_HEIGHT = 553;
+    public static final int NORTH_PANEL_HEIGHT = 80;
     public static final int MENU_BUTTON_WIDTH = 128;
     public static final int MENU_BUTTON_HEIGHT = 40;
     public static final int MENU_BUTTON_MARGIN = 5;
@@ -84,13 +86,15 @@ public class pathXConstants
     public static final int START_BUTTON_Y = 120;
     public static final int MAP_Y = 80;
     public static final int SCROLL_UP_BUTTON_X = 50;
-    public static final int SCROLL_UP_BUTTON_Y = WINDOW_HEIGHT - 128;
+    public static final int SCROLL_UP_BUTTON_Y = WINDOW_HEIGHT - 133;
     public static final int SCROLL_DOWN_BUTTON_X = 50;
-    public static final int SCROLL_DOWN_BUTTON_Y = WINDOW_HEIGHT - 78;
-    public static final int SCROLL_LEFT_BUTTON_X = 25;
+    public static final int SCROLL_DOWN_BUTTON_Y = WINDOW_HEIGHT - 73;
+    public static final int SCROLL_LEFT_BUTTON_X = 20;
     public static final int SCROLL_LEFT_BUTTON_Y = WINDOW_HEIGHT - 103;
-    public static final int SCROLL_RIGHT_BUTTON_X = 75;
+    public static final int SCROLL_RIGHT_BUTTON_X = 80;
     public static final int SCROLL_RIGHT_BUTTON_Y = WINDOW_HEIGHT - 103;
+    public static final int PAUSE_BUTTON_X = 50;
+    public static final int PAUSE_BUTTON_Y = WINDOW_HEIGHT - 103;
     public static final int INFO_DIALOG_BOX_X = 150;
     public static final int INFO_DIALOG_BOX_Y = 50;
     public static final int CLOSE_BUTTON_X = 350;

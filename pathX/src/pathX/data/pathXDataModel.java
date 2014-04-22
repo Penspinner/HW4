@@ -1,5 +1,7 @@
 package pathX.data;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import mini_game.MiniGame;
 import mini_game.MiniGameDataModel;
 import pathX.ui.pathXMiniGame;
@@ -13,11 +15,20 @@ public class pathXDataModel extends MiniGameDataModel
     // CAN NOTIFY IT TO UPDATE THE DISPLAY WHEN THE DATA MODEL CHANGES
     private pathXMiniGame game;
     
+    private ArrayList<pathXLevel> levels;
+    
+    // THE GAME SPEED
     private int gameSpeed;
     
     public pathXDataModel(pathXMiniGame initGame)
     {
         game = initGame;
+        levels = new ArrayList<pathXLevel>();
+    }
+    
+    public Iterator getLevelsIterator()
+    {
+        return levels.iterator();
     }
     
     // ACCESSOR METHODS
@@ -26,12 +37,18 @@ public class pathXDataModel extends MiniGameDataModel
         return gameSpeed;
     }
     
+    // MUTATOR METHODS
+    public void setGameSpeed(int initGameSpeed)
+    {
+        gameSpeed = initGameSpeed;
+    }
+    
     /**
      * This method provides a custom game response for handling mouse clicks on
      * the game screen. We'll use this to close game dialogs as well as to
      * listen for mouse clicks on grid cells.
      *
-     * @param game The Sorting Hat game.
+     * @param game The pathX game.
      *
      * @param x The x-axis pixel location of the mouse click.
      *

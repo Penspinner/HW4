@@ -1,0 +1,26 @@
+Washington Bank rob 6
+-Seattle Bank
+-Washington State Bank
+-Columbia Bank
+
+Montana countryside mansion rob 8
+-crib 0
+-crib 1
+-crib 2
+
+California casino rob 10
+-Eagle Mountain Casino
+-Thunder Valley Casino
+-Commerce Casino
+
+Texas Chainsaw Massacre 12
+-Bellamar Hotel massacre
+-One Shell Plaza massacre
+-JP Morgan Chase massacre
+
+Disney Amusement Park rob 14
+-Epcot Amusement Park
+-Typhoon Lagoon
+-Magic Kingdom
+
+New York 18

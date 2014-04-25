@@ -1,6 +1,5 @@
 package pathX.ui;
 
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -14,8 +13,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.TreeMap;
-import java.util.Vector;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.sampled.LineUnavailableException;
@@ -28,7 +25,6 @@ import mini_game.Viewport;
 import pathX.data.pathXDataModel;
 import pathX.data.pathXRecord;
 import pathX.file.pathXFileManager;
-import pathX.pathX;
 import pathX.pathX.pathXPropertyType;
 import static pathX.pathXConstants.*;
 import properties_manager.PropertiesManager;
@@ -53,6 +49,12 @@ public class pathXMiniGame extends MiniGame
     
     // HANDLES GAME SPECIALS
     private pathXSpecialsHandler specialsHandler;
+    
+    // HANDLES THE SCREEN SWITCHES
+    private pathXScreenSwitcher screenSwitcher;
+    
+    // SHOULD RENDER THE GAME VIEW
+    private pathXGamePanel gamePanel;
     
     // THE SCREEN CURRENTLY BEING PLAYED
     private String currentScreenState;
@@ -115,6 +117,26 @@ public class pathXMiniGame extends MiniGame
     {
         return specialsHandler;
     }
+    
+    /**
+     * Accessor method for getting the application's screen switcher.
+     * 
+     * @return 
+     */
+    public pathXScreenSwitcher getScreenSwitcher()
+    {
+        return screenSwitcher;
+    }
+    
+    /**
+     * Accessor method for getting the game panel.
+     * 
+     * @return 
+     */
+    public pathXGamePanel getGamePanel()
+    {
+        return gamePanel;
+    }
 
     /**
      * Used for testing to see if the current screen state matches
@@ -162,215 +184,15 @@ public class pathXMiniGame extends MiniGame
     }
     
     /**
-     * This method switches the application to the level select screen, making
-     * all the appropriate UI controls visible & invisible.
+     * Sets the current screen state
+     * 
+     * @param initCurrentScreenState the current screen state
      */
-    public void switchToLevelSelectScreen()
+    public void setCurrentScreenState(String initCurrentScreenState)
     {
-        if (isCurrentScreenState(GAME_SCREEN_STATE))
-        {
-            guiDecor.get(INFO_DIALOG_BOX_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-            guiButtons.get(CLOSE_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-            guiButtons.get(CLOSE_BUTTON_TYPE).setEnabled(false);
-            guiButtons.get(PAUSE_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-            guiButtons.get(PAUSE_BUTTON_TYPE).setEnabled(false);
-            guiButtons.get(HOME_BUTTON_TYPE).setX(HOME_BUTTON_X);
-            guiButtons.get(HOME_BUTTON_TYPE).setY(0);
-            guiButtons.get(EXIT_BUTTON_TYPE).setX(EXIT_BUTTON_X);
-            guiButtons.get(EXIT_BUTTON_TYPE).setY(0);
-        } 
-        
-        // CHANGE THE BACKGROUND
-        guiDecor.get(BACKGROUND_TYPE).setState(LEVEL_SELECT_SCREEN_STATE);
-        //guiDecor.get(MAP_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
-        
-        currentScreenState = LEVEL_SELECT_SCREEN_STATE;
-        
-        // DEACTIVATE ALL MENU CONTROLS
-        disableMenuButtons();
-        
-        // ACTIVATE THE HOME BUTTON
-        guiButtons.get(HOME_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
-        guiButtons.get(HOME_BUTTON_TYPE).setEnabled(true);
-        guiButtons.get(SCROLL_UP_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
-        guiButtons.get(SCROLL_UP_BUTTON_TYPE).setEnabled(true);
-        guiButtons.get(SCROLL_DOWN_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
-        guiButtons.get(SCROLL_DOWN_BUTTON_TYPE).setEnabled(true);
-        guiButtons.get(SCROLL_LEFT_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
-        guiButtons.get(SCROLL_LEFT_BUTTON_TYPE).setEnabled(true);
-        guiButtons.get(SCROLL_RIGHT_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
-        guiButtons.get(SCROLL_RIGHT_BUTTON_TYPE).setEnabled(true);
-        //guiButtons.get(LOCATION_BUTTON_TYPE).setEnabled(true);
+        currentScreenState = initCurrentScreenState;
     }
     
-    /**
-     * This method switches the application to the game screen, making
-     * all the appropriate UI controls visible & invisible.
-     */
-    public void switchToSettingsScreen()
-    {
-        // CHANGE THE BACKGROUND
-        guiDecor.get(BACKGROUND_TYPE).setState(SETTINGS_SCREEN_STATE);
-        
-        currentScreenState = SETTINGS_SCREEN_STATE;
-        
-        // DEACTIVATE ALL MENU CONTROLS
-        disableMenuButtons();
-        
-        // ACTIVATE THE HOME BUTTON
-        guiButtons.get(HOME_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
-        guiButtons.get(HOME_BUTTON_TYPE).setEnabled(true);
-        
-        // SET THE STATE OF THE MUTE BOXES
-        if (soundMuted)
-        {
-            guiButtons.get(SOUND_MUTE_BOX_BUTTON_TYPE).setState(pathXTileState.SELECTED_STATE.toString());
-            guiButtons.get(SOUND_MUTE_BOX_BUTTON_TYPE).setEnabled(true);
-        } else
-        {
-            guiButtons.get(SOUND_MUTE_BOX_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
-            guiButtons.get(SOUND_MUTE_BOX_BUTTON_TYPE).setEnabled(true);
-        }
-        if (musicMuted)
-        {
-            guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE).setState(pathXTileState.SELECTED_STATE.toString());
-            guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE).setEnabled(true);
-        } else
-        {
-            guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
-            guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE).setEnabled(true);
-        }
-        guiDecor.get(GAME_SPEED_SLIDER_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
-        guiDecor.get(GAME_SPEED_SLIDER_TYPE).setEnabled(true);
-    }
-    
-    /**
-     * This method switches the application to the game screen, making
-     * all the appropriate UI controls visible & invisible.
-     */
-    public void switchToGameScreen()
-    {
-        // CHANGE THE BACKGROUND
-        guiDecor.get(BACKGROUND_TYPE).setState(GAME_SCREEN_STATE);
-        guiDecor.get(MAP_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-        
-        currentScreenState = GAME_SCREEN_STATE;
-        
-        guiButtons.get(LOCATION_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-        
-        guiDecor.get(INFO_DIALOG_BOX_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
-        guiButtons.get(PAUSE_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
-        guiButtons.get(PAUSE_BUTTON_TYPE).setEnabled(true);
-        guiButtons.get(CLOSE_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
-        guiButtons.get(CLOSE_BUTTON_TYPE).setEnabled(true);
-        guiButtons.get(HOME_BUTTON_TYPE).setX(40);
-        guiButtons.get(HOME_BUTTON_TYPE).setY(100);
-        guiButtons.get(EXIT_BUTTON_TYPE).setX(83);
-        guiButtons.get(EXIT_BUTTON_TYPE).setY(100);
-    }
-    
-    /**
-     * This method switches the application to the game screen, making
-     * all the appropriate UI controls visible & invisible.
-     */
-    public void switchToMenuScreen()
-    {
-        // CHANGE THE BACKGROUND
-        guiDecor.get(BACKGROUND_TYPE).setState(MENU_SCREEN_STATE);
-        
-        // DISABLE DECORATIONS OR BUTTONS DEPENDING ON SCREEN FOR EFFICIENCY
-        if (isCurrentScreenState(SETTINGS_SCREEN_STATE))
-        {
-            guiButtons.get(SOUND_MUTE_BOX_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-            guiButtons.get(SOUND_MUTE_BOX_BUTTON_TYPE).setEnabled(false);
-            guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-            guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE).setEnabled(false);
-            guiDecor.get(GAME_SPEED_SLIDER_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-            guiDecor.get(GAME_SPEED_SLIDER_TYPE).setEnabled(false);
-        } else if (isCurrentScreenState(LEVEL_SELECT_SCREEN_STATE))
-        {
-            guiDecor.get(MAP_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-            guiButtons.get(LOCATION_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-            guiButtons.get(LOCATION_BUTTON_TYPE).setEnabled(false);
-            disableScrollButtons();
-        } else if (isCurrentScreenState(GAME_SCREEN_STATE))
-        {
-            guiDecor.get(INFO_DIALOG_BOX_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-            guiButtons.get(CLOSE_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-            guiButtons.get(CLOSE_BUTTON_TYPE).setEnabled(false);
-            guiButtons.get(PAUSE_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-            guiButtons.get(PAUSE_BUTTON_TYPE).setEnabled(false);
-            guiButtons.get(HOME_BUTTON_TYPE).setX(HOME_BUTTON_X);
-            guiButtons.get(HOME_BUTTON_TYPE).setY(0);
-            guiButtons.get(EXIT_BUTTON_TYPE).setX(EXIT_BUTTON_X);
-            guiButtons.get(EXIT_BUTTON_TYPE).setY(0);
-            disableScrollButtons();
-        } else if (isCurrentScreenState(HELP_SCREEN_STATE))
-        {
-            guiDecor.get(HELP_DESCRIPTION_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-        }
-        
-        // DEACTIVATE THE HOME BUTTON
-        guiButtons.get(HOME_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-        guiButtons.get(HOME_BUTTON_TYPE).setEnabled(false);
-        
-        currentScreenState = MENU_SCREEN_STATE;
-        
-        // ACTIVATE THE MENU CONTROLS
-        guiButtons.get(PLAY_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
-        guiButtons.get(PLAY_BUTTON_TYPE).setEnabled(true);
-        guiButtons.get(RESET_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
-        guiButtons.get(RESET_BUTTON_TYPE).setEnabled(true);
-        guiButtons.get(SETTINGS_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
-        guiButtons.get(SETTINGS_BUTTON_TYPE).setEnabled(true);
-        guiButtons.get(HELP_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
-        guiButtons.get(HELP_BUTTON_TYPE).setEnabled(true);
-    }
-    
-    /**
-     * This method switches the application to the game screen, making
-     * all the appropriate UI controls visible & invisible.
-     */
-    public void switchToHelpScreen()
-    {
-        // CHANGE THE BACKGROUND
-        guiDecor.get(BACKGROUND_TYPE).setState(HELP_SCREEN_STATE);
-        guiDecor.get(HELP_DESCRIPTION_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
-        
-        currentScreenState = HELP_SCREEN_STATE;
-        
-        // DEACTIVATE ALL MENU CONTROLS
-        disableMenuButtons();
-        
-        // ACTIVATE THE HOME BUTTON
-        guiButtons.get(HOME_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
-        guiButtons.get(HOME_BUTTON_TYPE).setEnabled(true);
-    }
-    
-    public void disableMenuButtons()
-    {
-        // DEACTIVATE ALL MENU CONTROLS
-        guiButtons.get(PLAY_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-        guiButtons.get(PLAY_BUTTON_TYPE).setEnabled(false);
-        guiButtons.get(RESET_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-        guiButtons.get(RESET_BUTTON_TYPE).setEnabled(false);
-        guiButtons.get(SETTINGS_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-        guiButtons.get(SETTINGS_BUTTON_TYPE).setEnabled(false);
-        guiButtons.get(HELP_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-        guiButtons.get(HELP_BUTTON_TYPE).setEnabled(false);
-    }
-    
-    public void disableScrollButtons()
-    {
-        guiButtons.get(SCROLL_UP_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-        guiButtons.get(SCROLL_UP_BUTTON_TYPE).setEnabled(false);
-        guiButtons.get(SCROLL_DOWN_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-        guiButtons.get(SCROLL_DOWN_BUTTON_TYPE).setEnabled(false);
-        guiButtons.get(SCROLL_LEFT_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-        guiButtons.get(SCROLL_LEFT_BUTTON_TYPE).setEnabled(false);
-        guiButtons.get(SCROLL_RIGHT_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-        guiButtons.get(SCROLL_RIGHT_BUTTON_TYPE).setEnabled(false);
-    }
     
     @Override
     /**
@@ -442,6 +264,9 @@ public class pathXMiniGame extends MiniGame
         // LOAD THE PLAYER'S RECORD FROM A FILE
         
         
+        // INIT OUR SCREEN SWITCHER
+        screenSwitcher = new pathXScreenSwitcher(this);
+        
         // INIT OUR DATA MANAGER
         data = new pathXDataModel(this);
     }
@@ -467,6 +292,7 @@ public class pathXMiniGame extends MiniGame
         
         // CONSTRUCT THE PANEL WHERE WE'LL DRAW EVERYTHING
         canvas = new pathXPanel(this, (pathXDataModel) data);
+        //canvas.add(new pathXGamePanel(this));
         
         // LOAD THE BACKGROUNDS, WHICH ARE GUI DECOR
         currentScreenState = MENU_SCREEN_STATE;
@@ -606,16 +432,27 @@ public class pathXMiniGame extends MiniGame
         s = new Sprite(sT, PAUSE_BUTTON_X, PAUSE_BUTTON_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
         guiButtons.put(PAUSE_BUTTON_TYPE, s);
         
-        // ADD THE LOCATION WITH STATUS
-        sT = new SpriteType(LOCATION_BUTTON_TYPE);
-        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_LOCKED_LOCATION));
-        sT.addState(pathXTileState.LOCKED_STATE.toString(), img);
-        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_SUCCESSFUL_LOCATION));
-        sT.addState(pathXTileState.SUCCESSFUL_STATE.toString(), img);
-        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_UNSUCCESSFUL_LOCATION));
-        sT.addState(pathXTileState.UNSUCCESSFUL_STATE.toString(), img);
-        s = new Sprite(sT, 150, 120, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
-        guiButtons.put(LOCATION_BUTTON_TYPE, s);
+        // ADD THE LEVELS WITH STATUS
+        for (int i = 0; i < 2; i++)
+        {
+            sT = new SpriteType(LEVEL_BUTTON_TYPE);
+            img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_LOCKED_LOCATION));
+            sT.addState(pathXTileState.LOCKED_STATE.toString(), img);
+            img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_SUCCESSFUL_LOCATION));
+            sT.addState(pathXTileState.SUCCESSFUL_STATE.toString(), img);
+            img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_UNSUCCESSFUL_LOCATION));
+            sT.addState(pathXTileState.UNSUCCESSFUL_STATE.toString(), img);
+            s = new Sprite(sT, LEVEL_X_COORDINATES[i], LEVEL_Y_COORDINATES[i], 0, 0, pathXTileState.INVISIBLE_STATE.toString());
+            // ADD THE LISTENER NOW SO THAT WE DON'T HAVE TO ADD IT LATER
+            s.setActionListener(new ActionListener()
+            {
+                public void actionPerformed(ActionEvent e)
+                {
+                    eventHandler.respondToLevelSelectRequest();
+                }
+            });
+            guiButtons.put(LEVEL_BUTTON_TYPE + (i + 1), s);
+        }
         
         // ADD THE CLOSE BUTTON
         sT = new SpriteType(CLOSE_BUTTON_TYPE);
@@ -774,14 +611,22 @@ public class pathXMiniGame extends MiniGame
             }
         });
         
-        guiButtons.get(LOCATION_BUTTON_TYPE).setActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                eventHandler.respondToLevelSelectRequest();
-            }
-        });
+        Iterator i = guiButtons.keySet().iterator();
+//        while(i.hasNext())
+//        {
+//            String level = (String) i.next();
+//            if (level.contains(LEVEL_BUTTON_TYPE))
+//            {
+//            level.setActionListener(new ActionListener()
+//            {
+//                @Override
+//                public void actionPerformed(ActionEvent e)
+//                {
+//                    eventHandler.respondToLevelSelectRequest();
+//                }
+//            });
+//            }
+//        }
         
         guiButtons.get(CLOSE_BUTTON_TYPE).setActionListener(new ActionListener()
         {

@@ -122,6 +122,7 @@ public class pathX
         SONG_CUE_GAME_SCREEN,
         
         // MENU BUTTONS
+        LEVEL_OPTIONS,
         MENU_BUTTON_OPTIONS,
         MENU_MOUSE_OVER_OPTIONS,
     }

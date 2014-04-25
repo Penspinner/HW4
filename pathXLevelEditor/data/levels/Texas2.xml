@@ -35,12 +35,13 @@
           <road int_id1="6" int_id2="11" one_way="false" speed_limit="60"/>
           <road int_id1="7" int_id2="10" one_way="false" speed_limit="30"/>
           <road int_id1="8" int_id2="5" one_way="true" speed_limit="10"/>
-          <road int_id1="6" int_id2="9" one_way="false" speed_limit="30"/>
+          <road int_id1="6" int_id2="9" one_way="true" speed_limit="30"/>
+          <road int_id1="2" int_id2="5" one_way="true" speed_limit="30"/>
      </roads>
      <start_intersection id="0" image="TexasStart2.png"/>
      <destination_intersection id="1" image="Safehouse.png"/>
      <money amount="300"/>
      <police num="2"/>
      <bandits num="2"/>
-     <zombies num="4"/>
+     <zombies num="3"/>
 </level>

@@ -18,6 +18,8 @@ public class pathXConstants
     public static final String PROPERTIES_FILE_NAME = "properties.xml";
     public static final String PROPERTIES_SCHEMA_FILE_NAME = "properties_schema.xsd";    
     public static final String PATH_DATA = "./data/";
+    public static final String LEVELS_PATH = PATH_DATA + "./path_X/";
+    public static final String LEVEL_IMAGES_PATH = "/level_images/";
     
     // TITLE OF THE APP
     public static final String APP_TITLE = "pathX";
@@ -54,7 +56,7 @@ public class pathXConstants
     public static final String SCROLL_LEFT_BUTTON_TYPE = "SCROLL_LEFT_BUTTON_TYPE";
     public static final String SCROLL_RIGHT_BUTTON_TYPE = "SCROLL_RIGHT_BUTTON_TYPE";
     public static final String PAUSE_BUTTON_TYPE = "PAUSE_BUTTON_TYPE";
-    public static final String LOCATION_BUTTON_TYPE = "LOCATION_BUTTON_TYPE";
+    public static final String LEVEL_BUTTON_TYPE = "LEVEL_BUTTON_TYPE";
     
     // SETTINGS BUTTONS
     public static final String SOUND_MUTE_BOX_BUTTON_TYPE = "SOUND_MUTE_BOX_TYPE";
@@ -106,6 +108,10 @@ public class pathXConstants
     public static final int GAME_SPEED_SLIDER_X = 450;
     public static final int GAME_SPEED_SLIDER_Y = 370;
     
+    // COORDINATES OF THE LEVELS
+    public static final int[] LEVEL_X_COORDINATES = {150,200};
+    public static final int[] LEVEL_Y_COORDINATES = {120,130};
+    
     // HELP SCREEN OFFSET AND DESCRIPTION
     public static final int HELP_DESCRIPTION_X = 50;
     public static final int HELP_DESCRIPTION_Y = 95;
@@ -134,6 +140,71 @@ public class pathXConstants
     // COLORS FOR RENDERING TEXT
     public static final Color COLOR_TEXT = Color.BLACK;
     
+    // DEFAULT COLORS
+    public static final Color   INT_OUTLINE_COLOR   = Color.BLACK;
+    public static final Color   HIGHLIGHTED_COLOR   = Color.YELLOW;
+    public static final Color   OPEN_INT_COLOR      = Color.GREEN;
+    public static final Color   CLOSED_INT_COLOR    = Color.RED;
+    
     // FONTS FOR DISPLAYING TEXT
     public static final Font FONT_TEXT_DISPLAY = new Font("Candara", Font.BOLD, 22);
+    
+    // AND FOR THE ROAD SPEED LIMITS
+    public static final int DEFAULT_SPEED_LIMIT = 30;
+    public static final int MIN_SPEED_LIMIT = 10;
+    public static final int MAX_SPEED_LIMIT = 100;
+    public static final int SPEED_LIMIT_STEP = 10;
+    
+    // RENDERING SETTINGS
+    public static final int INTERSECTION_RADIUS = 20;
+    public static final int INT_STROKE = 3;
+    public static final int ONE_WAY_TRIANGLE_HEIGHT = 40;
+    public static final int ONE_WAY_TRIANGLE_WIDTH = 60;
+    
+    // FOR RENDERING STATS
+    public static final Color STATS_TEXT_COLOR = Color.ORANGE;
+    public static final Font STATS_TEXT_FONT = new Font("Monospace", Font.BOLD, 16);
+    public static final String MOUSE_SCREEN_POSITION_TITLE = "Screen Mouse Position: ";
+    public static final String MOUSE_LEVEL_POSITION_TITLE = "Level Mouse Position: ";
+    public static final String VIEWPORT_POSITION_TITLE = "Viewport Position: ";
+    
+    // FOR POSITIONING THE STATS
+    public static final int STATS_X = 20;
+    public static final int STATS_Y_DIFF = 20;
+    public static final int MOUSE_SCREEN_POSITION_Y = 20;
+    public static final int MOUSE_LEVEL_POSITION_Y = MOUSE_SCREEN_POSITION_Y + STATS_Y_DIFF;
+    public static final int VIEWPORT_POSITION_Y = MOUSE_LEVEL_POSITION_Y + STATS_Y_DIFF;
+    
+    // CONSTANTS FOR LOADING DATA FROM THE XML FILES
+    // THESE ARE THE XML NODES
+    public static final String LEVEL_NODE = "level";
+    public static final String INTERSECTIONS_NODE = "intersections";
+    public static final String INTERSECTION_NODE = "intersection";
+    public static final String ROADS_NODE = "roads";
+    public static final String ROAD_NODE = "road";
+    public static final String START_INTERSECTION_NODE = "start_intersection";
+    public static final String DESTINATION_INTERSECTION_NODE = "destination_intersection";
+    public static final String MONEY_NODE = "money";
+    public static final String POLICE_NODE = "police";
+    public static final String BANDITS_NODE = "bandits";
+    public static final String ZOMBIES_NODE = "zombies";
+
+    // AND THE ATTRIBUTES FOR THOSE NODES
+    public static final String NAME_ATT = "name";
+    public static final String IMAGE_ATT = "image";
+    public static final String ID_ATT = "id";
+    public static final String X_ATT = "x";
+    public static final String Y_ATT = "y";
+    public static final String OPEN_ATT = "open";
+    public static final String INT_ID1_ATT = "int_id1";
+    public static final String INT_ID2_ATT = "int_id2";
+    public static final String SPEED_LIMIT_ATT = "speed_limit";
+    public static final String ONE_WAY_ATT = "one_way";
+    public static final String AMOUNT_ATT = "amount";
+    public static final String NUM_ATT = "num";
+    
+    // FOR NICELY FORMATTED XML OUTPUT
+    public static final String XML_INDENT_PROPERTY = "{http://xml.apache.org/xslt}indent-amount";
+    public static final String XML_INDENT_VALUE = "5";
+    public static final String YES_VALUE = "Yes";
 }

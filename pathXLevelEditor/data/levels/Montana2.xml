@@ -28,8 +28,8 @@
      </roads>
      <start_intersection id="0" image="MontanaStart2.png"/>
      <destination_intersection id="1" image="Safehouse.png"/>
-     <money amount="300"/>
+     <money amount="600"/>
      <police num="1"/>
-     <bandits num="1"/>
+     <bandits num="2"/>
      <zombies num="1"/>
 </level>

@@ -63,8 +63,12 @@ public class pathXPanel extends JPanel
             
             if (((pathXMiniGame)game).isCurrentScreenState(LEVEL_SELECT_SCREEN_STATE))
             {
-                renderMap(g2);
+                renderUSAMap(g2);
                 renderLevel(g2);
+                renderBackground(g2);
+            } else if (((pathXMiniGame)game).isCurrentScreenState(GAME_SCREEN_STATE))
+            {
+                renderLevelMap(g2);
                 renderBackground(g2);
             } else
             {
@@ -126,7 +130,7 @@ public class pathXPanel extends JPanel
     {
         // ONLY RENDER THE VISIBLE ONES
         if (!s.getState().equals(pathXTileState.INVISIBLE_STATE.toString()) &&
-            !s.getSpriteType().getSpriteTypeID().contains(LOCATION_BUTTON_TYPE) &&
+            !s.getSpriteType().getSpriteTypeID().contains(LEVEL_BUTTON_TYPE) &&
             !s.getSpriteType().getSpriteTypeID().contains(MAP_TYPE) &&
             !s.getState().equals(LEVEL_SELECT_SCREEN_STATE))
         {
@@ -171,7 +175,7 @@ public class pathXPanel extends JPanel
         //renderSprite(g, helpSprite);
     }
     
-    public void renderMap(Graphics2D g2)
+    public void renderUSAMap(Graphics2D g2)
     {
         Sprite map = game.getGUIDecor().get(MAP_TYPE);
         map.setState(pathXTileState.VISIBLE_STATE.toString());
@@ -185,42 +189,59 @@ public class pathXPanel extends JPanel
                 viewportX, viewportY, WINDOW_WIDTH + viewportX, WINDOW_HEIGHT + viewportY, null);
     }
     
+    public void renderLevelMap(Graphics2D g2)
+    {
+        
+    }
+    
     public void renderLevel(Graphics2D g2)
     {
-        Sprite location = game.getGUIButtons().get(LOCATION_BUTTON_TYPE);
-        location.setEnabled(true);
-        location.setState(pathXTileState.UNSUCCESSFUL_STATE.toString());
-        SpriteType sTLocation = location.getSpriteType();
-        Image img = sTLocation.getStateImage(location.getState());
-        Viewport viewport = ((pathXMiniGame)game).getMapViewport();
-        if (location.getY() <= 50)
-            location.setEnabled(false);
-        else
-            location.setEnabled(true);
-        g2.drawImage(img, (int) location.getX(), (int) location.getY(), sTLocation.getWidth(), sTLocation.getHeight(), null);
-        
-        
-        Iterator<pathXLevel> it = data.getLevelsIterator();
-        while (it.hasNext())
+        for (Sprite level : game.getGUIButtons().values())
         {
-            pathXLevel p = it.next();
-            if (p.getState().equals("LOCKED_STATE"))
+            if (level.getSpriteType().getSpriteTypeID().contains(LEVEL_BUTTON_TYPE))
             {
-                g2.setColor(Color.WHITE);
-            } else if (p.getState().equals("UNSUCCESSFUL_STATE"))
-            {
-                g2.setColor(Color.RED);
-            } else
-            {
-                g2.setColor(Color.GREEN);
+                level.setEnabled(true);
+                level.setState(pathXTileState.UNSUCCESSFUL_STATE.toString());
+                SpriteType sTLevel = level.getSpriteType();
+                Image img = sTLevel.getStateImage(level.getState());
+                Viewport viewport = ((pathXMiniGame)game).getMapViewport();
+                if (level.getY() <= 50)
+                    level.setEnabled(false);
+                else
+                    level.setEnabled(true);
+                g2.drawImage(img, (int) level.getX(), (int) level.getY(), sTLevel.getWidth(), sTLevel.getHeight(), null);
             }
-            g2.fill(levelCircle);
-            
-            g2.setColor(Color.BLACK);
-            Stroke s = new BasicStroke(3);
-            g2.setStroke(s);
-            g2.draw(levelCircle);
         }
+//        if (viewport.isCircleBoundingBoxInsideViewport(img.getWidth(null), img.getHeight(null), 30))
+//        g2.drawImage(img, (int) level.getX() - viewport.getViewportX(), (int) level.getY() - viewport.getViewportY(), (int) (level.getX() + level.getAABBwidth() - viewport.getViewportX()), (int) (level.getY() + level.getAABBheight() - viewport.getViewportY()), 
+//                0, 0, sTLevel.getWidth(), sTLevel.getHeight(), null);
+        
+//        Iterator<pathXLevel> it = data.getLevelsIterator();
+//        while (it.hasNext())
+//        {
+//            pathXLevel p = it.next();
+//            if (viewport.isCircleBoundingBoxInsideViewport(30, 30, 15))
+//            {
+//            if (p.getState().equals("LOCKED_STATE"))
+//            {
+//                g2.setColor(Color.WHITE);
+//            } else if (p.getState().equals("UNSUCCESSFUL_STATE"))
+//            {
+//                g2.setColor(Color.RED);
+//            } else
+//            {
+//                g2.setColor(Color.GREEN);
+//            }
+//            levelCircle.x = p.getX() - viewport.getViewportX() - 15;
+//            levelCircle.y = p.getY() - viewport.getViewportY() - 15;
+//            g2.fill(levelCircle);
+//            
+//            g2.setColor(Color.BLACK);
+//            Stroke s = new BasicStroke(3);
+//            g2.setStroke(s);
+//            g2.draw(levelCircle);
+//            }
+//        }
     }
     
     public void renderGameSpeed(Graphics2D g2)

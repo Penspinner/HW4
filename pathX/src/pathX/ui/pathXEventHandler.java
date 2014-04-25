@@ -35,7 +35,7 @@ public class pathXEventHandler
         else if (game.isCurrentScreenState(GAME_SCREEN_STATE))
         {
             game.reset();
-            game.switchToLevelSelectScreen();
+            game.getScreenSwitcher().switchToLevelSelectScreen();
             return;
         }
         // AND CLOSE THE ALL
@@ -49,11 +49,11 @@ public class pathXEventHandler
     {
         if (game.getDataModel().inProgress())
         {
-            game.switchToGameScreen();
+            game.getScreenSwitcher().switchToGameScreen();
         }
         else
         {
-            game.switchToLevelSelectScreen();
+            game.getScreenSwitcher().switchToLevelSelectScreen();
         }
     }
     
@@ -62,7 +62,7 @@ public class pathXEventHandler
      */
     public void respondToLevelSelectRequest()
     {
-        game.switchToGameScreen();
+        game.getScreenSwitcher().switchToGameScreen();
     }
     
     /**
@@ -79,7 +79,7 @@ public class pathXEventHandler
     public void respondToSettingsRequest()
     {
         if (!game.isCurrentScreenState(SETTINGS_SCREEN_STATE))
-            game.switchToSettingsScreen();
+            game.getScreenSwitcher().switchToSettingsScreen();
     }
     
     /**
@@ -88,7 +88,7 @@ public class pathXEventHandler
     public void respondToHelpRequest()
     {
         if (!game.isCurrentScreenState(HELP_SCREEN_STATE))
-            game.switchToHelpScreen();
+            game.getScreenSwitcher().switchToHelpScreen();
     }
     
     /**
@@ -96,7 +96,7 @@ public class pathXEventHandler
      */
     public void respondToHomeRequest()
     {
-        game.switchToMenuScreen();
+        game.getScreenSwitcher().switchToMenuScreen();
     }
     
     public void respondToMuteRequest(Sprite muteButton)
@@ -127,7 +127,7 @@ public class pathXEventHandler
     //        viewport.setViewportSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     //        viewport.updateViewportBoundaries();
     //        viewport.initViewportMargins();
-            Sprite node = game.getGUIButtons().get(LOCATION_BUTTON_TYPE);
+            
             switch (direction)
             {
                 case "UP":
@@ -137,7 +137,9 @@ public class pathXEventHandler
                     {
     //                    map.setY(map.getY() + SCROLL_PIXELS);
                         viewport.scroll(0, -SCROLL_PIXELS);
-                        node.setY(node.getY() + SCROLL_PIXELS);
+                        for (Sprite node : game.getGUIButtons().values())
+                            if (node.getSpriteType().getSpriteTypeID().contains(LEVEL_BUTTON_TYPE))
+                                node.setY(node.getY() + SCROLL_PIXELS);
                     }
                 } break;
 
@@ -148,7 +150,9 @@ public class pathXEventHandler
                     {
     //                    map.setY(map.getY() - SCROLL_PIXELS);
                         viewport.scroll(0, SCROLL_PIXELS);
-                        node.setY(node.getY() - SCROLL_PIXELS);
+                        for (Sprite node : game.getGUIButtons().values())
+                            if (node.getSpriteType().getSpriteTypeID().contains(LEVEL_BUTTON_TYPE))
+                                node.setY(node.getY() - SCROLL_PIXELS);
                     }
                 } break;
 
@@ -159,7 +163,9 @@ public class pathXEventHandler
                     {
     //                    map.setX(map.getX() + SCROLL_PIXELS);
                         viewport.scroll(-SCROLL_PIXELS, 0);
-                        node.setX(node.getX() + SCROLL_PIXELS);
+                        for (Sprite node : game.getGUIButtons().values())
+                            if (node.getSpriteType().getSpriteTypeID().contains(LEVEL_BUTTON_TYPE))
+                                node.setX(node.getX() + SCROLL_PIXELS);
                     }
                 } break;
 
@@ -170,7 +176,9 @@ public class pathXEventHandler
                     {
     //                    map.setX(map.getX() - SCROLL_PIXELS);
                         viewport.scroll(SCROLL_PIXELS, 0);
-                        node.setX(node.getX() - SCROLL_PIXELS);
+                        for (Sprite node : game.getGUIButtons().values())
+                            if (node.getSpriteType().getSpriteTypeID().contains(LEVEL_BUTTON_TYPE))
+                                node.setX(node.getX() - SCROLL_PIXELS);
                     }
                 } break;
             }

@@ -16,9 +16,10 @@ public class pathXConstants
     // LOADING SETTINGS FROM OUR XML FILES
     public static final String PROPERTY_TYPES_LIST = "property_types.txt";
     public static final String PROPERTIES_FILE_NAME = "properties.xml";
-    public static final String PROPERTIES_SCHEMA_FILE_NAME = "properties_schema.xsd";    
+    public static final String PROPERTIES_SCHEMA_FILE_NAME = "properties_schema.xsd";
+    public static final String LEVEL_SCHEMA = "PathXLevelSchema.xsd";
     public static final String PATH_DATA = "./data/";
-    public static final String LEVELS_PATH = PATH_DATA + "./path_X/";
+    public static final String LEVELS_PATH = PATH_DATA + "./levels/";
     public static final String LEVEL_IMAGES_PATH = "/level_images/";
     
     // TITLE OF THE APP
@@ -31,6 +32,15 @@ public class pathXConstants
     public static final String MAP_TYPE = "MAP_TYPE";
     public static final String HELP_DESCRIPTION_TYPE = "HELP_DESCRIPTION_TYPE";
     public static final String INFO_DIALOG_BOX_TYPE = "INFO_DIALOG_BOX_TYPE";
+    
+    // LEVELS
+    public static final String[] LEVEL_NAMES = 
+    {
+        "Washington0.xml",
+        "Washington1.xml",
+        "Washington2.xml",
+        "Montana0.xml"
+    };
     
     // IN GAME MENU SCREEN USER INTERFACE CONTROLS
     public static final String[] MENU_BUTTON_TYPE = {"PLAY_BUTTON_TYPE",
@@ -85,7 +95,7 @@ public class pathXConstants
     public static final int EXIT_BUTTON_X = 855;
     public static final int HOME_BUTTON_X = EXIT_BUTTON_X - 38 - MENU_BUTTON_MARGIN;
     public static final int START_BUTTON_X = 20;
-    public static final int START_BUTTON_Y = 120;
+    public static final int START_BUTTON_Y = 140;
     public static final int MAP_Y = 80;
     public static final int SCROLL_UP_BUTTON_X = 50;
     public static final int SCROLL_UP_BUTTON_Y = WINDOW_HEIGHT - 133;
@@ -107,14 +117,27 @@ public class pathXConstants
     public static final int MUSIC_MUTE_BOX_BUTTON_Y = SOUND_MUTE_BOX_BUTTON_Y + 80;
     public static final int GAME_SPEED_SLIDER_X = 450;
     public static final int GAME_SPEED_SLIDER_Y = 370;
+    public static final int DETAILS_X = 400;
+    public static final int BALANCE_Y = 30;
+    public static final int GOAL_Y = 60;
+    public static final int GOAL_MONEY = 140000;
     
     // COORDINATES OF THE LEVELS
-    public static final int[] LEVEL_X_COORDINATES = {150,200};
-    public static final int[] LEVEL_Y_COORDINATES = {120,130};
+    public static final int[] LEVEL_X_COORDINATES = {150,200,180,345,500,
+                                                    450,150,70,80,740,
+                                                    760,780,1215,1250,1230,
+                                                    1325,1350,1375,25,125};
+    public static final int[] LEVEL_Y_COORDINATES = {120,130,160,155,195,
+                                                    230,640,460,645,830,
+                                                    940,900,955,950,980,
+                                                    365,400,405,500,120};
     
     // HELP SCREEN OFFSET AND DESCRIPTION
     public static final int HELP_DESCRIPTION_X = 50;
     public static final int HELP_DESCRIPTION_Y = 95;
+    
+    // GAME VIEWPORT OFFSET
+    public static final int GAME_OFFSET = 200;
     
     // SCROLLING CONSTANT
     public static final int SCROLL_PIXELS = 5;
@@ -147,7 +170,7 @@ public class pathXConstants
     public static final Color   CLOSED_INT_COLOR    = Color.RED;
     
     // FONTS FOR DISPLAYING TEXT
-    public static final Font FONT_TEXT_DISPLAY = new Font("Candara", Font.BOLD, 22);
+    public static final Font FONT_TEXT_DISPLAY = new Font("Candara", Font.BOLD, 30);
     
     // AND FOR THE ROAD SPEED LIMITS
     public static final int DEFAULT_SPEED_LIMIT = 30;

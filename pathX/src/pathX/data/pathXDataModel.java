@@ -10,6 +10,7 @@ import mini_game.Sprite;
 import pathX.pathX.pathXPropertyType;
 import pathX.ui.pathXMiniGame;
 import static pathX.pathXConstants.*;
+import pathX.ui.pathXTileState;
 import properties_manager.PropertiesManager;
 /**
  *
@@ -21,11 +22,11 @@ public class pathXDataModel extends MiniGameDataModel
     // CAN NOTIFY IT TO UPDATE THE DISPLAY WHEN THE DATA MODEL CHANGES
     private pathXMiniGame game;
     
+    // THE CURRENT LEVEL
     private pathXLevel level;
     
-    private ArrayList<String> levels;
-    
-    private ArrayList<Sprite> levelsOnMap;
+    ArrayList<String> levelNames;
+    ArrayList<String> levelStates;
     
     PropertiesManager props = PropertiesManager.getPropertiesManager();
 
@@ -42,10 +43,6 @@ public class pathXDataModel extends MiniGameDataModel
     
     // WE'LL USE THIS WHEN WE'RE ADDING A NEW ROAD
     Intersection startRoadIntersection;
-
-    // IN CASE WE WANT TO TRACK MOVEMENTS
-    int lastMouseX;
-    int lastMouseY;    
     
     // THESE BOOLEANS HELP US KEEP TRACK OF
     // @todo DO WE NEED THESE?
@@ -54,28 +51,33 @@ public class pathXDataModel extends MiniGameDataModel
     boolean dataUpdatedSinceLastSave;
     
     // THE GAME SPEED
-    private int gameSpeed;
+    int gameSpeed;
+    int currentLevelCounter;
+    int balance;
+    int goal;
     
     public pathXDataModel(pathXMiniGame initGame)
     {
         game = initGame;
-        levels = props.getPropertyOptionsList(pathXPropertyType.LEVEL_OPTIONS);
-        levelsOnMap = new ArrayList<Sprite>();
+        level = new pathXLevel();
+        levelNames = props.getPropertyOptionsList(pathXPropertyType.LEVEL_OPTIONS);
+        levelStates = new ArrayList();
+        initLevelStates();
     }
     
     // ACCESSOR METHODS
     public pathXLevel       getLevel()                  {   return level;                   }
     public int              getGameSpeed()              {   return gameSpeed;               }
-    public ArrayList<String> getLevels()                {   return levels;                  }
-    public ArrayList<Sprite> getLevelsOnMap()           {   return levelsOnMap;             }
+    public int              getCurrentLevelCounter()    {   return currentLevelCounter;     }
+    public int              getBalance()                {   return balance;                 }
+    public ArrayList<String> getLevelNames()            {   return levelNames;              }
+    public ArrayList<String> getLevelStates()           {   return levelStates;             }
     public Image            getBackgroundImage()        {   return backgroundImage;         }
     public Image            getStartingLocationImage()  {   return startingLocationImage;   }
     public Image            getDesinationImage()        {   return destinationImage;        }
     public Intersection     getSelectedIntersection()   {   return selectedIntersection;    }
     public Road             getSelectedRoad()           {   return selectedRoad;            }
     public Intersection     getStartRoadIntersection()  {   return startRoadIntersection;   }
-//    public int              getLastMouseX()             {   return lastMouseX;              }
-//    public int              getLastMouseY()             {   return lastMouseY;              }
     public Intersection     getStartingLocation()       {   return level.startingLocation;  }
     public Intersection     getDestination()            {   return level.destination;       }
     public boolean          isDataUpdatedSinceLastSave(){   return dataUpdatedSinceLastSave;}    
@@ -89,7 +91,6 @@ public class pathXDataModel extends MiniGameDataModel
     {   return testRoad == selectedRoad;                    }
     
     // ITERATOR METHODS FOR GOING THROUGH THE GRAPH
-
     public Iterator intersectionsIterator()
     {
         ArrayList<Intersection> intersections = level.getIntersections();
@@ -101,10 +102,16 @@ public class pathXDataModel extends MiniGameDataModel
         return roads.iterator();
     }
     
-    // MUTATOR METHODS
-    public void setGameSpeed(int initGameSpeed)
+    public void initLevelStates()
     {
-        gameSpeed = initGameSpeed;
+        levelStates.add(pathXTileState.UNSUCCESSFUL_STATE.toString());
+        
+        // ALL LEVEL BUTTON STATES SHOULD BE LOCKED UNTIL THE PREVIOUS LEVEL
+        // HAS BEEN SUCCESSFULLY ROBBED
+        for (int i = 1; i < 20; i++)
+        {
+            levelStates.add(pathXTileState.LOCKED_STATE.toString());
+        }
     }
     
     /**
@@ -146,26 +153,26 @@ public class pathXDataModel extends MiniGameDataModel
      * the user may perform.
      */
 //    public void switchEditMode(PXLE_EditMode initEditMode)
-    {
-        if (levelBeingEdited)
-        {
-            // SET THE NEW EDIT MODE
-//            editMode = initEditMode;
-            
-            // UPDATE THE CURSOR
-//            view.updateCursor(editMode);
-
-            // IF WE'RE ADDING A ROAD, THEN NOTHING SHOULD BE SELECTED 
-//            if (editMode == PXLE_EditMode.ADDING_ROAD_START)
-            {
-                selectedIntersection = null;
-                selectedRoad = null;            
-            }
-            
-            // RENDER
-//            view.getCanvas().repaint();
-        }
-    }
+//    {
+//        if (levelBeingEdited)
+//        {
+//            // SET THE NEW EDIT MODE
+////            editMode = initEditMode;
+//            
+//            // UPDATE THE CURSOR
+////            view.updateCursor(editMode);
+//
+//            // IF WE'RE ADDING A ROAD, THEN NOTHING SHOULD BE SELECTED 
+////            if (editMode == PXLE_EditMode.ADDING_ROAD_START)
+//            {
+//                selectedIntersection = null;
+//                selectedRoad = null;            
+//            }
+//            
+//            // RENDER
+////            view.getCanvas().repaint();
+//        }
+//    }
 
     /**
      * Adds an intersection to the graph

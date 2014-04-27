@@ -49,7 +49,7 @@ public class pathXGamePanel extends JPanel
         // KEEP THESE FOR LATER
         game = initGame;
         data = (pathXDataModel) game.getDataModel();
-        viewport = game.getDataModel().getViewport();
+        viewport = data.getViewport();
 
         // MAKE THE RENDER OBJECTS TO BE RECYCLED
         recyclableCircle = new Ellipse2D.Double(0, 0, INTERSECTION_RADIUS * 2, INTERSECTION_RADIUS * 2);

@@ -20,7 +20,7 @@
           <road int_id1="4" int_id2="3" one_way="false" speed_limit="10"/>
      </roads>
      <start_intersection id="0" image="WashingtonStart1.png"/>
-     <destination_intersection id="1" image="Destination.png"/>
+     <destination_intersection id="1" image="Safehouse.png"/>
      <money amount="200"/>
      <police num="1"/>
      <bandits num="1"/>

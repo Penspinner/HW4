@@ -10,6 +10,10 @@
         <property name="IMAGE_BACKGROUND_SETTINGS"              value="./pathX/BackgroundSettings.png"></property>
         <property name="IMAGE_BACKGROUND_HELP"                  value="./pathX/BackgroundHelp.png"></property>
         <property name="IMAGE_BACKGROUND_LEVEL_SELECT"          value="./pathX/BackgroundLevelSelect.png"></property>
+        <property name="IMAGE_PLAYER"                           value="./pathX/Player.png"></property>
+        <property name="IMAGE_ZOMBIE"                           value="./pathX/Zombie.png"></property>
+        <property name="IMAGE_BANDIT"                           value="./pathX/Bandit.png"></property>
+        <property name="IMAGE_POLICE"                           value="./pathX/Police.png"></property>
         <property name="IMAGE_MAP_USA"                          value="./pathX/MapUSA.png"></property>
         <property name="IMAGE_HELP_DESCRIPTION"                 value="./pathX/HelpDescription.png"></property>
         <property name="IMAGE_LOCKED_LOCATION"                  value="./pathX/LockedLocation.png"></property>
@@ -55,15 +59,28 @@
             
         </property_options>
         <property_options name="LEVEL_OPTIONS">
-            <option>./levels/Washington0.xml</option>
-            <option>./levels/Washington1.xml</option>
-            <!-- <option>./levels/Washington2.xml</option>
-            <option>./levels/Montana0.xml</option>
-            <option>./levels/Montana1.xml</option>
-            <option>./levels/Montana2.xml</option> -->
+            <option>Washington0.xml</option>
+            <option>Washington1.xml</option>
+            <option>Washington2.xml</option>
+            <option>Montana0.xml</option>
+            <option>Montana1.xml</option>
+            <option>Montana2.xml</option>
+            <option>California0.xml</option>
+            <option>California1.xml</option>
+            <option>California2.xml</option>
+            <option>Texas0.xml</option>
+            <option>Texas1.xml</option>
+            <option>Texas2.xml</option>
+            <option>Florida0.xml</option>
+            <option>Florida1.xml</option>
+            <option>Florida2.xml</option>
+            <option>NewYork0.xml</option>
+            <option>NewYork1.xml</option>
+            <option>NewYork2.xml</option>
+            <option>Zucker.xml</option>
+            <option>Gates.xml</option>
         </property_options>
         <property_options name="LEVEL_IMAGE_OPTIONS">
-            <option></option>
         </property_options>
         <property_options name="MENU_BUTTON_OPTIONS">
             <option>./pathX/ButtonPlayGame.png</option>

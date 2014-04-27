@@ -1,6 +1,8 @@
 package pathX.ui;
 
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.util.ArrayList;
 import mini_game.Sprite;
 import mini_game.Viewport;
 import pathX.data.pathXDataModel;
@@ -45,7 +47,7 @@ public class pathXEventHandler
     /**
      * Called when the user clicks the Play button.
      */
-    public void respondToPlayGameRequest()
+    public void respondToPlayButtonRequest()
     {
         if (game.getDataModel().inProgress())
         {
@@ -60,15 +62,30 @@ public class pathXEventHandler
     /**
      * Called when the user clicks on a level.
      */
-    public void respondToLevelSelectRequest()
+    public void respondToLevelSelectRequest(pathXTile px)
     {
-        game.getScreenSwitcher().switchToGameScreen();
+//        ArrayList<String> levels = ((pathXDataModel)game.getDataModel()).getLevelNames();
+//        String levelName = "";
+//        for (String l : levels)
+//        {
+//            if (px.getSpriteType().getSpriteTypeID().contains(l))
+//            {
+//                levelName = px.getSpriteType().getSpriteTypeID().substring(17);
+//            }
+//        }
+        File file = new File(LEVELS_PATH + px.getName());
+        boolean loadedSuccessfully = game.getXMLLevelIO().loadLevel(file, ((pathXDataModel)game.getDataModel()));
+        if (loadedSuccessfully)
+        {
+            game.initGameViewport();
+            game.getScreenSwitcher().switchToGameScreen();
+        }
     }
     
     /**
      * Called when the user clicks on the reset button.
      */
-    public void respondToResetGameRequest()
+    public void respondToResetButtonRequest()
     {
         game.reset();
     }
@@ -76,7 +93,7 @@ public class pathXEventHandler
     /**
      * Called when the user clicks on the settings button.
      */
-    public void respondToSettingsRequest()
+    public void respondToSettingsButtonRequest()
     {
         if (!game.isCurrentScreenState(SETTINGS_SCREEN_STATE))
             game.getScreenSwitcher().switchToSettingsScreen();
@@ -85,7 +102,7 @@ public class pathXEventHandler
     /**
      * Called when the user clicks on the help button.
      */
-    public void respondToHelpRequest()
+    public void respondToHelpButtonRequest()
     {
         if (!game.isCurrentScreenState(HELP_SCREEN_STATE))
             game.getScreenSwitcher().switchToHelpScreen();
@@ -94,12 +111,17 @@ public class pathXEventHandler
     /**
      * Called when the user clicks on the Home button.
      */
-    public void respondToHomeRequest()
+    public void respondToHomeButtonRequest()
     {
         game.getScreenSwitcher().switchToMenuScreen();
     }
     
-    public void respondToMuteRequest(Sprite muteButton)
+    /**
+     * Called when the user clicks on a mute button.
+     * 
+     * @param muteButton 
+     */
+    public void respondToMuteButtonRequest(Sprite muteButton)
     {
         if (!muteButton.getState().equals(pathXTileState.SELECTED_STATE.toString()))
         {
@@ -107,6 +129,25 @@ public class pathXEventHandler
         } else
         {
             muteButton.setState(pathXTileState.VISIBLE_STATE.toString());
+        }
+    }
+    
+    public void respondToPauseButtonRequest()
+    {
+        if (game.isCurrentScreenState(GAME_SCREEN_STATE))
+        {
+            
+        }
+    }
+    
+    /**
+     * Called when the user clicks on the start button in game screen.
+     */
+    public void respondToStartButtonRequest()
+    {
+        if (game.isCurrentScreenState(GAME_SCREEN_STATE))
+        {
+            
         }
     }
     
@@ -118,70 +159,107 @@ public class pathXEventHandler
      */
     public void scroll(String direction)
     {
-        if (game.isCurrentScreenState(LEVEL_SELECT_SCREEN_STATE))
+        Viewport viewport = game.getMapViewport();
+        Sprite map = game.getGUIDecor().get(MAP_TYPE);        
+//        viewport.setNorthPanelHeight(80);
+//        viewport.setGameWorldSize((int) map.getAABBwidth(), (int) map.getAABBheight());
+//        viewport.setViewportSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+//        viewport.updateViewportBoundaries();
+//        viewport.initViewportMargins();
+        Viewport gameViewport = game.getGameViewport();
+        switch (direction)
         {
-            Viewport viewport = game.getMapViewport();
-            Sprite map = game.getGUIDecor().get(MAP_TYPE);        
-    //        viewport.setNorthPanelHeight(80);
-    //        viewport.setGameWorldSize((int) map.getAABBwidth(), (int) map.getAABBheight());
-    //        viewport.setViewportSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-    //        viewport.updateViewportBoundaries();
-    //        viewport.initViewportMargins();
-            
-            switch (direction)
+            case "UP":
             {
-                case "UP":
+                //if (map.getY() + WINDOW_HEIGHT - map.getAABBheight() < WINDOW_HEIGHT - map.getAABBheight() + MAP_Y)
+                if (game.isCurrentScreenState(LEVEL_SELECT_SCREEN_STATE))
                 {
-                    //if (map.getY() + WINDOW_HEIGHT - map.getAABBheight() < WINDOW_HEIGHT - map.getAABBheight() + MAP_Y)
                     if (viewport.getMinViewportY() < viewport.getViewportY())
                     {
-    //                    map.setY(map.getY() + SCROLL_PIXELS);
+                        map.setY(map.getY() + SCROLL_PIXELS);
                         viewport.scroll(0, -SCROLL_PIXELS);
                         for (Sprite node : game.getGUIButtons().values())
                             if (node.getSpriteType().getSpriteTypeID().contains(LEVEL_BUTTON_TYPE))
                                 node.setY(node.getY() + SCROLL_PIXELS);
                     }
-                } break;
-
-                case "DOWN":
+                }
+                else if (game.isCurrentScreenState(GAME_SCREEN_STATE))
                 {
-    //                if (map.getY() >= WINDOW_HEIGHT - map.getAABBheight() - 23)
-                    if (viewport.getMaxViewportY() > viewport.getViewportY())
+                    if (gameViewport.getMinViewportY() < gameViewport.getViewportY())
                     {
-    //                    map.setY(map.getY() - SCROLL_PIXELS);
+                        gameViewport.scroll(0, -SCROLL_PIXELS);
+                    }
+                }
+            } break;
+
+            case "DOWN":
+            {
+//                if (map.getY() >= WINDOW_HEIGHT - map.getAABBheight() - 23)
+                if (game.isCurrentScreenState(LEVEL_SELECT_SCREEN_STATE))
+                {
+                    if (viewport.getMaxViewportY() + NORTH_PANEL_HEIGHT > viewport.getViewportY())
+                    {
+                        map.setY(map.getY() - SCROLL_PIXELS);
                         viewport.scroll(0, SCROLL_PIXELS);
                         for (Sprite node : game.getGUIButtons().values())
                             if (node.getSpriteType().getSpriteTypeID().contains(LEVEL_BUTTON_TYPE))
                                 node.setY(node.getY() - SCROLL_PIXELS);
                     }
-                } break;
-
-                case "LEFT":
+                }
+                else if (game.isCurrentScreenState(GAME_SCREEN_STATE))
                 {
-    //                if (map.getX() + WINDOW_WIDTH - map.getAABBwidth() < WINDOW_WIDTH - map.getAABBwidth())
+                    if (gameViewport.getMaxViewportY() > gameViewport.getViewportY())
+                    {
+                        gameViewport.scroll(0, SCROLL_PIXELS);
+                    }
+                }
+            } break;
+
+            case "LEFT":
+            {
+//                if (map.getX() + WINDOW_WIDTH - map.getAABBwidth() < WINDOW_WIDTH - map.getAABBwidth())
+                if (game.isCurrentScreenState(LEVEL_SELECT_SCREEN_STATE))
+                {
                     if (viewport.getMinViewportX() < viewport.getViewportX())
                     {
-    //                    map.setX(map.getX() + SCROLL_PIXELS);
+                        map.setX(map.getX() + SCROLL_PIXELS);
                         viewport.scroll(-SCROLL_PIXELS, 0);
                         for (Sprite node : game.getGUIButtons().values())
                             if (node.getSpriteType().getSpriteTypeID().contains(LEVEL_BUTTON_TYPE))
                                 node.setX(node.getX() + SCROLL_PIXELS);
                     }
-                } break;
-
-                case "RIGHT":
+                }
+                else if (game.isCurrentScreenState(GAME_SCREEN_STATE))
                 {
-    //                if (map.getX() >= WINDOW_WIDTH - map.getAABBwidth())
+                    if (gameViewport.getMinViewportX() < gameViewport.getViewportX())
+                    {
+                        gameViewport.scroll(-SCROLL_PIXELS, 0);
+                    }
+                }
+            } break;
+
+            case "RIGHT":
+            {
+//                if (map.getX() >= WINDOW_WIDTH - map.getAABBwidth())
+                if (game.isCurrentScreenState(LEVEL_SELECT_SCREEN_STATE))
+                {
                     if (viewport.getMaxViewportX() > viewport.getViewportX())
                     {
-    //                    map.setX(map.getX() - SCROLL_PIXELS);
+                        map.setX(map.getX() - SCROLL_PIXELS);
                         viewport.scroll(SCROLL_PIXELS, 0);
                         for (Sprite node : game.getGUIButtons().values())
                             if (node.getSpriteType().getSpriteTypeID().contains(LEVEL_BUTTON_TYPE))
                                 node.setX(node.getX() - SCROLL_PIXELS);
                     }
-                } break;
-            }
+                }
+                else if (game.isCurrentScreenState(GAME_SCREEN_STATE))
+                {
+                    if (gameViewport.getMaxViewportX() + GAME_OFFSET > gameViewport.getViewportX())
+                    {
+                        gameViewport.scroll(SCROLL_PIXELS, 0);
+                    }
+                }
+            } break;
         }
     }
     
@@ -191,7 +269,8 @@ public class pathXEventHandler
     public void respondToKeyPress(int keyCode)
     {
         
-        if (game.isCurrentScreenState(LEVEL_SELECT_SCREEN_STATE))
+        if (game.isCurrentScreenState(LEVEL_SELECT_SCREEN_STATE) ||
+            game.isCurrentScreenState(GAME_SCREEN_STATE))
         {
             Sprite map = game.getGUIDecor().get(MAP_TYPE);
             

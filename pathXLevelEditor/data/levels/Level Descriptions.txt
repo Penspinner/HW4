@@ -1,26 +1,35 @@
 Washington Bank rob 6
--Seattle Bank
--Washington State Bank
--Columbia Bank
+-Seattle Bank			----	150,120
+-Washington State Bank		----	200,130
+-Columbia Bank			----	180,160
 
 Montana countryside mansion rob 8
--crib 0
--crib 1
--crib 2
+-crib 0				----	345,75
+-crib 1				----	500,115
+-crib 2				----	450,150
 
 California casino rob 10
--Eagle Mountain Casino
--Thunder Valley Casino
--Commerce Casino
+-Eagle Mountain Casino		----	150,560
+-Thunder Valley Casino		----	70,380
+-Commerce Casino		----	80,565
 
 Texas Chainsaw Massacre 12
--Bellamar Hotel massacre
--One Shell Plaza massacre
--JP Morgan Chase massacre
+-Rosewood Crescent Hotel	----	740,750
+-One Shell Plaza massacre	----	760,860
+-JP Morgan Chase massacre	----	780,820
 
 Disney Amusement Park rob 14
--Epcot Amusement Park
--Typhoon Lagoon
--Magic Kingdom
+-Epcot Amusement Park		----	1215,875
+-Typhoon Lagoon			----	1250,870
+-Magic Kingdom			----	1230,900
 
-New York 18
+
+
+New York rob 18
+-NYC Google Building		----	1325,285
+-Time Warner Center Headquarters----	1350,320
+-Verizon headquarters		----	1375,325
+
+-rob Mark Zuckerberg 20 	---- 	25,420
+-rob Bill Gates 24 		---- 	125,120
+ next to Seattle

@@ -1,5 +1,8 @@
 package pathX.ui;
 
+import java.util.Iterator;
+import mini_game.Sprite;
+import pathX.data.pathXLevel;
 import static pathX.pathXConstants.*;
 /**
  *
@@ -23,6 +26,8 @@ public class pathXScreenSwitcher
         if (game.isCurrentScreenState(GAME_SCREEN_STATE))
         {
             game.getGUIDecor().get(INFO_DIALOG_BOX_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+            game.getGUIButtons().get(START_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+            game.getGUIButtons().get(START_BUTTON_TYPE).setEnabled(false);
             game.getGUIButtons().get(CLOSE_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
             game.getGUIButtons().get(CLOSE_BUTTON_TYPE).setEnabled(false);
             game.getGUIButtons().get(PAUSE_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
@@ -103,6 +108,8 @@ public class pathXScreenSwitcher
      */
     public void switchToGameScreen()
     {
+        disableLevelButtons();
+        
         // CHANGE THE BACKGROUND
         game.getGUIDecor().get(BACKGROUND_TYPE).setState(GAME_SCREEN_STATE);
         game.getGUIDecor().get(MAP_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
@@ -112,14 +119,16 @@ public class pathXScreenSwitcher
 //        game.getGUIButtons().get(LEVEL_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
         
         game.getGUIDecor().get(INFO_DIALOG_BOX_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
+        game.getGUIButtons().get(START_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
+        game.getGUIButtons().get(START_BUTTON_TYPE).setEnabled(true);
         game.getGUIButtons().get(PAUSE_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
         game.getGUIButtons().get(PAUSE_BUTTON_TYPE).setEnabled(true);
         game.getGUIButtons().get(CLOSE_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
         game.getGUIButtons().get(CLOSE_BUTTON_TYPE).setEnabled(true);
         game.getGUIButtons().get(HOME_BUTTON_TYPE).setX(40);
-        game.getGUIButtons().get(HOME_BUTTON_TYPE).setY(100);
-        game.getGUIButtons().get(EXIT_BUTTON_TYPE).setX(83);
-        game.getGUIButtons().get(EXIT_BUTTON_TYPE).setY(100);
+        game.getGUIButtons().get(HOME_BUTTON_TYPE).setY(90);
+        game.getGUIButtons().get(EXIT_BUTTON_TYPE).setX(90);
+        game.getGUIButtons().get(EXIT_BUTTON_TYPE).setY(90);
     }
     
     /**
@@ -144,9 +153,12 @@ public class pathXScreenSwitcher
         {
             game.getGUIDecor().get(MAP_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
             disableScrollButtons();
+            disableLevelButtons();
         } else if (game.isCurrentScreenState(GAME_SCREEN_STATE))
         {
             game.getGUIDecor().get(INFO_DIALOG_BOX_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+            game.getGUIButtons().get(START_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+            game.getGUIButtons().get(START_BUTTON_TYPE).setEnabled(false);
             game.getGUIButtons().get(CLOSE_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
             game.getGUIButtons().get(CLOSE_BUTTON_TYPE).setEnabled(false);
             game.getGUIButtons().get(PAUSE_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
@@ -221,5 +233,18 @@ public class pathXScreenSwitcher
         game.getGUIButtons().get(SCROLL_LEFT_BUTTON_TYPE).setEnabled(false);
         game.getGUIButtons().get(SCROLL_RIGHT_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
         game.getGUIButtons().get(SCROLL_RIGHT_BUTTON_TYPE).setEnabled(false);
+    }
+    
+    public void disableLevelButtons()
+    {
+        Iterator<Sprite> it = game.getGUIButtons().values().iterator();
+        while (it.hasNext())
+        {
+            Sprite level = it.next();
+            if (level.getSpriteType().getSpriteTypeID().contains(LEVEL_BUTTON_TYPE))
+            {
+                level.setEnabled(false);
+            }
+        }
     }
 }

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<level image="GatesBackground.png" name="Gates">
+     <intersections>
+          <intersection id="0" open="true" x="94" y="257"/>
+          <intersection id="0" open="true" x="1415" y="1308"/>
+          <intersection id="0" open="true" x="292" y="261"/>
+          <intersection id="0" open="false" x="487" y="72"/>
+          <intersection id="0" open="false" x="745" y="847"/>
+          <intersection id="0" open="true" x="739" y="72"/>
+          <intersection id="0" open="true" x="1223" y="85"/>
+          <intersection id="0" open="true" x="1383" y="1063"/>
+          <intersection id="0" open="true" x="482" y="840"/>
+          <intersection id="0" open="true" x="485" y="450"/>
+          <intersection id="0" open="false" x="977" y="837"/>
+          <intersection id="0" open="false" x="1376" y="840"/>
+          <intersection id="0" open="false" x="748" y="649"/>
+          <intersection id="0" open="true" x="482" y="649"/>
+          <intersection id="0" open="true" x="1372" y="658"/>
+          <intersection id="0" open="true" x="742" y="454"/>
+          <intersection id="0" open="false" x="1220" y="450"/>
+          <intersection id="0" open="true" x="982" y="449"/>
+          <intersection id="0" open="true" x="1219" y="271"/>
+          <intersection id="0" open="false" x="746" y="268"/>
+          <intersection id="0" open="true" x="978" y="274"/>
+          <intersection id="0" open="true" x="977" y="72"/>
+          <intersection id="0" open="false" x="480" y="257"/>
+          <intersection id="0" open="true" x="980" y="656"/>
+          <intersection id="0" open="true" x="984" y="1056"/>
+          <intersection id="0" open="true" x="753" y="1054"/>
+     </intersections>
+     <roads>
+          <road int_id1="0" int_id2="2" one_way="false" speed_limit="30"/>
+          <road int_id1="2" int_id2="9" one_way="false" speed_limit="30"/>
+          <road int_id1="2" int_id2="22" one_way="false" speed_limit="30"/>
+          <road int_id1="3" int_id2="2" one_way="true" speed_limit="30"/>
+          <road int_id1="22" int_id2="19" one_way="true" speed_limit="30"/>
+          <road int_id1="19" int_id2="5" one_way="false" speed_limit="30"/>
+          <road int_id1="19" int_id2="15" one_way="false" speed_limit="30"/>
+          <road int_id1="15" int_id2="9" one_way="false" speed_limit="30"/>
+          <road int_id1="19" int_id2="9" one_way="false" speed_limit="30"/>
+          <road int_id1="5" int_id2="21" one_way="true" speed_limit="30"/>
+          <road int_id1="21" int_id2="6" one_way="false" speed_limit="30"/>
+          <road int_id1="18" int_id2="21" one_way="false" speed_limit="30"/>
+          <road int_id1="6" int_id2="18" one_way="true" speed_limit="30"/>
+          <road int_id1="21" int_id2="20" one_way="true" speed_limit="30"/>
+          <road int_id1="20" int_id2="17" one_way="true" speed_limit="30"/>
+          <road int_id1="17" int_id2="19" one_way="true" speed_limit="30"/>
+          <road int_id1="19" int_id2="20" one_way="true" speed_limit="30"/>
+          <road int_id1="18" int_id2="20" one_way="true" speed_limit="30"/>
+          <road int_id1="16" int_id2="17" one_way="true" speed_limit="30"/>
+          <road int_id1="17" int_id2="15" one_way="true" speed_limit="30"/>
+          <road int_id1="18" int_id2="16" one_way="true" speed_limit="30"/>
+          <road int_id1="12" int_id2="22" one_way="true" speed_limit="50"/>
+          <road int_id1="15" int_id2="12" one_way="true" speed_limit="100"/>
+          <road int_id1="12" int_id2="13" one_way="true" speed_limit="60"/>
+          <road int_id1="13" int_id2="15" one_way="true" speed_limit="20"/>
+          <road int_id1="4" int_id2="8" one_way="true" speed_limit="20"/>
+          <road int_id1="8" int_id2="13" one_way="true" speed_limit="50"/>
+          <road int_id1="4" int_id2="13" one_way="false" speed_limit="60"/>
+          <road int_id1="12" int_id2="8" one_way="true" speed_limit="40"/>
+          <road int_id1="12" int_id2="17" one_way="true" speed_limit="100"/>
+          <road int_id1="17" int_id2="23" one_way="true" speed_limit="30"/>
+          <road int_id1="10" int_id2="4" one_way="true" speed_limit="30"/>
+          <road int_id1="23" int_id2="4" one_way="true" speed_limit="30"/>
+          <road int_id1="11" int_id2="10" one_way="false" speed_limit="30"/>
+          <road int_id1="7" int_id2="1" one_way="false" speed_limit="30"/>
+          <road int_id1="25" int_id2="4" one_way="true" speed_limit="30"/>
+          <road int_id1="7" int_id2="11" one_way="false" speed_limit="30"/>
+          <road int_id1="7" int_id2="24" one_way="true" speed_limit="30"/>
+          <road int_id1="7" int_id2="10" one_way="true" speed_limit="30"/>
+          <road int_id1="24" int_id2="10" one_way="true" speed_limit="30"/>
+          <road int_id1="24" int_id2="25" one_way="true" speed_limit="30"/>
+          <road int_id1="25" int_id2="10" one_way="true" speed_limit="30"/>
+          <road int_id1="24" int_id2="4" one_way="false" speed_limit="30"/>
+          <road int_id1="14" int_id2="11" one_way="false" speed_limit="30"/>
+          <road int_id1="8" int_id2="25" one_way="true" speed_limit="30"/>
+          <road int_id1="15" int_id2="22" one_way="true" speed_limit="30"/>
+          <road int_id1="5" int_id2="3" one_way="true" speed_limit="30"/>
+          <road int_id1="4" int_id2="12" one_way="true" speed_limit="20"/>
+          <road int_id1="23" int_id2="11" one_way="true" speed_limit="30"/>
+          <road int_id1="14" int_id2="23" one_way="true" speed_limit="30"/>
+     </roads>
+     <start_intersection id="0" image="GatesStart.png"/>
+     <destination_intersection id="1" image="Boat.png"/>
+     <money amount="10000"/>
+     <police num="6"/>
+     <bandits num="6"/>
+     <zombies num="6"/>
+</level>

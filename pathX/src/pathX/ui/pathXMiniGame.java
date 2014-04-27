@@ -10,6 +10,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,6 +26,7 @@ import mini_game.Viewport;
 import pathX.data.pathXDataModel;
 import pathX.data.pathXRecord;
 import pathX.file.pathXFileManager;
+import pathX.file.pathXXMLLevelIO;
 import pathX.pathX.pathXPropertyType;
 import static pathX.pathXConstants.*;
 import properties_manager.PropertiesManager;
@@ -55,6 +57,9 @@ public class pathXMiniGame extends MiniGame
     
     // SHOULD RENDER THE GAME VIEW
     private pathXGamePanel gamePanel;
+    
+    // HANDLES THE LEVEL LOADLING
+    private pathXXMLLevelIO xmlLevelIO;
     
     // THE SCREEN CURRENTLY BEING PLAYED
     private String currentScreenState;
@@ -137,6 +142,16 @@ public class pathXMiniGame extends MiniGame
     {
         return gamePanel;
     }
+    
+    /**
+     * Accessor method for getting the XML level loader.
+     * 
+     * @return 
+     */
+    public pathXXMLLevelIO getXMLLevelIO()
+    {
+        return xmlLevelIO;
+    }
 
     /**
      * Used for testing to see if the current screen state matches
@@ -181,6 +196,11 @@ public class pathXMiniGame extends MiniGame
     public Viewport getMapViewport()
     {
         return mapViewport;
+    }
+    
+    public Viewport getGameViewport()
+    {
+        return gameViewport;
     }
     
     /**
@@ -238,12 +258,24 @@ public class pathXMiniGame extends MiniGame
     {
         Sprite map = getGUIDecor().get(MAP_TYPE);
         Viewport viewport = data.getViewport();
-        viewport.setNorthPanelHeight(80);
+        viewport.setNorthPanelHeight(NORTH_PANEL_HEIGHT);
         viewport.setGameWorldSize((int) map.getAABBwidth(), (int) map.getAABBheight());
 //        viewport.setViewportSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         viewport.updateViewportBoundaries();
         viewport.initViewportMargins();
         mapViewport = viewport;
+    }
+    
+    public void initGameViewport()
+    {
+        int levelWidth = ((pathXDataModel)data).getBackgroundImage().getWidth(null);
+        int levelHeight = ((pathXDataModel)data).getBackgroundImage().getHeight(null);
+        gameViewport = new Viewport();
+        gameViewport.setScreenSize(data.getViewport().getScreenWidth(), data.getViewport().getScreenHeight());
+        gameViewport.setGameWorldSize(levelWidth, levelHeight);
+        gameViewport.updateViewportBoundaries();
+    //    gameViewport.setViewportSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+        gameViewport.initViewportMargins();
     }
     
     /**
@@ -269,6 +301,11 @@ public class pathXMiniGame extends MiniGame
         
         // INIT OUR DATA MANAGER
         data = new pathXDataModel(this);
+        
+        gamePanel = new pathXGamePanel(this);
+        
+        // INITIALIZE THE XML LEVEL IO PARSER
+        xmlLevelIO = new pathXXMLLevelIO(new File(PATH_DATA + LEVEL_SCHEMA));
     }
     
     /**
@@ -284,6 +321,7 @@ public class pathXMiniGame extends MiniGame
         float x, y;
         SpriteType sT;
         Sprite s;
+        pathXTile px;
         
         PropertiesManager props = PropertiesManager.getPropertiesManager();
         String imgPath = props.getProperty(pathXPropertyType.PATH_IMG);
@@ -292,7 +330,7 @@ public class pathXMiniGame extends MiniGame
         
         // CONSTRUCT THE PANEL WHERE WE'LL DRAW EVERYTHING
         canvas = new pathXPanel(this, (pathXDataModel) data);
-        //canvas.add(new pathXGamePanel(this));
+//        canvas.add(gamePanel);
         
         // LOAD THE BACKGROUNDS, WHICH ARE GUI DECOR
         currentScreenState = MENU_SCREEN_STATE;
@@ -433,26 +471,37 @@ public class pathXMiniGame extends MiniGame
         guiButtons.put(PAUSE_BUTTON_TYPE, s);
         
         // ADD THE LEVELS WITH STATUS
-        for (int i = 0; i < 2; i++)
+        ArrayList<String> levels = ((pathXDataModel)data).getLevelNames();
+        ArrayList<String> levelStates = ((pathXDataModel)data).getLevelStates();
+        for (int i = 0; i < levels.size(); i++)
         {
-            sT = new SpriteType(LEVEL_BUTTON_TYPE);
+            String levelName = levels.get(i);
+            String levelState = levelStates.get(i);
+            sT = new SpriteType(LEVEL_BUTTON_TYPE + levelName);
             img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_LOCKED_LOCATION));
             sT.addState(pathXTileState.LOCKED_STATE.toString(), img);
             img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_SUCCESSFUL_LOCATION));
             sT.addState(pathXTileState.SUCCESSFUL_STATE.toString(), img);
             img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_UNSUCCESSFUL_LOCATION));
             sT.addState(pathXTileState.UNSUCCESSFUL_STATE.toString(), img);
-            s = new Sprite(sT, LEVEL_X_COORDINATES[i], LEVEL_Y_COORDINATES[i], 0, 0, pathXTileState.INVISIBLE_STATE.toString());
+            px = new pathXTile(sT, LEVEL_X_COORDINATES[i],LEVEL_Y_COORDINATES[i], 0, 0, levelState, levelName);
             // ADD THE LISTENER NOW SO THAT WE DON'T HAVE TO ADD IT LATER
-            s.setActionListener(new ActionListener()
+            px.setActionListener(new ActionListener()
             {
                 public void actionPerformed(ActionEvent e)
                 {
-                    eventHandler.respondToLevelSelectRequest();
+                    pathXTile px = (pathXTile) e.getSource();
+                    if (!px.getState().equals(pathXTileState.LOCKED_STATE.toString()))
+                        eventHandler.respondToLevelSelectRequest(px);
                 }
             });
-            guiButtons.put(LEVEL_BUTTON_TYPE + (i + 1), s);
+            guiButtons.put(levelName, px);
         }
+        
+        // ADD THE PLAYER TILE
+        sT = new SpriteType("PLAYER");
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_PLAYER));
+        px = new pathXTile(sT, 0 , 0, 0, 0, pathXTileState.INVISIBLE_STATE.toString(), "PLAYER");
         
         // ADD THE CLOSE BUTTON
         sT = new SpriteType(CLOSE_BUTTON_TYPE);
@@ -523,7 +572,7 @@ public class pathXMiniGame extends MiniGame
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-                eventHandler.respondToPlayGameRequest();
+                eventHandler.respondToPlayButtonRequest();
             }
         });
         
@@ -533,7 +582,7 @@ public class pathXMiniGame extends MiniGame
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-                eventHandler.respondToResetGameRequest();
+                eventHandler.respondToResetButtonRequest();
             }
         });
         
@@ -543,7 +592,7 @@ public class pathXMiniGame extends MiniGame
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-                eventHandler.respondToSettingsRequest();
+                eventHandler.respondToSettingsButtonRequest();
             }
         });
         
@@ -553,7 +602,7 @@ public class pathXMiniGame extends MiniGame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                eventHandler.respondToHelpRequest();
+                eventHandler.respondToHelpButtonRequest();
             }
         });
         
@@ -562,7 +611,7 @@ public class pathXMiniGame extends MiniGame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                eventHandler.respondToHomeRequest();
+                eventHandler.respondToHomeButtonRequest();
             }
         });
         
@@ -572,6 +621,15 @@ public class pathXMiniGame extends MiniGame
             public void actionPerformed(ActionEvent e)
             {
                 eventHandler.respondToExitRequest();
+            }
+        });
+        
+        guiButtons.get(START_BUTTON_TYPE).setActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                eventHandler.respondToStartButtonRequest();
             }
         });
         
@@ -643,7 +701,7 @@ public class pathXMiniGame extends MiniGame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                eventHandler.respondToMuteRequest(guiButtons.get(SOUND_MUTE_BOX_BUTTON_TYPE));
+                eventHandler.respondToMuteButtonRequest(guiButtons.get(SOUND_MUTE_BOX_BUTTON_TYPE));
                 if (soundMuted)
                     soundMuted = false;
                 else
@@ -656,7 +714,7 @@ public class pathXMiniGame extends MiniGame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                eventHandler.respondToMuteRequest(guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE));
+                eventHandler.respondToMuteButtonRequest(guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE));
                 if (musicMuted)
                     musicMuted = false;
                 else

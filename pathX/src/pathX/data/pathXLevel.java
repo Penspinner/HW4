@@ -1,6 +1,7 @@
 package pathX.data;
 
 import java.util.ArrayList;
+import pathX.ui.pathXTileState;
 
 /**
  *
@@ -10,6 +11,8 @@ public class pathXLevel
 {
     // EVERY LEVEL HAS A NAME
     String levelName;
+    
+    String state;
 
     // THE LEVEL BACKGROUND
     String startingLocationImageFileName;
@@ -25,6 +28,10 @@ public class pathXLevel
     String backgroundImageFileName;
     Intersection destination;
     String destinationImageFileName;
+    
+    // 
+    int x;
+    int y;
 
     // THE AMOUNT OF MONEY TO BE EARNED BY THE LEVEL
     int money;
@@ -59,6 +66,7 @@ public class pathXLevel
     {
         // THESE THINGS ARE KNOWN
         levelName = initLevelName;
+        state = pathXTileState.LOCKED_STATE.toString();
         backgroundImageFileName = initBackgroundImageFileName;
         startingLocationImageFileName = initStartingLocationImageFileName;
         destinationImageFileName = initDestinationImageFileName;

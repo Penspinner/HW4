@@ -17,7 +17,10 @@ import javax.swing.JPanel;
 import pathX.level_editor.model.Intersection;
 import pathX.level_editor.model.PXLE_Model;
 import static pathX.level_editor.PXLE_Constants.*;
+import pathX.level_editor.model.Bandit;
+import pathX.level_editor.model.Police;
 import pathX.level_editor.model.Road;
+import pathX.level_editor.model.Zombie;
 
 /**
  * This class does all the rendering for the level editor.
@@ -105,6 +108,9 @@ public class PXLE_Canvas extends JPanel
 
             // RENDER THE INTERSECTIONS
             renderIntersections(g2);
+            
+            // RENDER THE SPRITES
+            renderC(g2);
 
             // RENDERING STATS CAN HELP FIGURE OUT WHAT'S GOING ON
             renderStats(g2);
@@ -241,10 +247,37 @@ public class PXLE_Canvas extends JPanel
         int y2 = y1 + img.getHeight(null);
         
         // ONLY RENDER IF INSIDE THE VIEWPORT
-        if (viewport.isRectInsideViewport(x1, y1, x2, y2));
+        if (viewport.isRectInsideViewport(x1, y1, x2, y2))
         {
             g2.drawImage(img, x1 - viewport.x, y1 - viewport.y, null);
         }        
+    }
+    
+    private void renderC(Graphics2D g2)
+    {
+        Iterator<Zombie> itZ = model.zombiesIterator();
+        while (itZ.hasNext())
+        {
+            Zombie currentZombie = itZ.next();
+            Image zombieImage = model.getView().loadImage(LEVELS_PATH + "Zombie.png");
+            g2.drawImage(zombieImage, currentZombie.x - viewport.x, currentZombie.y - viewport.y, null);
+        }
+        
+        Iterator<Police> itP = model.policesIterator();
+        while (itP.hasNext())
+        {
+            Police currentPolice = itP.next();
+            Image policeImage = model.getView().loadImage(LEVELS_PATH + "Police.png");
+            g2.drawImage(policeImage, currentPolice.x - viewport.x, currentPolice.y - viewport.y, null);
+        }
+        
+        Iterator<Bandit> itB = model.banditsIterator();
+        while (itB.hasNext())
+        {
+            Bandit currentBandit = itB.next();
+            Image banditImage = model.getView().loadImage(LEVELS_PATH + "Bandit.png");
+            g2.drawImage(banditImage, currentBandit.x - viewport.x, currentBandit.y - viewport.y, null);
+        }
     }
 
     // HELPER METHOD FOR RENDERING SOME SCREEN STATS, WHICH CAN

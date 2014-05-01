@@ -13,7 +13,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.TreeMap;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.sampled.LineUnavailableException;
@@ -75,6 +77,8 @@ public class pathXMiniGame extends MiniGame
     
     // THE VIEWPORT FOR THE GAME
     private Viewport gameViewport;
+    
+    private TreeMap<String, pathXTile> guiCharacters;
     
     // ACCESSOR METHODS
         // - getPlayerRecord
@@ -203,6 +207,11 @@ public class pathXMiniGame extends MiniGame
         return gameViewport;
     }
     
+    public TreeMap<String, pathXTile> getGUICharacters()
+    {
+        return guiCharacters;
+    }
+    
     /**
      * Sets the current screen state
      * 
@@ -306,6 +315,8 @@ public class pathXMiniGame extends MiniGame
         
         // INITIALIZE THE XML LEVEL IO PARSER
         xmlLevelIO = new pathXXMLLevelIO(new File(PATH_DATA + LEVEL_SCHEMA));
+        
+        guiCharacters = new TreeMap<String, pathXTile>();
     }
     
     /**
@@ -544,6 +555,18 @@ public class pathXMiniGame extends MiniGame
         sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
         s = new Sprite(sT, GAME_SPEED_SLIDER_X, GAME_SPEED_SLIDER_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
         guiDecor.put(GAME_SPEED_SLIDER_TYPE, s);
+        
+        sT = new SpriteType(PLAYER_TYPE);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_PLAYER));
+        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
+        px = new pathXTile(sT, 0, 0, 0, 0, pathXTileState.VISIBLE_STATE.toString(), "PLAYER");
+        guiCharacters.put(PLAYER_TYPE, px);
+        
+        sT = new SpriteType(ZOMBIE_TYPE);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_ZOMBIE));
+        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
+        px = new pathXTile(sT, 0, 0, 0, 0, pathXTileState.VISIBLE_STATE.toString(), "ZOMBIE");
+        guiCharacters.put(ZOMBIE_TYPE, px);
     }
     
     /**
@@ -666,6 +689,15 @@ public class pathXMiniGame extends MiniGame
             public void actionPerformed(ActionEvent e) 
             {
                 eventHandler.scroll("RIGHT");
+            }
+        });
+        
+        guiButtons.get(PAUSE_BUTTON_TYPE).setActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                eventHandler.respondToPauseButtonRequest();
             }
         });
         

@@ -66,6 +66,21 @@ public class PXLE_KeyController implements KeyListener
             // CHANGE THE APP MODE
             model.switchEditMode(PXLE_EditMode.ADDING_ROAD_START);
         }
+        // ADD A POLICE
+        else if (ke.getKeyCode() == KeyEvent.VK_P)
+        {
+            model.switchEditMode(PXLE_EditMode.ADDING_POLICE);
+        }
+        // ADD A ZOMBIE
+        else if (ke.getKeyCode() == KeyEvent.VK_O)
+        {
+            model.switchEditMode(PXLE_EditMode.ADDING_ZOMBIE);
+        }
+        // ADD A BANDIT
+        else if (ke.getKeyCode() == KeyEvent.VK_B)
+        {
+            model.switchEditMode(PXLE_EditMode.ADDING_BANDIT);
+        }
         // ESCAPE FROM THE CURRENT EDIT OPERATION
         else if (ke.getKeyCode() == KeyEvent.VK_ESCAPE)
         {

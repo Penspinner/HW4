@@ -108,6 +108,8 @@ public class pathXPanel extends JPanel
                 renderLevelBackground(g2);
                 renderRoads(g2);
                 renderIntersections(g2);
+                renderPlayer(g2);
+                renderZombies(g2);
                 renderBackground(g2);
             } else
             {
@@ -498,5 +500,49 @@ public class pathXPanel extends JPanel
         
         // RESTORE THE OLD TRANSFORM SO EVERYTHING DOESN'T END UP ROTATED 0
         g2.setTransform(oldAt);
+    }
+    
+    // RENDERS THE PLAYER NEXT TO THE STARTING LOCATION AT FIRST
+    // THEN RENDERS ACCORDING TO USER
+    public void renderPlayer(Graphics2D g2)
+    {
+        pathXTile player = game.getGUICharacters().get(PLAYER_TYPE);
+        SpriteType sT = player.getSpriteType();
+        Image img = sT.getStateImage(player.getState());
+        Viewport gameViewport = ((pathXMiniGame)game).getGameViewport();
+        g2.drawImage(img,
+                (int) player.getX() - gameViewport.getViewportX(), 
+                (int) player.getY() - gameViewport.getViewportY(), 
+                null);
+    }
+    
+    public void renderZombies(Graphics2D g2)
+    {
+        pathXTile zombie = game.getGUICharacters().get(ZOMBIE_TYPE);
+        SpriteType sT = zombie.getSpriteType();
+        Image img = sT.getStateImage(zombie.getState());
+        Viewport gameViewport = ((pathXMiniGame)game).getGameViewport();
+        for (int i = 0; i < data.getZombies().size(); i++)
+        {
+            g2.drawImage(img, 
+                    (int) data.getZombies().get(i).getX() - gameViewport.getViewportX(), 
+                    (int) data.getZombies().get(i).getY() - gameViewport.getViewportY(), 
+                    null);
+        }
+    }
+    
+    public void renderPolice(Graphics2D g2)
+    {
+        pathXTile police = game.getGUICharacters().get(PLAYER_TYPE);
+        SpriteType sT = police.getSpriteType();
+        Image img = sT.getStateImage(police.getState());
+        Viewport gameViewport = ((pathXMiniGame)game).getGameViewport();
+        for (int i = 0; i < data.getPolice().size(); i++)
+        {
+            g2.drawImage(img, 
+                    (int) data.getPolice().get(i).getX() - gameViewport.getViewportX(), 
+                    (int) data.getPolice().get(i).getY() - gameViewport.getViewportY(), 
+                    null);
+        }
     }
 }

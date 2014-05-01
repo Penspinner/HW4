@@ -3,6 +3,7 @@ package pathX.ui;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
+import mini_game.MiniGameState;
 import mini_game.Sprite;
 import mini_game.Viewport;
 import pathX.data.pathXDataModel;
@@ -78,6 +79,8 @@ public class pathXEventHandler
         if (loadedSuccessfully)
         {
             game.initGameViewport();
+            ((pathXDataModel)game.getDataModel()).initPlayerStartingLocation();
+            ((pathXDataModel)game.getDataModel()).initZombieLocation();
             game.getScreenSwitcher().switchToGameScreen();
         }
     }
@@ -134,9 +137,14 @@ public class pathXEventHandler
     
     public void respondToPauseButtonRequest()
     {
-        if (game.isCurrentScreenState(GAME_SCREEN_STATE))
+        if (game.isCurrentScreenState(GAME_SCREEN_STATE) &&
+            game.getDataModel().isPaused())
         {
-            
+            game.getDataModel().unpause();
+        } else if (game.isCurrentScreenState(GAME_SCREEN_STATE) &&
+                game.getDataModel().isPaused())
+        {
+            game.getDataModel().pause();
         }
     }
     
@@ -147,7 +155,7 @@ public class pathXEventHandler
     {
         if (game.isCurrentScreenState(GAME_SCREEN_STATE))
         {
-            
+            game.getDataModel().setGameState(MiniGameState.IN_PROGRESS);
         }
     }
     

@@ -1,7 +1,9 @@
 package pathX.data;
 
 import java.util.ArrayList;
+import mini_game.SpriteType;
 import pathX.ui.pathXTileState;
+import pathX.ui.pathXTile;
 
 /**
  *
@@ -29,9 +31,7 @@ public class pathXLevel
     Intersection destination;
     String destinationImageFileName;
     
-    // 
-    int x;
-    int y;
+    pathXTile player;
 
     // THE AMOUNT OF MONEY TO BE EARNED BY THE LEVEL
     int money;
@@ -77,6 +77,8 @@ public class pathXLevel
         destination = new Intersection(destinationX, destinationY);
         intersections.add(destination);
         
+        // MAKE A NEW TILE FOR EACH CHARACTER
+        
         // THESE THINGS WILL BE PROVIDED DURING LEVEL EDITING
         money = 0;
         numPolice = 0;
@@ -93,6 +95,7 @@ public class pathXLevel
     public ArrayList<Road>          getRoads()                          {   return roads;                           }
     public Intersection             getStartingLocation()               {   return startingLocation;                }
     public Intersection             getDestination()                    {   return destination;                     }
+    public pathXTile                getPlayer()                         {   return player;                          }
     public int                      getMoney()                          {   return money;                           }
     public int                      getNumPolice()                      {   return numPolice;                       }
     public int                      getNumBandits()                     {   return numBandits;                      }

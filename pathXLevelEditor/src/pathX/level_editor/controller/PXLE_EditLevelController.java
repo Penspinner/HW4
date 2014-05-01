@@ -95,6 +95,21 @@ public class PXLE_EditLevelController implements MouseListener, MouseMotionListe
             // TRY ADDING THE SECOND NODE FOR A ROAD
             model.selectEndRoadIntersection(canvasX, canvasY);
         }
+        // PERHAPS THE USER WANTS TO ADD A POLICE
+        else if (model.isAddingPolice())
+        {
+            model.addPoliceAtCanvasLocation(canvasX, canvasY);
+        }
+        // PERhAPS THE USER WANTS TO ADD A ZOMBIE TO THE ROAD
+        else if (model.isAddingZombie())
+        {
+            model.addZombieAtCanvasLocation(canvasX, canvasY);
+        }
+        // PERHAPS THE USER WANTS TO ADD A BANDIT TO THE ROAD
+        else if (model.isAddingBandit())
+        {
+            model.addBanditAtCanvasLocation(canvasX, canvasY);
+        }
     }
     
     /**

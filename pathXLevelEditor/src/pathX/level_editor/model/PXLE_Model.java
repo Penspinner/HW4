@@ -31,6 +31,9 @@ public class PXLE_Model
     Image backgroundImage;
     Image startingLocationImage;
     Image destinationImage;
+    Image zombieImage;
+    Image policeImage;
+    Image banditImage;
 
     // THE SELECTED INTERSECTION OR ROAD MIGHT BE EDITED OR DELETED
     // AND IS RENDERED DIFFERENTLY
@@ -65,6 +68,11 @@ public class PXLE_Model
         viewport = new Viewport();
         levelBeingEdited = false;
         startRoadIntersection = null;
+        
+        // UPDATES THE ZOMBIE, POLICE< AND BANDIT IMAGES
+//        zombieImage = view.loadImage(LEVELS_PATH + "Zombie.png");
+//        policeImage = view.loadImage(LEVELS_PATH + "Police.png");
+//        banditImage = view.loadImage(LEVELS_PATH + "Bandit.png");
     }
 
     // ACCESSOR METHODS
@@ -76,6 +84,9 @@ public class PXLE_Model
     public Image            getBackgroundImage()        {   return backgroundImage;         }
     public Image            getStartingLocationImage()  {   return startingLocationImage;   }
     public Image            getDesinationImage()        {   return destinationImage;        }
+    public Image            getZombieImage()            {   return zombieImage;             }
+    public Image            getPoliceImage()            {   return policeImage;             }
+    public Image            getBanditImage()            {   return banditImage;             }
     public Intersection     getSelectedIntersection()   {   return selectedIntersection;    }
     public Road             getSelectedRoad()           {   return selectedRoad;            }
     public Intersection     getStartRoadIntersection()  {   return startRoadIntersection;   }
@@ -105,6 +116,21 @@ public class PXLE_Model
         ArrayList<Road> roads = level.roads;
         return roads.iterator();
     }
+    public Iterator zombiesIterator()
+    {
+        ArrayList<Zombie> zombies = level.zombies;
+        return zombies.iterator();
+    }
+    public Iterator policesIterator()
+    {
+        ArrayList<Police> polices = level.polices;
+        return polices.iterator();
+    }
+    public Iterator banditsIterator()
+    {
+        ArrayList<Bandit> bandits = level.bandits;
+        return bandits.iterator();
+    }
     
     // THESE ARE FOR TESTING WHAT EDIT MODE THE APP CURRENTLY IS IN
     public boolean isNothingSelected()      { return editMode == PXLE_EditMode.NOTHING_SELECTED; }
@@ -114,6 +140,9 @@ public class PXLE_Model
     public boolean isAddingIntersection()   { return editMode == PXLE_EditMode.ADDING_INTERSECTION; }
     public boolean isAddingRoadStart()      { return editMode == PXLE_EditMode.ADDING_ROAD_START; }
     public boolean isAddingRoadEnd()        { return editMode == PXLE_EditMode.ADDING_ROAD_END; }
+    public boolean isAddingZombie()         { return editMode == PXLE_EditMode.ADDING_ZOMBIE; }
+    public boolean isAddingPolice()         { return editMode == PXLE_EditMode.ADDING_POLICE; }
+    public boolean isAddingBandit()         { return editMode == PXLE_EditMode.ADDING_BANDIT; }
        
     // MUTATOR METHODS
 
@@ -224,6 +253,13 @@ public class PXLE_Model
         
         // AND NOW MAKE SURE IT GETS RENDERED FOR THE FIRST TIME
         view.getCanvas().repaint();
+    }
+    
+    public void updateImages()
+    {
+        zombieImage = view.loadImage(LEVELS_PATH + "Zombie.png");
+        policeImage = view.loadImage(LEVELS_PATH + "Police.png");
+        banditImage = view.loadImage(LEVELS_PATH + "Bandit.png");
     }
 
     /**
@@ -459,6 +495,81 @@ public class PXLE_Model
         int intY = canvasY + viewport.y;
         Intersection newInt = new Intersection(intX, intY);
         level.intersections.add(newInt);
+        view.getCanvas().repaint();
+    }
+    
+    public void addZombieAtCanvasLocation(int canvasX, int canvasY)
+    {
+        // FIRST MAKE SURE THE ENTIRE INTERSECTION IS INSIDE THE LEVEL
+        if ((canvasX - 17.5) < 0) return;
+        if ((canvasY - 17.5) < 0) return;
+        if ((canvasX + 17.5) > viewport.levelWidth) return;
+        if ((canvasY + 17.5) > viewport.levelHeight) return;
+        
+        // AND ONLY ADD THE INTERSECTION IF IT DOESN'T OVERLAP WITH
+        // AN EXISTING INTERSECTION
+        for(Zombie z : level.zombies)
+        {
+            double distance = calculateDistanceBetweenPoints(z.x-viewport.x, z.y-viewport.y, canvasX, canvasY);
+            if (distance < 17.5)
+                return;
+        } 
+        
+        // LET'S ADD A NEW INTERSECTION
+        int intX = canvasX + viewport.x;
+        int intY = canvasY + viewport.y;
+        Zombie newZombie = new Zombie(intX, intY);
+        level.zombies.add(newZombie);
+        view.getCanvas().repaint();
+    }
+    
+    public void addPoliceAtCanvasLocation(int canvasX, int canvasY)
+    {
+        // FIRST MAKE SURE THE ENTIRE INTERSECTION IS INSIDE THE LEVEL
+        if ((canvasX - 17.5) < 0) return;
+        if ((canvasY - 17.5) < 0) return;
+        if ((canvasX + 17.5) > viewport.levelWidth) return;
+        if ((canvasY + 17.5) > viewport.levelHeight) return;
+        
+        // AND ONLY ADD THE INTERSECTION IF IT DOESN'T OVERLAP WITH
+        // AN EXISTING INTERSECTION
+        for(Police p : level.polices)
+        {
+            double distance = calculateDistanceBetweenPoints(p.x-viewport.x, p.y-viewport.y, canvasX, canvasY);
+            if (distance < 17.5)
+                return;
+        }
+        
+        // LET'S ADD A NEW INTERSECTION
+        int intX = canvasX + viewport.x;
+        int intY = canvasY + viewport.y;
+        Police newPolice = new Police(intX, intY);
+        level.polices.add(newPolice);
+        view.getCanvas().repaint();
+    }
+    
+    public void addBanditAtCanvasLocation(int canvasX, int canvasY)
+    {
+        // FIRST MAKE SURE THE ENTIRE INTERSECTION IS INSIDE THE LEVEL
+        if ((canvasX - 17.5) < 0) return;
+        if ((canvasY - 17.5) < 0) return;
+        if ((canvasX + 17.5) > viewport.levelWidth) return;
+        if ((canvasY + 17.5) > viewport.levelHeight) return;
+        
+        // AND ONLY ADD THE INTERSECTION IF IT DOESN'T OVERLAP WITH
+        // AN EXISTING INTERSECTION
+        for(Bandit b : level.bandits)
+        {
+            double distance = calculateDistanceBetweenPoints(b.x-viewport.x, b.y-viewport.y, canvasX, canvasY);
+            if (distance < 17.5)
+                return;
+        }
+        
+        // LET'S ADD A NEW INTERSECTION
+        int intX = canvasX + viewport.x;
+        int intY = canvasY + viewport.y;
+        Bandit newBandit = new Bandit(intX, intY);
+        level.bandits.add(newBandit);
         view.getCanvas().repaint();
     }
     

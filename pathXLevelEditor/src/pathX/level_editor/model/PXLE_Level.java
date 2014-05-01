@@ -22,6 +22,11 @@ public class PXLE_Level
 
     // COMPLETE LIST OF ROADS SORTED BY STARTING INTERSECTION LOCATION LEFT TO RIGHT
     ArrayList<Road> roads;
+    
+    // COMPLETE LIST OF ZOMBIES, POLICES, AND BANDITS
+    ArrayList<Zombie> zombies;
+    ArrayList<Police> polices;
+    ArrayList<Bandit> bandits;
 
     // THE STARTING LOCATION AND DESTINATION
     Intersection startingLocation;
@@ -45,7 +50,10 @@ public class PXLE_Level
     {
         // INIT THE GRAPH DATA STRUCTURES
         intersections = new ArrayList();
-        roads = new ArrayList();         
+        roads = new ArrayList();
+        zombies = new ArrayList();
+        polices = new ArrayList();
+        bandits = new ArrayList();
     }
 
     /**
@@ -86,6 +94,9 @@ public class PXLE_Level
     public String                   getDestinationImageFileName()       {   return destinationImageFileName;        }
     public ArrayList<Intersection>  getIntersections()                  {   return intersections;                   }
     public ArrayList<Road>          getRoads()                          {   return roads;                           }
+    public ArrayList<Zombie>        getZombies()                        {   return zombies;                         }
+    public ArrayList<Police>        getPolices()                        {   return polices;                         }
+    public ArrayList<Bandit>        getBandits()                        {   return bandits;                         }
     public Intersection             getStartingLocation()               {   return startingLocation;                }
     public Intersection             getDestination()                    {   return destination;                     }
     public int                      getMoney()                          {   return money;                           }
@@ -124,6 +135,9 @@ public class PXLE_Level
         startingLocationImageFileName = "";
         intersections.clear();
         roads.clear();
+        zombies.clear();
+        polices.clear();
+        bandits.clear();
         startingLocation = null;
         backgroundImageFileName = "";
         destination = null;

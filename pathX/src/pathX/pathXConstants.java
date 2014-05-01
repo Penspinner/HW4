@@ -32,6 +32,10 @@ public class pathXConstants
     public static final String MAP_TYPE = "MAP_TYPE";
     public static final String HELP_DESCRIPTION_TYPE = "HELP_DESCRIPTION_TYPE";
     public static final String INFO_DIALOG_BOX_TYPE = "INFO_DIALOG_BOX_TYPE";
+    public static final String PLAYER_TYPE = "PLAYER_TYPE";
+    public static final String ZOMBIE_TYPE = "ZOMBIE_TYPE";
+    public static final String POLICE_TYPE = "POLICE_TYPE";
+    public static final String BANDIT_TYPE = "BANDIT_TYPE";
     
     // LEVELS
     public static final String[] LEVEL_NAMES = 

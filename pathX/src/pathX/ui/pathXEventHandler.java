@@ -31,11 +31,12 @@ public class pathXEventHandler
     public void respondToExitRequest()
     {
         // IF THE GAME IS STILL GOING ON, END IT AS A LOSS
-        if (game.getDataModel().inProgress())
-        {
-            game.getDataModel().endGameAsLoss();
-        }
-        else if (game.isCurrentScreenState(GAME_SCREEN_STATE))
+//        if (game.getDataModel().inProgress())
+//        {
+//            game.getDataModel().endGameAsLoss();
+//        }
+//        else 
+        if (game.isCurrentScreenState(GAME_SCREEN_STATE))
         {
             game.reset();
             game.getScreenSwitcher().switchToLevelSelectScreen();
@@ -50,11 +51,11 @@ public class pathXEventHandler
      */
     public void respondToPlayButtonRequest()
     {
-        if (game.getDataModel().inProgress())
-        {
-            game.getScreenSwitcher().switchToGameScreen();
-        }
-        else
+//        if (game.getDataModel().inProgress())
+//        {
+//            game.getScreenSwitcher().switchToGameScreen();
+//        }
+//        else
         {
             game.getScreenSwitcher().switchToLevelSelectScreen();
         }
@@ -155,7 +156,7 @@ public class pathXEventHandler
     {
         if (game.isCurrentScreenState(GAME_SCREEN_STATE))
         {
-            game.getDataModel().setGameState(MiniGameState.IN_PROGRESS);
+            game.getDataModel().beginGame();
         }
     }
     
@@ -189,8 +190,8 @@ public class pathXEventHandler
                         for (Sprite node : game.getGUIButtons().values())
                             if (node.getSpriteType().getSpriteTypeID().contains(LEVEL_BUTTON_TYPE))
                                 node.setY(node.getY() + SCROLL_PIXELS);
-                    }
                 }
+                    }
                 else if (game.isCurrentScreenState(GAME_SCREEN_STATE))
                 {
                     if (gameViewport.getMinViewportY() < gameViewport.getViewportY())

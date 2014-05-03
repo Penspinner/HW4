@@ -2,30 +2,38 @@
 <level image="WashingtonBackground.png" name="Washington">
      <intersections>
           <intersection id="0" open="true" x="108" y="294"/>
-          <intersection id="0" open="true" x="899" y="282"/>
-          <intersection id="0" open="false" x="413" y="532"/>
-          <intersection id="0" open="false" x="595" y="61"/>
-          <intersection id="0" open="false" x="752" y="532"/>
+          <intersection id="0" open="true" x="929" y="273"/>
+          <intersection id="0" open="true" x="413" y="532"/>
+          <intersection id="0" open="true" x="595" y="61"/>
+          <intersection id="0" open="true" x="776" y="521"/>
           <intersection id="0" open="true" x="276" y="291"/>
      </intersections>
+     <zombies_list>
+          <zombie id="0" x="712" y="360"/>
+     </zombies_list>
+     <polices_list>
+          <policee id="0" x="538" y="203"/>
+     </polices_list>
+     <bandits_list>
+          <bandit id="0" x="600" y="525"/>
+     </bandits_list>
      <roads>
-          <road int_id1="3" int_id2="1" one_way="false" speed_limit="30"/>
           <road int_id1="2" int_id2="4" one_way="false" speed_limit="30"/>
           <road int_id1="4" int_id2="1" one_way="false" speed_limit="10"/>
           <road int_id1="5" int_id2="3" one_way="true" speed_limit="30"/>
-          <road int_id1="5" int_id2="2" one_way="false" speed_limit="10"/>
           <road int_id1="0" int_id2="5" one_way="false" speed_limit="30"/>
           <road int_id1="2" int_id2="2" one_way="false" speed_limit="30"/>
           <road int_id1="5" int_id2="4" one_way="false" speed_limit="30"/>
           <road int_id1="2" int_id2="3" one_way="false" speed_limit="100"/>
-          <road int_id1="2" int_id2="1" one_way="false" speed_limit="30"/>
           <road int_id1="4" int_id2="3" one_way="false" speed_limit="100"/>
           <road int_id1="1" int_id2="5" one_way="true" speed_limit="30"/>
+          <road int_id1="1" int_id2="3" one_way="true" speed_limit="30"/>
+          <road int_id1="2" int_id2="5" one_way="true" speed_limit="30"/>
      </roads>
      <start_intersection id="0" image="WashingtonStart2.png"/>
      <destination_intersection id="1" image="Safehouse.png"/>
      <money amount="300"/>
      <police num="1"/>
      <bandits num="1"/>
-     <zombies num="2"/>
+     <zombies num="1"/>
 </level>

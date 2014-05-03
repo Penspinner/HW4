@@ -75,6 +75,8 @@ public class pathXDataModel extends MiniGameDataModel
         levelNames = props.getPropertyOptionsList(pathXPropertyType.LEVEL_OPTIONS);
         levelStates = new ArrayList();
         movingTiles = new ArrayList<pathXTile>();
+        
+        
         initLevelStates();
         initCharacterImages();
     }
@@ -146,7 +148,28 @@ public class pathXDataModel extends MiniGameDataModel
         {
             zombie.setX(level.getIntersections().get(i+2).x + GAME_OFFSET);
             zombie.setY(level.getIntersections().get(i+2).y);
+            zombie.setCurrentIntersection(level.getIntersections().get(i+2));
+            ArrayList z = generatePath(zombie.getCurrentIntersection());
+            zombie.initPath(z);
             zombies.add(zombie);
+        }
+        
+        pathXTile policee = game.getGUICharacters().get(POLICE_TYPE);
+        police = new ArrayList(level.numPolice);
+        for (int i = 0; i < level.numPolice; i++)
+        {
+            policee.setX(level.getIntersections().get(i+2).x + GAME_OFFSET);
+            policee.setY(level.getIntersections().get(i+2).y);
+            police.add(policee);
+        }
+        
+        pathXTile bandit = game.getGUICharacters().get(BANDIT_TYPE);
+        bandits = new ArrayList(level.numBandits);
+        for (int i = 0; i < level.numBandits; i++)
+        {
+            bandit.setX(level.getIntersections().get(i+2).x + GAME_OFFSET);
+            bandit.setY(level.getIntersections().get(i+2).y);
+            bandits.add(bandit);
         }
     }
     
@@ -170,7 +193,8 @@ public class pathXDataModel extends MiniGameDataModel
         // HAS BEEN SUCCESSFULLY ROBBED
         for (int i = 1; i < 20; i++)
         {
-            levelStates.add(pathXTileState.LOCKED_STATE.toString());
+            // CHANGE BACK LATER ON TO LOCKED
+            levelStates.add(pathXTileState.UNSUCCESSFUL_STATE.toString());
         }
     }
     
@@ -498,11 +522,42 @@ public class pathXDataModel extends MiniGameDataModel
     
     public Road findRoadAtTileLocation(pathXTile tile)
     {
-        for (Road r : level.roads)
+        Iterator<Road> it = level.roads.iterator();
+        Line2D.Double tempLine = new Line2D.Double();
+        while (it.hasNext())
         {
+            Road r = it.next();
+            tempLine.x1 = r.node1.x;
+            tempLine.y1 = r.node1.y;
+            tempLine.x2 = r.node2.x;
+            tempLine.y2 = r.node2.y;
+            double distance = tempLine.ptSegDist(tile.getX()+viewport.getViewportX(), tile.getY()+viewport.getViewportY());
             
+            // IS IT CLOSE ENOUGH?
+            if (distance <= INT_STROKE)
+            {
+                // SELECT IT
+                this.selectedRoad = r;
+                //this.switchEditMode(PXLE_EditMode.ROAD_SELECTED);
+                return selectedRoad;
+            }
         }
         return null;
+    }
+    
+    public ArrayList generatePath(Intersection intersection)
+    {
+        ArrayList<Intersection> path = new ArrayList();
+        
+        for (int i = 0; i < level.getIntersections().size(); i++)
+        {
+            Intersection i1 = level.getIntersections().get(i);
+            if (i1.x != intersection.x && i1.y != intersection.y)
+            {
+                path.add(i1);
+            }
+        }
+        return path;
     }
     
     /**
@@ -551,6 +606,19 @@ public class pathXDataModel extends MiniGameDataModel
             
             pathXTile player = ((pathXMiniGame)game).getGUICharacters().get(PLAYER_TYPE);
             player.update(game);
+            
+            for (pathXTile zombie : zombies)
+            {
+                zombie.update(game);
+            }
+            for (pathXTile police : police)
+            {
+                police.update(game);
+            }
+            for (pathXTile bandit : bandits)
+            {
+                bandit.update(game);
+            }
         } finally
         {
             game.endUsingData();

@@ -159,6 +159,12 @@ public class PXLE_Constants
     public static final String INTERSECTION_NODE = "intersection";
     public static final String ROADS_NODE = "roads";
     public static final String ROAD_NODE = "road";
+    public static final String ZOMBIE_LIST_NODE = "zombies_list";
+    public static final String ZOMBIE_NODE = "zombie";
+    public static final String POLICE_LIST_NODE = "polices_list";
+    public static final String POLICE_NODE2 = "policee";
+    public static final String BANDIT_LIST_NODE = "bandits_list";
+    public static final String BANDIT_NODE = "bandit";
     public static final String START_INTERSECTION_NODE = "start_intersection";
     public static final String DESTINATION_INTERSECTION_NODE = "destination_intersection";
     public static final String MONEY_NODE = "money";

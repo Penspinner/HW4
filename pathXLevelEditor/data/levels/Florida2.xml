@@ -16,6 +16,9 @@
           <intersection id="0" open="false" x="832" y="332"/>
           <intersection id="0" open="true" x="1268" y="511"/>
      </intersections>
+     <zombies_list/>
+     <polices_list/>
+     <bandits_list/>
      <roads>
           <road int_id1="0" int_id2="8" one_way="false" speed_limit="30"/>
           <road int_id1="8" int_id2="7" one_way="false" speed_limit="100"/>

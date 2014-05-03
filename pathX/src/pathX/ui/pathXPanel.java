@@ -110,6 +110,8 @@ public class pathXPanel extends JPanel
                 renderIntersections(g2);
                 renderPlayer(g2);
                 renderZombies(g2);
+                renderPolice(g2);
+                renderBandits(g2);
                 renderBackground(g2);
             } else
             {
@@ -525,15 +527,15 @@ public class pathXPanel extends JPanel
         for (int i = 0; i < data.getZombies().size(); i++)
         {
             g2.drawImage(img, 
-                    (int) data.getZombies().get(i).getX() - gameViewport.getViewportX(), 
-                    (int) data.getZombies().get(i).getY() - gameViewport.getViewportY(), 
+                    (int) data.getZombies().get(i).getX() - gameViewport.getViewportX() - 17, 
+                    (int) data.getZombies().get(i).getY() - gameViewport.getViewportY() - 17, 
                     null);
         }
     }
     
     public void renderPolice(Graphics2D g2)
     {
-        pathXTile police = game.getGUICharacters().get(PLAYER_TYPE);
+        pathXTile police = game.getGUICharacters().get(POLICE_TYPE);
         SpriteType sT = police.getSpriteType();
         Image img = sT.getStateImage(police.getState());
         Viewport gameViewport = ((pathXMiniGame)game).getGameViewport();
@@ -542,6 +544,21 @@ public class pathXPanel extends JPanel
             g2.drawImage(img, 
                     (int) data.getPolice().get(i).getX() - gameViewport.getViewportX(), 
                     (int) data.getPolice().get(i).getY() - gameViewport.getViewportY(), 
+                    null);
+        }
+    }
+    
+    public void renderBandits(Graphics2D g2)
+    {
+        pathXTile bandit = game.getGUICharacters().get(BANDIT_TYPE);
+        SpriteType sT = bandit.getSpriteType();
+        Image img = sT.getStateImage(bandit.getState());
+        Viewport gameViewport = ((pathXMiniGame)game).getGameViewport();
+        for (int i = 0; i < data.getBandits().size(); i++)
+        {
+            g2.drawImage(img, 
+                    (int) data.getBandits().get(i).getX() - gameViewport.getViewportX(), 
+                    (int) data.getBandits().get(i).getY() - gameViewport.getViewportY(), 
                     null);
         }
     }

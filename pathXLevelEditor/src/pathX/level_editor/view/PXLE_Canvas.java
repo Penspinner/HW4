@@ -260,7 +260,7 @@ public class PXLE_Canvas extends JPanel
         {
             Zombie currentZombie = itZ.next();
             Image zombieImage = model.getView().loadImage(LEVELS_PATH + "Zombie.png");
-            g2.drawImage(zombieImage, currentZombie.x - viewport.x, currentZombie.y - viewport.y, null);
+            g2.drawImage(zombieImage, currentZombie.x - viewport.x - 17, currentZombie.y - viewport.y - 17, null);
         }
         
         Iterator<Police> itP = model.policesIterator();
@@ -268,7 +268,7 @@ public class PXLE_Canvas extends JPanel
         {
             Police currentPolice = itP.next();
             Image policeImage = model.getView().loadImage(LEVELS_PATH + "Police.png");
-            g2.drawImage(policeImage, currentPolice.x - viewport.x, currentPolice.y - viewport.y, null);
+            g2.drawImage(policeImage, currentPolice.x - viewport.x - 17, currentPolice.y - viewport.y - 17, null);
         }
         
         Iterator<Bandit> itB = model.banditsIterator();
@@ -276,7 +276,7 @@ public class PXLE_Canvas extends JPanel
         {
             Bandit currentBandit = itB.next();
             Image banditImage = model.getView().loadImage(LEVELS_PATH + "Bandit.png");
-            g2.drawImage(banditImage, currentBandit.x - viewport.x, currentBandit.y - viewport.y, null);
+            g2.drawImage(banditImage, currentBandit.x - viewport.x - 17, currentBandit.y - viewport.y - 17, null);
         }
     }
 

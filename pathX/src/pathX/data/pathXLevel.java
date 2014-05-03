@@ -66,7 +66,7 @@ public class pathXLevel
     {
         // THESE THINGS ARE KNOWN
         levelName = initLevelName;
-        state = pathXTileState.LOCKED_STATE.toString();
+        state = pathXTileState.UNSUCCESSFUL_STATE.toString();
         backgroundImageFileName = initBackgroundImageFileName;
         startingLocationImageFileName = initStartingLocationImageFileName;
         destinationImageFileName = initDestinationImageFileName;

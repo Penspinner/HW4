@@ -4,6 +4,14 @@
           <intersection id="0" open="true" x="32" y="100"/>
           <intersection id="0" open="true" x="650" y="100"/>
      </intersections>
+     <zombies_list>
+          <zombie id="0" x="458" y="208"/>
+          <zombie id="0" x="392" y="205"/>
+     </zombies_list>
+     <polices_list>
+          <policee id="0" x="595" y="278"/>
+     </polices_list>
+     <bandits_list/>
      <roads/>
      <start_intersection id="0" image="DefaultStartLocation.png"/>
      <destination_intersection id="1" image="DefaultDestination.png"/>

@@ -1,8 +1,10 @@
 package pathX.ui;
 
+import java.util.ArrayList;
 import mini_game.MiniGame;
 import mini_game.Sprite;
 import mini_game.SpriteType;
+import pathX.data.Intersection;
 
 /**
  *
@@ -15,6 +17,12 @@ public class pathXTile extends Sprite
     // COORDINATES OF THE TARGETED LOCATION
     private float targetX;
     private float targetY;
+    
+    private int pathIndex;
+    
+    private ArrayList<Intersection> path;
+    
+    private Intersection currentIntersection;
     
     private boolean movingToTarget;
     /**
@@ -43,6 +51,16 @@ public class pathXTile extends Sprite
         return name;
     }
     
+    public Intersection getCurrentIntersection()
+    {
+        return currentIntersection;
+    }
+    
+    public void setCurrentIntersection(Intersection currentIntersection)
+    {
+        this.currentIntersection = currentIntersection;
+    }
+    
     public void setTarget(int initTargetX, int initTargetY)
     {
         targetX = initTargetX;
@@ -52,6 +70,18 @@ public class pathXTile extends Sprite
     public boolean isMovingToTarget()
     {
         return movingToTarget;
+    }
+    
+    public void initPath(ArrayList<Intersection> initPath)
+    {
+        path = new ArrayList(initPath.size());
+        
+        for (Intersection i : initPath)
+        {
+            path.add(i);
+        }
+        
+        setTarget(path.get(pathIndex).x, path.get(pathIndex).y);
     }
     
     public void startMovingToTarget(int maxVelocity)
@@ -80,9 +110,36 @@ public class pathXTile extends Sprite
         if ((diffY > 0) && (vY < 0)) vY *= -1;
     }
     
+    /**
+     * This method calculates the distance from this tile's current location
+     * to the target coordinates on a direct line.
+     * 
+     * @return The total distance on a direct line from where the tile is
+     * currently, to where its target is.
+     */
+    public float calculateDistanceToTarget()
+    {
+        // GET THE X-AXIS DISTANCE TO GO
+        float diffX = targetX - x;
+        
+        // AND THE Y-AXIS DISTANCE TO GO
+        float diffY = targetY - y;
+        
+        // AND EMPLOY THE PYTHAGOREAN THEOREM TO CALCULATE THE DISTANCE
+        float distance = (float)Math.sqrt((diffX * diffX) + (diffY * diffY));
+        
+        // AND RETURN THE DISTANCE
+        return distance;
+    }
+    
     @Override
     public void update(MiniGame game)
     {
+        if (calculateDistanceToTarget() < 20)
+        {
+            vX = 0;
+            vY = 0;
+        }
         super.update(game);
     }
 }

@@ -23,6 +23,9 @@ import static pathX.level_editor.PXLE_Constants.*;
 import pathX.level_editor.model.Intersection;
 import pathX.level_editor.model.PXLE_Model;
 import pathX.level_editor.model.Road;
+import pathX.level_editor.model.Zombie;
+import pathX.level_editor.model.Bandit;
+import pathX.level_editor.model.Police;
 
 /**
  * This class serves as a does the reading and writing of levels
@@ -78,6 +81,10 @@ public class PXLE_XMLLevelIO
             // THEN LET'S LOAD THE LIST OF ALL THE REGIONS
             loadIntersectionsList(doc, levelToLoad);
             ArrayList<Intersection> intersections = levelToLoad.getIntersections();
+            
+            loadZombiesList(doc, levelToLoad);
+            loadPolicesList(doc, levelToLoad);
+            loadBanditsList(doc, levelToLoad);
             
             // AND NOW CONNECT ALL THE REGIONS TO EACH OTHER
             loadRoadsList(doc, levelToLoad);
@@ -165,6 +172,75 @@ public class PXLE_XMLLevelIO
             intersections.add(newIntersection);
         }
     }
+    
+    // PRIVATE HELPER METHOD FOR LOADING ZOMBIES INTO OUR LEVEL
+    private void loadZombiesList(Document doc, PXLE_Level levelToLoad)
+    {
+        Node zombiesListNode = doc.getElementsByTagName(ZOMBIE_LIST_NODE).item(0);
+        ArrayList<Zombie> zombies = levelToLoad.getZombies();
+        
+        ArrayList<Node> zombiesList = xmlUtil.getChildNodesWithName(zombiesListNode, ZOMBIE_NODE);
+        for (int i = 0; i < zombiesList.size(); i++)
+        {
+            // GET THEIR DATA FROM THE DOC
+            Node zombieNode = zombiesList.get(i);
+            NamedNodeMap zombieAttributes = zombieNode.getAttributes();
+            String idText = zombieAttributes.getNamedItem(ID_ATT).getNodeValue();
+            String xText = zombieAttributes.getNamedItem(X_ATT).getNodeValue();
+            int x = Integer.parseInt(xText);
+            String yText = zombieAttributes.getNamedItem(Y_ATT).getNodeValue();
+            int y = Integer.parseInt(yText);
+            
+            Zombie newZombie = new Zombie(x, y);
+            zombies.add(newZombie);
+        }
+    }
+    
+    // PRIVATE HELPER METHOD FOR LOADING POLICE INTO OUR LEVEL
+    private void loadPolicesList(Document doc, PXLE_Level levelToLoad)
+    {
+        Node policeListNode = doc.getElementsByTagName(POLICE_LIST_NODE).item(0);
+        ArrayList<Police> polices = levelToLoad.getPolices();
+        
+        ArrayList<Node> policeList = xmlUtil.getChildNodesWithName(policeListNode, POLICE_NODE2);
+        for (int i = 0; i < policeList.size(); i++)
+        {
+            // GET THEIR DATA FROM THE DOC
+            Node policeNode = policeList.get(i);
+            NamedNodeMap policeAttributes = policeNode.getAttributes();
+            String idText = policeAttributes.getNamedItem(ID_ATT).getNodeValue();
+            String xText = policeAttributes.getNamedItem(X_ATT).getNodeValue();
+            int x = Integer.parseInt(xText);
+            String yText = policeAttributes.getNamedItem(Y_ATT).getNodeValue();
+            int y = Integer.parseInt(yText);
+            
+            Police newPolice = new Police(x, y);
+            polices.add(newPolice);
+        }
+    }
+    
+    // PRIVATE HELPER METHOD FOR LOADING BANDITS INTO OUR LEVEL
+    private void loadBanditsList(Document doc, PXLE_Level levelToLoad)
+    {
+        Node banditListNode = doc.getElementsByTagName(BANDIT_LIST_NODE).item(0);
+        ArrayList<Bandit> bandits = levelToLoad.getBandits();
+        
+        ArrayList<Node> banditList = xmlUtil.getChildNodesWithName(banditListNode, BANDIT_NODE);
+        for (int i = 0; i < banditList.size(); i++)
+        {
+            // GET THEIR DATA FROM THE DOC
+            Node banditNode = banditList.get(i);
+            NamedNodeMap banditAttributes = banditNode.getAttributes();
+            String idText = banditAttributes.getNamedItem(ID_ATT).getNodeValue();
+            String xText = banditAttributes.getNamedItem(X_ATT).getNodeValue();
+            int x = Integer.parseInt(xText);
+            String yText = banditAttributes.getNamedItem(Y_ATT).getNodeValue();
+            int y = Integer.parseInt(yText);
+            
+            Bandit newBandit = new Bandit(x, y);
+            bandits.add(newBandit);
+        }
+    }
 
     // PRIVATE HELPER METHOD FOR LOADING ROADS INTO OUR LEVEL
     private void loadRoadsList( Document doc, PXLE_Level levelToLoad)
@@ -245,6 +321,33 @@ public class PXLE_XMLLevelIO
                 intersectionNodeElement.setAttribute(Y_ATT,     "" + i.y);
                 intersectionNodeElement.setAttribute(OPEN_ATT,  "" + i.open);
              }
+            
+            Element zombieListElement = makeElement(doc, levelElement, ZOMBIE_LIST_NODE, "");
+            for (Zombie z : levelToSave.getZombies())
+            {
+                Element zombieElement = makeElement(doc, zombieListElement, ZOMBIE_NODE, "");
+                zombieElement.setAttribute(ID_ATT,     "" + id);
+                zombieElement.setAttribute(X_ATT,      "" + z.x);
+                zombieElement.setAttribute(Y_ATT,      "" + z.y);
+            }
+            
+            Element policeListElement = makeElement(doc, levelElement, POLICE_LIST_NODE, "");
+            for (Police p : levelToSave.getPolices())
+            {
+                Element policeElement = makeElement(doc, policeListElement, POLICE_NODE2, "");
+                policeElement.setAttribute(ID_ATT,     "" + id);
+                policeElement.setAttribute(X_ATT,      "" + p.x);
+                policeElement.setAttribute(Y_ATT,      "" + p.y);
+            }
+            
+            Element banditListElement = makeElement(doc, levelElement, BANDIT_LIST_NODE, "");
+            for (Bandit b : levelToSave.getBandits())
+            {
+                Element policeElement = makeElement(doc, banditListElement, BANDIT_NODE, "");
+                policeElement.setAttribute(ID_ATT,     "" + id);
+                policeElement.setAttribute(X_ATT,      "" + b.x);
+                policeElement.setAttribute(Y_ATT,      "" + b.y);
+            }
 
             // AND NOW ADD ALL THE ROADS
             Element roadsElement = makeElement(doc, levelElement, ROADS_NODE, "");

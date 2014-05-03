@@ -567,6 +567,18 @@ public class pathXMiniGame extends MiniGame
         sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
         px = new pathXTile(sT, 0, 0, 0, 0, pathXTileState.VISIBLE_STATE.toString(), "ZOMBIE");
         guiCharacters.put(ZOMBIE_TYPE, px);
+        
+        sT = new SpriteType(POLICE_TYPE);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_POLICE));
+        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
+        px = new pathXTile(sT, 0, 0, 0, 0, pathXTileState.VISIBLE_STATE.toString(), "POLICE");
+        guiCharacters.put(POLICE_TYPE, px);
+        
+        sT = new SpriteType(BANDIT_TYPE);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BANDIT));
+        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
+        px = new pathXTile(sT, 0, 0, 0, 0, pathXTileState.VISIBLE_STATE.toString(), "BANDIT");
+        guiCharacters.put(BANDIT_TYPE, px);
     }
     
     /**

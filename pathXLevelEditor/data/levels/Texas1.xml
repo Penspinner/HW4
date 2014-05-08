@@ -15,17 +15,17 @@
           <intersection id="0" open="false" x="756" y="103"/>
      </intersections>
      <zombies_list>
-          <zombie id="0" x="482" y="447"/>
-          <zombie id="0" x="458" y="318"/>
+          <zombie id="0" x="392" y="397"/>
+          <zombie id="0" x="791" y="522"/>
      </zombies_list>
      <polices_list>
-          <policee id="0" x="602" y="294"/>
-          <policee id="0" x="812" y="217"/>
+          <policee id="0" x="550" y="230"/>
+          <policee id="0" x="669" y="366"/>
      </polices_list>
      <bandits_list>
-          <bandit id="0" x="539" y="612"/>
-          <bandit id="0" x="804" y="490"/>
-          <bandit id="0" x="713" y="100"/>
+          <bandit id="0" x="456" y="96"/>
+          <bandit id="0" x="491" y="632"/>
+          <bandit id="0" x="879" y="345"/>
      </bandits_list>
      <roads>
           <road int_id1="0" int_id2="4" one_way="false" speed_limit="30"/>

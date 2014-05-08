@@ -2,18 +2,30 @@
 <level image="TexasBackground.png" name="Texas1">
      <intersections>
           <intersection id="0" open="true" x="124" y="218"/>
-          <intersection id="0" open="true" x="1020" y="229"/>
-          <intersection id="0" open="true" x="882" y="348"/>
+          <intersection id="0" open="true" x="1077" y="415"/>
+          <intersection id="0" open="true" x="868" y="416"/>
           <intersection id="0" open="true" x="461" y="99"/>
           <intersection id="0" open="true" x="264" y="218"/>
-          <intersection id="0" open="false" x="551" y="232"/>
-          <intersection id="0" open="false" x="671" y="370"/>
-          <intersection id="0" open="true" x="439" y="652"/>
+          <intersection id="0" open="true" x="553" y="222"/>
+          <intersection id="0" open="true" x="664" y="416"/>
+          <intersection id="0" open="true" x="311" y="634"/>
           <intersection id="0" open="true" x="317" y="415"/>
-          <intersection id="0" open="false" x="569" y="489"/>
-          <intersection id="0" open="true" x="793" y="526"/>
+          <intersection id="0" open="false" x="493" y="525"/>
+          <intersection id="0" open="true" x="665" y="623"/>
           <intersection id="0" open="false" x="790" y="100"/>
      </intersections>
+     <zombies_list>
+          <zombie id="0" x="662" y="416"/>
+          <zombie id="0" x="315" y="413"/>
+     </zombies_list>
+     <polices_list>
+          <policee id="0" x="550" y="219"/>
+          <policee id="0" x="864" y="415"/>
+     </polices_list>
+     <bandits_list>
+          <bandit id="0" x="312" y="631"/>
+          <bandit id="0" x="665" y="620"/>
+     </bandits_list>
      <roads>
           <road int_id1="0" int_id2="4" one_way="false" speed_limit="30"/>
           <road int_id1="4" int_id2="3" one_way="false" speed_limit="50"/>
@@ -37,10 +49,11 @@
           <road int_id1="8" int_id2="5" one_way="true" speed_limit="10"/>
           <road int_id1="6" int_id2="9" one_way="true" speed_limit="30"/>
           <road int_id1="2" int_id2="5" one_way="true" speed_limit="30"/>
+          <road int_id1="2" int_id2="6" one_way="false" speed_limit="30"/>
      </roads>
      <start_intersection id="0" image="TexasStart2.png"/>
      <destination_intersection id="1" image="Safehouse.png"/>
-     <money amount="300"/>
+     <money amount="1000"/>
      <police num="2"/>
      <bandits num="2"/>
      <zombies num="3"/>

@@ -26,6 +26,7 @@
         <property name="IMAGE_GAME_SPEED_SLIDER"                value="./pathX/GameSpeedSlider.png"></property>
         <property name="IMAGE_WINDOW_ICON"                      value="./pathX/WindowIcon.png"></property>
         <property name="IMAGE_GUN_CURSOR"                       value="./pathX/GunCursor.png"></property>
+        <property name="IMAGE_SPRITE_SHEET_SPECIALS"            value="./pathX/SpecialsSpriteSheet.png"></property>
         
         <!-- SCROLLING BUTTONS -->
         <property name="IMAGE_BUTTON_SCROLL_UP"                 value="./pathX/ButtonScrollUp.png"></property>
@@ -51,6 +52,7 @@
         
         <!-- AUDIO AND SONG CUES -->
         <property name="AUDIO_CUE_SELECT"                       value="./pathX/Select.wav"></property>
+        <property name="SONG_CUE_MENU_SCREEN"                   value="./pathX/SongRealAmerican.wav"></property>
     </property_list>
     
     <!-- PLAYABLE LEVELS CREATED WITH THE LEVEL EDITOR -->

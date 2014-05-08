@@ -13,16 +13,16 @@
           <intersection id="0" open="true" x="656" y="430"/>
      </intersections>
      <zombies_list>
-          <zombie id="0" x="659" y="115"/>
-          <zombie id="0" x="656" y="329"/>
+          <zombie id="0" x="655" y="260"/>
+          <zombie id="0" x="431" y="435"/>
      </zombies_list>
      <polices_list>
-          <policee id="0" x="540" y="431"/>
-          <policee id="0" x="488" y="266"/>
+          <policee id="0" x="655" y="431"/>
+          <policee id="0" x="890" y="365"/>
      </polices_list>
      <bandits_list>
-          <bandit id="0" x="893" y="227"/>
-          <bandit id="0" x="600" y="507"/>
+          <bandit id="0" x="431" y="107"/>
+          <bandit id="0" x="893" y="114"/>
      </bandits_list>
      <roads>
           <road int_id1="0" int_id2="6" one_way="false" speed_limit="30"/>

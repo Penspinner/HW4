@@ -19,11 +19,17 @@ import mini_game.MiniGame;
 import mini_game.Sprite;
 import mini_game.SpriteType;
 import mini_game.Viewport;
+import pathX.data.Bandit;
 import pathX.data.Intersection;
+import pathX.data.Police;
 import pathX.data.Road;
+import pathX.data.Zombie;
 import pathX.data.pathXDataModel;
 import pathX.data.pathXLevel;
+import pathX.pathX;
+import pathX.pathX.pathXPropertyType;
 import static pathX.pathXConstants.*;
+import properties_manager.PropertiesManager;
 /**
  *
  * @author Steven Liao
@@ -109,9 +115,7 @@ public class pathXPanel extends JPanel
                 renderRoads(g2);
                 renderIntersections(g2);
                 renderPlayer(g2);
-                renderZombies(g2);
-                renderPolice(g2);
-                renderBandits(g2);
+                renderC(g2);
                 renderBackground(g2);
             } else
             {
@@ -269,36 +273,6 @@ public class pathXPanel extends JPanel
                 g2.drawImage(img, (int) level.getX(), (int) level.getY(), sTLevel.getWidth(), sTLevel.getHeight(), null);
             }
         }
-//        if (viewport.isCircleBoundingBoxInsideViewport(img.getWidth(null), img.getHeight(null), 30))
-//        g2.drawImage(img, (int) level.getX() - viewport.getViewportX(), (int) level.getY() - viewport.getViewportY(), (int) (level.getX() + level.getAABBwidth() - viewport.getViewportX()), (int) (level.getY() + level.getAABBheight() - viewport.getViewportY()), 
-//                0, 0, sTLevel.getWidth(), sTLevel.getHeight(), null);
-        
-//        Iterator<pathXLevel> it = data.getLevelsIterator();
-//        while (it.hasNext())
-//        {
-//            pathXLevel p = it.next();
-//            if (viewport.isCircleBoundingBoxInsideViewport(30, 30, 15))
-//            {
-//            if (p.getState().equals("LOCKED_STATE"))
-//            {
-//                g2.setColor(Color.WHITE);
-//            } else if (p.getState().equals("UNSUCCESSFUL_STATE"))
-//            {
-//                g2.setColor(Color.RED);
-//            } else
-//            {
-//                g2.setColor(Color.GREEN);
-//            }
-//            levelCircle.x = p.getX() - viewport.getViewportX() - 15;
-//            levelCircle.y = p.getY() - viewport.getViewportY() - 15;
-//            g2.fill(levelCircle);
-//            
-//            g2.setColor(Color.BLACK);
-//            Stroke s = new BasicStroke(3);
-//            g2.setStroke(s);
-//            g2.draw(levelCircle);
-//            }
-//        }
     }
     
     public void renderGameSpeed(Graphics2D g2)
@@ -363,9 +337,9 @@ public class pathXPanel extends JPanel
         g2.setStroke(recyclableStrokes.get(strokeId));
 
         // LOAD ALL THE DATA INTO THE RECYCLABLE LINE
-        recyclableLine.x1 = road.getNode1().x-gameViewport.getViewportX()+GAME_OFFSET;
+        recyclableLine.x1 = road.getNode1().x-gameViewport.getViewportX();
         recyclableLine.y1 = road.getNode1().y-gameViewport.getViewportY();
-        recyclableLine.x2 = road.getNode2().x-gameViewport.getViewportX()+GAME_OFFSET;
+        recyclableLine.x2 = road.getNode2().x-gameViewport.getViewportX();
         recyclableLine.y2 = road.getNode2().y-gameViewport.getViewportY();
 
         // AND DRAW IT
@@ -401,7 +375,7 @@ public class pathXPanel extends JPanel
                 {
                     g2.setColor(CLOSED_INT_COLOR);
                 }
-                recyclableCircle.x = intersection.x - gameViewport.getViewportX() - INTERSECTION_RADIUS+GAME_OFFSET;
+                recyclableCircle.x = intersection.x - gameViewport.getViewportX() - INTERSECTION_RADIUS;
                 recyclableCircle.y = intersection.y - gameViewport.getViewportY() - INTERSECTION_RADIUS;
                 g2.fill(recyclableCircle);
 
@@ -443,9 +417,9 @@ public class pathXPanel extends JPanel
         int y2 = y1 + img.getHeight(null);
         
         // ONLY RENDER IF INSIDE THE VIEWPORT
-        if (gameViewport.isRectInsideViewport(x1, y1, x2, y2));
+        if (gameViewport.isRectInsideViewport(x1, y1, x2, y2))
         {
-            g2.drawImage(img, x1 - gameViewport.getViewportX()+GAME_OFFSET, y1 - gameViewport.getViewportY(), null);
+            g2.drawImage(img, x1 - gameViewport.getViewportX(), y1 - gameViewport.getViewportY(), null);
         }        
     }
 
@@ -508,7 +482,8 @@ public class pathXPanel extends JPanel
     // THEN RENDERS ACCORDING TO USER
     public void renderPlayer(Graphics2D g2)
     {
-        pathXTile player = game.getGUICharacters().get(PLAYER_TYPE);
+//        pathXTile player = game.getGUICharacters().get(PLAYER_TYPE);
+        pathXTile player = data.getPlayer();
         SpriteType sT = player.getSpriteType();
         Image img = sT.getStateImage(player.getState());
         Viewport gameViewport = ((pathXMiniGame)game).getGameViewport();
@@ -516,6 +491,40 @@ public class pathXPanel extends JPanel
                 (int) player.getX() - gameViewport.getViewportX(), 
                 (int) player.getY() - gameViewport.getViewportY(), 
                 null);
+    }
+    
+    private void renderC(Graphics2D g2)
+    {
+        Viewport gameViewport = ((pathXMiniGame)game).getGameViewport();
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
+        String imgPath = props.getProperty(pathXPropertyType.PATH_IMG);
+        
+        Iterator<Zombie> itZ = data.zombiesIterator();
+        while (itZ.hasNext())
+        {
+            Zombie currentZombie = itZ.next();
+            Image zombieImage = game.loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_ZOMBIE));
+            g2.drawImage(zombieImage, (int) currentZombie.getX() - gameViewport.getViewportX(), 
+                    (int) currentZombie.getY() - gameViewport.getViewportY(), null);
+        }
+        
+        Iterator<Police> itP = data.policesIterator();
+        while (itP.hasNext())
+        {
+            Police currentPolice = itP.next();
+            Image policeImage = game.loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_POLICE));
+            g2.drawImage(policeImage, (int) currentPolice.getX() - gameViewport.getViewportX(), 
+                    (int) currentPolice.getY() - gameViewport.getViewportY(), null);
+        }
+        
+        Iterator<Bandit> itB = data.banditsIterator();
+        while (itB.hasNext())
+        {
+            Bandit currentBandit = itB.next();
+            Image banditImage = game.loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BANDIT));
+            g2.drawImage(banditImage, (int)currentBandit.getX() - gameViewport.getViewportX(), 
+                    (int) currentBandit.getY() - gameViewport.getViewportY(), null);
+        }
     }
     
     public void renderZombies(Graphics2D g2)

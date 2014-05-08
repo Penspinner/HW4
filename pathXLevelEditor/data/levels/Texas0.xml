@@ -12,19 +12,19 @@
           <intersection id="0" open="true" x="317" y="415"/>
           <intersection id="0" open="false" x="506" y="513"/>
           <intersection id="0" open="true" x="793" y="526"/>
-          <intersection id="0" open="false" x="701" y="136"/>
+          <intersection id="0" open="true" x="701" y="136"/>
      </intersections>
      <zombies_list>
-          <zombie id="0" x="740" y="180"/>
-          <zombie id="0" x="646" y="443"/>
+          <zombie id="0" x="448" y="216"/>
+          <zombie id="0" x="624" y="267"/>
      </zombies_list>
      <polices_list>
-          <policee id="0" x="359" y="212"/>
-          <policee id="0" x="593" y="324"/>
+          <policee id="0" x="315" y="413"/>
+          <policee id="0" x="554" y="393"/>
      </polices_list>
      <bandits_list>
-          <bandit id="0" x="457" y="603"/>
-          <bandit id="0" x="653" y="147"/>
+          <bandit id="0" x="438" y="648"/>
+          <bandit id="0" x="701" y="133"/>
      </bandits_list>
      <roads>
           <road int_id1="0" int_id2="4" one_way="false" speed_limit="30"/>

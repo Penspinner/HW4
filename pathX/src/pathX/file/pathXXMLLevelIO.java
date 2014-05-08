@@ -12,17 +12,22 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import mini_game.SpriteType;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import pathX.data.Bandit;
 import pathX.data.Intersection;
+import pathX.data.Police;
 import pathX.data.Road;
+import pathX.data.Zombie;
 import pathX.data.pathXDataModel;
 import pathX.data.pathXLevel;
 import xml_utilities.XMLUtilities;
 import static pathX.pathXConstants.*;
+import pathX.ui.pathXTileState;
 /**
  *
  * @author Dell
@@ -75,6 +80,10 @@ public class pathXXMLLevelIO
             // THEN LET'S LOAD THE LIST OF ALL THE REGIONS
             loadIntersectionsList(doc, levelToLoad);
             ArrayList<Intersection> intersections = levelToLoad.getIntersections();
+            
+            loadZombiesList(doc, levelToLoad);
+            loadPolicesList(doc, levelToLoad);
+            loadBanditsList(doc, levelToLoad);
             
             // AND NOW CONNECT ALL THE REGIONS TO EACH OTHER
             loadRoadsList(doc, levelToLoad);
@@ -152,7 +161,7 @@ public class pathXXMLLevelIO
             String idText = intersectionAttributes.getNamedItem(ID_ATT).getNodeValue();
             String openText = intersectionAttributes.getNamedItem(OPEN_ATT).getNodeValue();
             String xText = intersectionAttributes.getNamedItem(X_ATT).getNodeValue();
-            int x = Integer.parseInt(xText);
+            int x = Integer.parseInt(xText) + GAME_OFFSET;
             String yText = intersectionAttributes.getNamedItem(Y_ATT).getNodeValue();
             int y = Integer.parseInt(yText);
             
@@ -160,6 +169,78 @@ public class pathXXMLLevelIO
             Intersection newIntersection = new Intersection(x, y);
             newIntersection.open = Boolean.parseBoolean(openText);
             intersections.add(newIntersection);
+        }
+    }
+    
+    // PRIVATE HELPER METHOD FOR LOADING ZOMBIES INTO OUR LEVEL
+    private void loadZombiesList(Document doc, pathXLevel levelToLoad)
+    {
+        Node zombiesListNode = doc.getElementsByTagName(ZOMBIE_LIST_NODE).item(0);
+        ArrayList<Zombie> zombies = levelToLoad.getZombies();
+        SpriteType zT = new SpriteType(ZOMBIE_TYPE);
+        
+        ArrayList<Node> zombiesList = xmlUtil.getChildNodesWithName(zombiesListNode, ZOMBIE_NODE);
+        for (int i = 0; i < zombiesList.size(); i++)
+        {
+            // GET THEIR DATA FROM THE DOC
+            Node zombieNode = zombiesList.get(i);
+            NamedNodeMap zombieAttributes = zombieNode.getAttributes();
+            String idText = zombieAttributes.getNamedItem(ID_ATT).getNodeValue();
+            String xText = zombieAttributes.getNamedItem(X_ATT).getNodeValue();
+            int x = Integer.parseInt(xText) + GAME_OFFSET - 17;
+            String yText = zombieAttributes.getNamedItem(Y_ATT).getNodeValue();
+            int y = Integer.parseInt(yText) - 17;
+            
+            Zombie newZombie = new Zombie(zT, (float) x, (float) y, 0, 0, pathXTileState.VISIBLE_STATE.toString());
+            zombies.add(newZombie);
+        }
+    }
+    
+    // PRIVATE HELPER METHOD FOR LOADING POLICE INTO OUR LEVEL
+    private void loadPolicesList(Document doc, pathXLevel levelToLoad)
+    {
+        Node policeListNode = doc.getElementsByTagName(POLICE_LIST_NODE).item(0);
+        ArrayList<Police> polices = levelToLoad.getPolices();
+        SpriteType pT = new SpriteType(POLICE_TYPE);
+        
+        ArrayList<Node> policeList = xmlUtil.getChildNodesWithName(policeListNode, POLICE_NODE2);
+        for (int i = 0; i < policeList.size(); i++)
+        {
+            // GET THEIR DATA FROM THE DOC
+            Node policeNode = policeList.get(i);
+            NamedNodeMap policeAttributes = policeNode.getAttributes();
+            String idText = policeAttributes.getNamedItem(ID_ATT).getNodeValue();
+            String xText = policeAttributes.getNamedItem(X_ATT).getNodeValue();
+            int x = Integer.parseInt(xText) + GAME_OFFSET - 17;
+            String yText = policeAttributes.getNamedItem(Y_ATT).getNodeValue();
+            int y = Integer.parseInt(yText) - 17;
+            
+            Police newPolice = new Police(pT, (float) x, (float) y, 0, 0, pathXTileState.VISIBLE_STATE.toString());
+            polices.add(newPolice);
+        }
+    }
+    
+    // PRIVATE HELPER METHOD FOR LOADING BANDITS INTO OUR LEVEL
+    private void loadBanditsList(Document doc, pathXLevel levelToLoad)
+    {
+        Node banditListNode = doc.getElementsByTagName(BANDIT_LIST_NODE).item(0);
+        ArrayList<Bandit> bandits = levelToLoad.getBandits();
+        SpriteType bT = new SpriteType(BANDIT_TYPE);
+        
+        ArrayList<Node> banditList = xmlUtil.getChildNodesWithName(banditListNode, BANDIT_NODE);
+        for (int i = 0; i < banditList.size(); i++)
+        {
+            // GET THEIR DATA FROM THE DOC
+            Node banditNode = banditList.get(i);
+            NamedNodeMap banditAttributes = banditNode.getAttributes();
+            String idText = banditAttributes.getNamedItem(ID_ATT).getNodeValue();
+            String xText = banditAttributes.getNamedItem(X_ATT).getNodeValue();
+            int x = Integer.parseInt(xText) + GAME_OFFSET - 17;
+            String yText = banditAttributes.getNamedItem(Y_ATT).getNodeValue();
+            int y = Integer.parseInt(yText) - 17;
+            
+            Bandit newBandit = new Bandit(bT, (float) x, (float) y, 0, 0, pathXTileState.VISIBLE_STATE.toString());
+            bandits.add(newBandit);
         }
     }
 
@@ -193,6 +274,7 @@ public class pathXXMLLevelIO
             newRoad.setNode2(intersections.get(int_id2));
             newRoad.setOneWay(oneWay);
             newRoad.setSpeedLimit(speedLimit);
+            newRoad.calculateDistance();
             roads.add(newRoad);
         }
     }

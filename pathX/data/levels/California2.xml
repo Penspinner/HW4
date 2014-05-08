@@ -4,14 +4,26 @@
           <intersection id="0" open="true" x="161" y="273"/>
           <intersection id="0" open="true" x="999" y="690"/>
           <intersection id="0" open="true" x="433" y="112"/>
-          <intersection id="0" open="false" x="654" y="119"/>
-          <intersection id="0" open="false" x="891" y="368"/>
-          <intersection id="0" open="false" x="432" y="433"/>
+          <intersection id="0" open="true" x="893" y="117"/>
+          <intersection id="0" open="true" x="891" y="368"/>
+          <intersection id="0" open="true" x="432" y="433"/>
           <intersection id="0" open="true" x="318" y="270"/>
-          <intersection id="0" open="false" x="657" y="263"/>
-          <intersection id="0" open="true" x="520" y="594"/>
+          <intersection id="0" open="true" x="657" y="263"/>
+          <intersection id="0" open="true" x="547" y="593"/>
           <intersection id="0" open="true" x="656" y="430"/>
      </intersections>
+     <zombies_list>
+          <zombie id="0" x="655" y="260"/>
+          <zombie id="0" x="431" y="435"/>
+     </zombies_list>
+     <polices_list>
+          <policee id="0" x="655" y="431"/>
+          <policee id="0" x="890" y="365"/>
+     </polices_list>
+     <bandits_list>
+          <bandit id="0" x="431" y="107"/>
+          <bandit id="0" x="893" y="114"/>
+     </bandits_list>
      <roads>
           <road int_id1="0" int_id2="6" one_way="false" speed_limit="30"/>
           <road int_id1="6" int_id2="2" one_way="false" speed_limit="10"/>
@@ -19,10 +31,9 @@
           <road int_id1="3" int_id2="7" one_way="false" speed_limit="30"/>
           <road int_id1="7" int_id2="5" one_way="false" speed_limit="30"/>
           <road int_id1="6" int_id2="5" one_way="false" speed_limit="60"/>
-          <road int_id1="5" int_id2="9" one_way="false" speed_limit="100"/>
+          <road int_id1="5" int_id2="9" one_way="true" speed_limit="100"/>
           <road int_id1="7" int_id2="2" one_way="false" speed_limit="30"/>
           <road int_id1="7" int_id2="4" one_way="false" speed_limit="30"/>
-          <road int_id1="8" int_id2="4" one_way="false" speed_limit="20"/>
           <road int_id1="9" int_id2="1" one_way="false" speed_limit="20"/>
           <road int_id1="9" int_id2="4" one_way="false" speed_limit="30"/>
           <road int_id1="7" int_id2="9" one_way="true" speed_limit="30"/>
@@ -32,11 +43,12 @@
           <road int_id1="2" int_id2="5" one_way="false" speed_limit="30"/>
           <road int_id1="4" int_id2="3" one_way="true" speed_limit="30"/>
           <road int_id1="1" int_id2="4" one_way="true" speed_limit="30"/>
+          <road int_id1="8" int_id2="9" one_way="false" speed_limit="30"/>
      </roads>
      <start_intersection id="0" image="CaliforniaStart2.png"/>
      <destination_intersection id="1" image="Safehouse.png"/>
      <money amount="900"/>
      <police num="2"/>
-     <bandits num="1"/>
-     <zombies num="3"/>
+     <bandits num="2"/>
+     <zombies num="2"/>
 </level>

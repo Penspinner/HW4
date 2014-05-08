@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <level image="ZuckerBackground.png" name="Zucker">
      <intersections>
-          <intersection id="0" open="true" x="94" y="244"/>
+          <intersection id="0" open="true" x="93" y="245"/>
           <intersection id="0" open="true" x="1204" y="237"/>
           <intersection id="0" open="true" x="482" y="65"/>
           <intersection id="0" open="false" x="703" y="237"/>
           <intersection id="0" open="false" x="834" y="156"/>
           <intersection id="0" open="true" x="940" y="568"/>
-          <intersection id="0" open="true" x="266" y="65"/>
+          <intersection id="0" open="false" x="266" y="65"/>
           <intersection id="0" open="true" x="486" y="243"/>
           <intersection id="0" open="false" x="703" y="411"/>
           <intersection id="0" open="true" x="492" y="411"/>
@@ -15,27 +15,42 @@
           <intersection id="0" open="true" x="943" y="232"/>
           <intersection id="0" open="true" x="708" y="571"/>
           <intersection id="0" open="true" x="492" y="580"/>
-          <intersection id="0" open="true" x="269" y="579"/>
+          <intersection id="0" open="false" x="269" y="579"/>
           <intersection id="0" open="true" x="266" y="240"/>
-          <intersection id="0" open="false" x="265" y="415"/>
+          <intersection id="0" open="true" x="265" y="415"/>
           <intersection id="0" open="false" x="824" y="487"/>
           <intersection id="0" open="true" x="936" y="72"/>
           <intersection id="0" open="true" x="602" y="331"/>
           <intersection id="0" open="false" x="368" y="149"/>
-          <intersection id="0" open="false" x="698" y="68"/>
+          <intersection id="0" open="true" x="698" y="68"/>
      </intersections>
-     <zombies_list/>
-     <polices_list/>
-     <bandits_list/>
+     <zombies_list>
+          <zombie id="0" x="493" y="578"/>
+          <zombie id="0" x="709" y="572"/>
+          <zombie id="0" x="482" y="64"/>
+          <zombie id="0" x="699" y="67"/>
+     </zombies_list>
+     <polices_list>
+          <policee id="0" x="485" y="242"/>
+          <policee id="0" x="702" y="238"/>
+          <policee id="0" x="699" y="409"/>
+          <policee id="0" x="486" y="410"/>
+     </polices_list>
+     <bandits_list>
+          <bandit id="0" x="265" y="65"/>
+          <bandit id="0" x="937" y="69"/>
+          <bandit id="0" x="939" y="567"/>
+          <bandit id="0" x="264" y="575"/>
+     </bandits_list>
      <roads>
           <road int_id1="0" int_id2="15" one_way="false" speed_limit="30"/>
-          <road int_id1="15" int_id2="6" one_way="false" speed_limit="30"/>
+          <road int_id1="15" int_id2="6" one_way="true" speed_limit="30"/>
           <road int_id1="6" int_id2="2" one_way="false" speed_limit="100"/>
           <road int_id1="2" int_id2="7" one_way="false" speed_limit="30"/>
           <road int_id1="7" int_id2="3" one_way="false" speed_limit="20"/>
           <road int_id1="3" int_id2="21" one_way="false" speed_limit="30"/>
           <road int_id1="21" int_id2="18" one_way="false" speed_limit="100"/>
-          <road int_id1="21" int_id2="2" one_way="false" speed_limit="100"/>
+          <road int_id1="21" int_id2="2" one_way="true" speed_limit="100"/>
           <road int_id1="21" int_id2="4" one_way="true" speed_limit="30"/>
           <road int_id1="11" int_id2="4" one_way="true" speed_limit="30"/>
           <road int_id1="4" int_id2="3" one_way="true" speed_limit="30"/>
@@ -52,7 +67,7 @@
           <road int_id1="9" int_id2="7" one_way="false" speed_limit="30"/>
           <road int_id1="15" int_id2="16" one_way="false" speed_limit="30"/>
           <road int_id1="16" int_id2="13" one_way="true" speed_limit="30"/>
-          <road int_id1="13" int_id2="8" one_way="true" speed_limit="10"/>
+          <road int_id1="13" int_id2="8" one_way="true" speed_limit="70"/>
           <road int_id1="14" int_id2="13" one_way="false" speed_limit="30"/>
           <road int_id1="9" int_id2="8" one_way="true" speed_limit="30"/>
           <road int_id1="8" int_id2="12" one_way="false" speed_limit="30"/>
@@ -66,6 +81,7 @@
           <road int_id1="17" int_id2="10" one_way="false" speed_limit="30"/>
           <road int_id1="17" int_id2="8" one_way="true" speed_limit="30"/>
           <road int_id1="17" int_id2="12" one_way="false" speed_limit="30"/>
+          <road int_id1="9" int_id2="13" one_way="true" speed_limit="30"/>
      </roads>
      <start_intersection id="0" image="ZuckerStart.png"/>
      <destination_intersection id="1" image="Safehouse.png"/>

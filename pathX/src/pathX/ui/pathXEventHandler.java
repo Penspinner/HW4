@@ -81,7 +81,7 @@ public class pathXEventHandler
         {
             game.initGameViewport();
             ((pathXDataModel)game.getDataModel()).initPlayerStartingLocation();
-            ((pathXDataModel)game.getDataModel()).initZombieLocation();
+            //((pathXDataModel)game.getDataModel()).initZombieLocation();
             game.getScreenSwitcher().switchToGameScreen();
         }
     }
@@ -143,7 +143,7 @@ public class pathXEventHandler
         {
             game.getDataModel().unpause();
         } else if (game.isCurrentScreenState(GAME_SCREEN_STATE) &&
-                game.getDataModel().isPaused())
+                !game.getDataModel().isPaused())
         {
             game.getDataModel().pause();
         }
@@ -169,12 +169,7 @@ public class pathXEventHandler
     public void scroll(String direction)
     {
         Viewport viewport = game.getMapViewport();
-        Sprite map = game.getGUIDecor().get(MAP_TYPE);        
-//        viewport.setNorthPanelHeight(80);
-//        viewport.setGameWorldSize((int) map.getAABBwidth(), (int) map.getAABBheight());
-//        viewport.setViewportSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-//        viewport.updateViewportBoundaries();
-//        viewport.initViewportMargins();
+        Sprite map = game.getGUIDecor().get(MAP_TYPE);
         Viewport gameViewport = game.getGameViewport();
         switch (direction)
         {
@@ -277,37 +272,22 @@ public class pathXEventHandler
      */    
     public void respondToKeyPress(int keyCode)
     {
-        
         if (game.isCurrentScreenState(LEVEL_SELECT_SCREEN_STATE) ||
             game.isCurrentScreenState(GAME_SCREEN_STATE))
         {
-            Sprite map = game.getGUIDecor().get(MAP_TYPE);
-            
             switch (keyCode)
             {
                 // SCROLL UP
-                case KeyEvent.VK_UP:
-                {
-                    scroll("UP");
-                } break;
+                case KeyEvent.VK_UP:    {   scroll("UP");   } break;
                     
                 // SCROLL DOWN
-                case KeyEvent.VK_DOWN:
-                {
-                    scroll("DOWN");
-                } break;
+                case KeyEvent.VK_DOWN:  {   scroll("DOWN"); } break;
                     
                 // SCROLL LEFT
-                case KeyEvent.VK_LEFT:
-                {
-                    scroll("LEFT");
-                } break;
+                case KeyEvent.VK_LEFT:  {   scroll("LEFT"); } break;
                     
                 // SCROLL RIGHT
-                case KeyEvent.VK_RIGHT:
-                {
-                    scroll("RIGHT");
-                } break;
+                case KeyEvent.VK_RIGHT: {   scroll("RIGHT");} break;
             }
         }
     }

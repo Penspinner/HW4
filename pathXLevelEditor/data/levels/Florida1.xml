@@ -5,7 +5,7 @@
           <intersection id="0" open="true" x="1516" y="355"/>
           <intersection id="0" open="true" x="485" y="96"/>
           <intersection id="0" open="false" x="701" y="101"/>
-          <intersection id="0" open="false" x="1318" y="108"/>
+          <intersection id="0" open="true" x="1318" y="108"/>
           <intersection id="0" open="true" x="1320" y="355"/>
           <intersection id="0" open="false" x="742" y="615"/>
           <intersection id="0" open="false" x="479" y="313"/>
@@ -17,19 +17,19 @@
           <intersection id="0" open="true" x="1021" y="614"/>
      </intersections>
      <zombies_list>
-          <zombie id="0" x="742" y="315"/>
-          <zombie id="0" x="388" y="312"/>
-          <zombie id="0" x="982" y="306"/>
+          <zombie id="0" x="487" y="96"/>
+          <zombie id="0" x="480" y="309"/>
+          <zombie id="0" x="840" y="317"/>
      </zombies_list>
      <polices_list>
-          <policee id="0" x="475" y="434"/>
-          <policee id="0" x="549" y="182"/>
-          <policee id="0" x="366" y="210"/>
+          <policee id="0" x="643" y="310"/>
+          <policee id="0" x="955" y="100"/>
+          <policee id="0" x="742" y="615"/>
      </polices_list>
      <bandits_list>
-          <bandit id="0" x="1266" y="105"/>
-          <bandit id="0" x="969" y="610"/>
-          <bandit id="0" x="528" y="606"/>
+          <bandit id="0" x="1316" y="104"/>
+          <bandit id="0" x="480" y="615"/>
+          <bandit id="0" x="1019" y="611"/>
      </bandits_list>
      <roads>
           <road int_id1="0" int_id2="8" one_way="false" speed_limit="100"/>

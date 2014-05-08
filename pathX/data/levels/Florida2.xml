@@ -3,30 +3,43 @@
      <intersections>
           <intersection id="0" open="true" x="104" y="404"/>
           <intersection id="0" open="true" x="1767" y="509"/>
-          <intersection id="0" open="false" x="455" y="98"/>
-          <intersection id="0" open="false" x="700" y="101"/>
-          <intersection id="0" open="false" x="1270" y="102"/>
-          <intersection id="0" open="true" x="1550" y="387"/>
+          <intersection id="0" open="true" x="251" y="107"/>
+          <intersection id="0" open="false" x="640" y="100"/>
+          <intersection id="0" open="false" x="1276" y="117"/>
+          <intersection id="0" open="true" x="1552" y="382"/>
           <intersection id="0" open="false" x="830" y="505"/>
-          <intersection id="0" open="false" x="485" y="359"/>
+          <intersection id="0" open="true" x="328" y="324"/>
           <intersection id="0" open="true" x="255" y="407"/>
-          <intersection id="0" open="true" x="612" y="329"/>
+          <intersection id="0" open="true" x="622" y="334"/>
           <intersection id="0" open="true" x="677" y="771"/>
           <intersection id="0" open="true" x="938" y="112"/>
-          <intersection id="0" open="false" x="832" y="332"/>
+          <intersection id="0" open="false" x="882" y="335"/>
           <intersection id="0" open="true" x="1268" y="511"/>
      </intersections>
+     <zombies_list>
+          <zombie id="0" x="622" y="330"/>
+          <zombie id="0" x="934" y="107"/>
+          <zombie id="0" x="881" y="334"/>
+     </zombies_list>
+     <polices_list>
+          <policee id="0" x="639" y="99"/>
+          <policee id="0" x="828" y="504"/>
+          <policee id="0" x="1268" y="510"/>
+     </polices_list>
+     <bandits_list>
+          <bandit id="0" x="251" y="104"/>
+          <bandit id="0" x="1274" y="111"/>
+          <bandit id="0" x="674" y="770"/>
+     </bandits_list>
      <roads>
           <road int_id1="0" int_id2="8" one_way="false" speed_limit="30"/>
           <road int_id1="8" int_id2="7" one_way="false" speed_limit="100"/>
-          <road int_id1="7" int_id2="10" one_way="true" speed_limit="100"/>
           <road int_id1="10" int_id2="6" one_way="false" speed_limit="50"/>
           <road int_id1="8" int_id2="2" one_way="false" speed_limit="30"/>
           <road int_id1="2" int_id2="9" one_way="false" speed_limit="30"/>
           <road int_id1="9" int_id2="12" one_way="false" speed_limit="30"/>
           <road int_id1="12" int_id2="6" one_way="false" speed_limit="100"/>
           <road int_id1="2" int_id2="3" one_way="true" speed_limit="30"/>
-          <road int_id1="3" int_id2="11" one_way="false" speed_limit="30"/>
           <road int_id1="6" int_id2="13" one_way="false" speed_limit="100"/>
           <road int_id1="11" int_id2="12" one_way="false" speed_limit="30"/>
           <road int_id1="11" int_id2="4" one_way="false" speed_limit="100"/>
@@ -39,17 +52,20 @@
           <road int_id1="11" int_id2="5" one_way="true" speed_limit="10"/>
           <road int_id1="4" int_id2="5" one_way="false" speed_limit="100"/>
           <road int_id1="11" int_id2="13" one_way="false" speed_limit="30"/>
-          <road int_id1="8" int_id2="6" one_way="false" speed_limit="30"/>
+          <road int_id1="8" int_id2="6" one_way="false" speed_limit="60"/>
           <road int_id1="10" int_id2="13" one_way="false" speed_limit="60"/>
           <road int_id1="3" int_id2="12" one_way="false" speed_limit="30"/>
           <road int_id1="10" int_id2="9" one_way="false" speed_limit="20"/>
           <road int_id1="9" int_id2="7" one_way="true" speed_limit="30"/>
           <road int_id1="5" int_id2="13" one_way="true" speed_limit="30"/>
+          <road int_id1="11" int_id2="3" one_way="true" speed_limit="30"/>
+          <road int_id1="7" int_id2="2" one_way="false" speed_limit="30"/>
+          <road int_id1="12" int_id2="13" one_way="false" speed_limit="10"/>
      </roads>
      <start_intersection id="0" image="FloridaStart2.png"/>
      <destination_intersection id="1" image="Safehouse.png"/>
      <money amount="1500"/>
      <police num="3"/>
      <bandits num="3"/>
-     <zombies num="4"/>
+     <zombies num="3"/>
 </level>

@@ -35,7 +35,7 @@ public class pathX
             // THEN WE'LL LOAD THE GAME FLAVOR AS SPECIFIED BY THE PROPERTIES FILE
             String gameFlavorFile = props.getProperty(pathXPropertyType.FILE_GAME_PROPERTIES);
             props.loadProperties(gameFlavorFile, PROPERTIES_SCHEMA_FILE_NAME);
-            miniGame.initMiniGame(APP_TITLE, 30, WINDOW_WIDTH, WINDOW_HEIGHT);
+            miniGame.initMiniGame(APP_TITLE, 60, WINDOW_WIDTH, WINDOW_HEIGHT);
             
             // GET THE PROPER WINDOW DIMENSIONS
             miniGame.startGame();
@@ -114,6 +114,7 @@ public class pathX
         IMAGE_BUTTON_CLOSE_MOUSE_OVER,
         IMAGE_WINDOW_ICON,
         IMAGE_GUN_CURSOR,
+        IMAGE_SPRITE_SHEET_SPECIALS,
         
         // AUDIO CUES
         AUDIO_CUE_LOSE,

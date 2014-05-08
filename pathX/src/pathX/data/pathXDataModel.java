@@ -2,12 +2,15 @@ package pathX.data;
 
 import java.awt.Image;
 import java.awt.geom.Line2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import mini_game.MiniGame;
 import mini_game.MiniGameDataModel;
 import mini_game.Sprite;
+import mini_game.SpriteType;
+import mini_game.Viewport;
 import pathX.pathX.pathXPropertyType;
 import pathX.ui.pathXMiniGame;
 import static pathX.pathXConstants.*;
@@ -29,12 +32,12 @@ public class pathXDataModel extends MiniGameDataModel
     
     ArrayList<String> levelNames;
     ArrayList<String> levelStates;
-    ArrayList<pathXTile> movingTiles;
+    ArrayList movingTiles;
     ArrayList<pathXTile> zombies;
     ArrayList<pathXTile> police;
     ArrayList<pathXTile> bandits;
     
-    HashMap<String, pathXTile> guiCharacters;
+    pathXTile player;
     
     PropertiesManager props = PropertiesManager.getPropertiesManager();
 
@@ -83,6 +86,7 @@ public class pathXDataModel extends MiniGameDataModel
     
     // ACCESSOR METHODS
     public pathXLevel           getLevel()                  {   return level;                   }
+    public pathXTile            getPlayer()                 {   return player;                  }
     public int                  getGameSpeed()              {   return gameSpeed;               }
     public int                  getCurrentLevelCounter()    {   return currentLevelCounter;     }
     public int                  getBalance()                {   return balance;                 }
@@ -126,52 +130,51 @@ public class pathXDataModel extends MiniGameDataModel
     
     public void initPlayerStartingLocation()
     {
-        pathXTile player = game.getGUICharacters().get(PLAYER_TYPE);
-        int x = level.getStartingLocation().x + startingLocationImage.getWidth(null) + GAME_OFFSET;
+//        pathXTile player = game.getGUICharacters().get(PLAYER_TYPE);
+        String imgPath = props.getProperty(pathXPropertyType.PATH_IMG);
+        SpriteType sT = new SpriteType(PLAYER_TYPE);
+        BufferedImage img = game.loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_PLAYER));
+        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
+        player = new pathXTile(sT, 0, 0, 0, 0, pathXTileState.VISIBLE_STATE.toString(), "PLAYER");
         int location = (startingLocationImage.getHeight(null) - (int) player.getAABBheight()) / 2;
-        int y = level.getStartingLocation().y + location;
         int w = startingLocationImage.getWidth(null);
         int h = startingLocationImage.getHeight(null);
-        int x1 = level.getStartingLocation().x-(w/2) + startingLocationImage.getWidth(null) + GAME_OFFSET;
-        int y1 = level.getStartingLocation().y-(h/2) + location;
-        int x2 = x1 + w + GAME_OFFSET;
-        int y2 = y1 + h + location;
-        player.setX(x1);
-        player.setY(y1);
+        int x = level.getStartingLocation().x-(w/2) + startingLocationImage.getWidth(null);
+        int y = level.getStartingLocation().y-(h/2) + location;
+        player.setX(x);
+        player.setY(y);
     }
     
-    public void initZombieLocation()
-    {
-        pathXTile zombie = game.getGUICharacters().get(ZOMBIE_TYPE);
-        zombies = new ArrayList(level.numZombies);
-        for (int i = 0; i < level.numZombies; i++)
-        {
-            zombie.setX(level.getIntersections().get(i+2).x + GAME_OFFSET);
-            zombie.setY(level.getIntersections().get(i+2).y);
-            zombie.setCurrentIntersection(level.getIntersections().get(i+2));
-            ArrayList z = generatePath(zombie.getCurrentIntersection());
-            zombie.initPath(z);
-            zombies.add(zombie);
-        }
-        
-        pathXTile policee = game.getGUICharacters().get(POLICE_TYPE);
-        police = new ArrayList(level.numPolice);
-        for (int i = 0; i < level.numPolice; i++)
-        {
-            policee.setX(level.getIntersections().get(i+2).x + GAME_OFFSET);
-            policee.setY(level.getIntersections().get(i+2).y);
-            police.add(policee);
-        }
-        
-        pathXTile bandit = game.getGUICharacters().get(BANDIT_TYPE);
-        bandits = new ArrayList(level.numBandits);
-        for (int i = 0; i < level.numBandits; i++)
-        {
-            bandit.setX(level.getIntersections().get(i+2).x + GAME_OFFSET);
-            bandit.setY(level.getIntersections().get(i+2).y);
-            bandits.add(bandit);
-        }
-    }
+//    public void initZombieLocation()
+//    {
+//        pathXTile zombie = game.getGUICharacters().get(ZOMBIE_TYPE);
+//        zombies = new ArrayList(level.numZombies);
+//        for (int i = 0; i < level.numZombies; i++)
+//        {
+//            zombie.setX(level.getIntersections().get(i+2).x + GAME_OFFSET);
+//            zombie.setY(level.getIntersections().get(i+2).y);
+//            zombie.setCurrentIntersection(level.getIntersections().get(i+2));
+//            zombies.add(zombie);
+//        }
+//        
+//        pathXTile policee = game.getGUICharacters().get(POLICE_TYPE);
+//        police = new ArrayList(level.numPolice);
+//        for (int i = 0; i < level.numPolice; i++)
+//        {
+//            policee.setX(level.getIntersections().get(i+2).x + GAME_OFFSET);
+//            policee.setY(level.getIntersections().get(i+2).y);
+//            police.add(policee);
+//        }
+//        
+//        pathXTile bandit = game.getGUICharacters().get(BANDIT_TYPE);
+//        bandits = new ArrayList(level.numBandits);
+//        for (int i = 0; i < level.numBandits; i++)
+//        {
+//            bandit.setX(level.getIntersections().get(i+2).x + GAME_OFFSET);
+//            bandit.setY(level.getIntersections().get(i+2).y);
+//            bandits.add(bandit);
+//        }
+//    }
     
     // ITERATOR METHODS FOR GOING THROUGH THE GRAPH
     public Iterator intersectionsIterator()
@@ -183,6 +186,21 @@ public class pathXDataModel extends MiniGameDataModel
     {
         ArrayList<Road> roads = level.roads;
         return roads.iterator();
+    }
+    public Iterator zombiesIterator()
+    {
+        ArrayList<Zombie> zombies = level.zombies;
+        return zombies.iterator();
+    }
+    public Iterator policesIterator()
+    {
+        ArrayList<Police> polices = level.polices;
+        return polices.iterator();
+    }
+    public Iterator banditsIterator()
+    {
+        ArrayList<Bandit> bandits = level.bandits;
+        return bandits.iterator();
     }
     
     public void initLevelStates()
@@ -297,7 +315,7 @@ public class pathXDataModel extends MiniGameDataModel
         // CHECK TO SEE IF THE USER IS SELECTING AN INTERSECTION
         for (Intersection i : level.intersections)
         {
-            double distance = calculateDistanceBetweenPoints(i.x + GAME_OFFSET, i.y, canvasX + viewport.getViewportX(), canvasY + viewport.getViewportY());
+            double distance = calculateDistanceBetweenPoints(i.x, i.y, canvasX + viewport.getViewportX(), canvasY + viewport.getViewportY());
             if (distance < INTERSECTION_RADIUS)
             {
                 // MAKE THIS THE SELECTED INTERSECTION
@@ -488,42 +506,188 @@ public class pathXDataModel extends MiniGameDataModel
         }
     }
     
+    public float calculateDistance(float x1, float y1, float x2, float y2)
+    {   
+        // GET THE X-AXIS DISTANCE TO GO
+        float diffX = x2 - x1;
+        
+        // AND THE Y-AXIS DISTANCE TO GO
+        float diffY = y2 - y1;
+        
+        // AND EMPLOY THE PYTHAGOREAN THEOREM TO CALCULATE THE DISTANCE
+        float distance = (float)Math.sqrt((diffX * diffX) + (diffY * diffY));
+        
+        // AND RETURN THE DISTANCE
+        return distance;
+    }
+    
     /**
      * 
      * @param selectedIntersection 
      */
-    public void findShortestPathToIntersection(Intersection selectedIntersection)
+    public ArrayList<Intersection> findShortestPathToIntersection(Intersection selectedIntersection)
     {
-        pathXTile player = game.getGUICharacters().get(PLAYER_TYPE);
-        int x = selectedIntersection.x + GAME_OFFSET;
-        int y = selectedIntersection.y;
-        player.setTarget(x, y);
-        player.startMovingToTarget(20);
+        boolean found = false;
+        int selectedX = selectedIntersection.x;
+        int selectedY = selectedIntersection.y;
+        
+        Road startRoad = findRoadAtSpriteLocation(player);
+        Intersection currentIntersection = getClosestIntersection(startRoad, player);
+        
         ArrayList<Road> roadsVisited = new ArrayList<Road>();
         ArrayList<Intersection> intersectionsVisited = new ArrayList<Intersection>();
-        ArrayList<Intersection> currentIntersection = new ArrayList<Intersection>();
+        intersectionsVisited.add(currentIntersection);
         
-        Road roadTouchingSelectedIntersection = findRoadTouchingIntersection(x, y);
-        Road currentRoad = findRoadAtTileLocation(player);
+        // LIST TO STORE THE SHORTEST PATH TO THE SELECTED INTERSECTION
+        ArrayList<Intersection> path = new ArrayList();
+        
+        // SAVES ALL NODE1 AS KEY AND NODE2 AS VALUE IN A HASHMAP
+        HashMap<Intersection, Intersection> intersections = new HashMap();
+        for (Road r : level.roads)
+        {
+            Intersection i1 = r.node1;
+            Intersection i2 = r.node2;
+            intersections.put(i1, i2);
+        }
+        
+        while (!found)
+        {
+            ArrayList<Intersection> neighbors = getNeighbors(currentIntersection);
+            if (neighbors.size() == 1)
+            {
+                currentIntersection = neighbors.get(0);
+                path.add(neighbors.get(0));
+                if (neighbors.get(0).x == selectedX && neighbors.get(0).y == selectedY)
+                    return path;
+            }
+            else
+            {
+                for (Intersection i : neighbors)
+                {
+                    if (i.x == selectedX && i.y == selectedY)
+                    {
+                        path.add(i);
+                        return path;
+                    }
+                }
+                currentIntersection = getClosestNeighbor(neighbors, currentIntersection);
+                path.add(currentIntersection);
+                intersectionsVisited.add(currentIntersection);
+            }
+        }
+        return path;
     }
     
-    public Road findRoadTouchingIntersection(int x, int y)
+    public Intersection getClosestIntersection(Road currentRoad, pathXTile player)
     {
-        for (int i = 0; i < level.roads.size(); i++)
+        int x1 = currentRoad.node1.x;
+        int y1 = currentRoad.node1.y;
+        int x2 = currentRoad.node2.x;
+        int y2 = currentRoad.node2.y;
+        int px = (int) player.getX();
+        int py = (int) player.getY();
+        double distanceNode1 = calculateDistanceBetweenPoints(px, py, x1, y1);
+        double distanceNode2 = calculateDistanceBetweenPoints(px, py, x2, y2);
+        
+        if (distanceNode1 < distanceNode2)
+            return currentRoad.node1;
+        else
+            return currentRoad.node2;
+    }
+    
+    public ArrayList<Intersection> getNeighbors(Intersection intersection)
+    {
+        ArrayList<Intersection> neighbors = new ArrayList();
+        ArrayList<Road> roads = level.roads;
+        int x = intersection.x;
+        int y = intersection.y;
+        
+        for (int i = 0; i < roads.size(); i++)
         {
-            if (x == level.roads.get(i).node1.x &&
-                y == level.roads.get(i).node1.y)
+            if (roads.get(i).node1.x == x && roads.get(i).node1.y == y)
             {
-                return level.roads.get(i);
+                neighbors.add(roads.get(i).node2);
+            } else if (roads.get(i).node2.x == x && roads.get(i).node2.y == y)
+            {
+                neighbors.add(roads.get(i).node1);
+            }
+        }
+        return neighbors;
+    }
+    
+    public Intersection getClosestNeighbor(ArrayList<Intersection> intersections, Intersection ci)
+    {
+        Intersection closestIntersection = intersections.get(0);
+        if (intersections.size() > 0)
+        {
+            for (int i = 1; i < intersections.size(); i++)
+            {
+                Intersection intersection = intersections.get(i);
+                if (calculateDistanceBetweenPoints(ci.x, ci.y, closestIntersection.x, closestIntersection.y) >
+                    calculateDistanceBetweenPoints(ci.x, ci.y, intersection.x, intersection.y))
+                {
+                    closestIntersection = intersection;
+                }
+            }
+        }
+        return closestIntersection;
+    }
+    
+    public ArrayList<Road> getNeighborRoads(Intersection intersection)
+    {
+        ArrayList<Road> neighborRoads = new ArrayList();
+        ArrayList<Road> roads = level.roads;
+        int x = intersection.x;
+        int y = intersection.y;
+        
+        for (int i = 0; i < roads.size(); i++)
+        {
+            // IF EITHER NODE 1 OR NODE 2 OF ROAD IS A NEIGHBOR
+            if ((roads.get(i).node1.x == x &&
+                roads.get(i).node1.y == y) ||
+                (roads.get(i).node2.x == x &&
+                roads.get(i).node2.y == y))
+            {
+                neighborRoads.add(roads.get(i));
+            }
+        }
+        return neighborRoads;
+    }
+    
+    public Road getShortestRoad(ArrayList<Road> roads)
+    {
+        Road shortestRoad = roads.get(0);
+        for (Road r : roads)
+        {
+            if (shortestRoad.distance > r.distance)
+            {
+                shortestRoad = r;
+            }
+        }
+        return shortestRoad;
+    }
+    
+    public Road getRoad(Intersection i1, Intersection i2)
+    {
+        for (Road r : level.roads)
+        {
+            if (((r.node1.x == i1.x && r.node1.y == i1.y) &&
+                (r.node2.x == i2.x && r.node2.y == i2.y)) ||
+                ((r.node1.x == i2.x && r.node1.y == i2.y) &&
+                (r.node2.x == i1.x && r.node2.y == i1.y)))
+            {
+                return r;
             }
         }
         return null;
     }
     
-    public Road findRoadAtTileLocation(pathXTile tile)
+    public Road findRoadAtSpriteLocation(Sprite s)
     {
         Iterator<Road> it = level.roads.iterator();
         Line2D.Double tempLine = new Line2D.Double();
+        double centerX = s.getX() + 17.5;
+        double centerY = s.getY() + 17.5;
         while (it.hasNext())
         {
             Road r = it.next();
@@ -531,33 +695,63 @@ public class pathXDataModel extends MiniGameDataModel
             tempLine.y1 = r.node1.y;
             tempLine.x2 = r.node2.x;
             tempLine.y2 = r.node2.y;
-            double distance = tempLine.ptSegDist(tile.getX()+viewport.getViewportX(), tile.getY()+viewport.getViewportY());
+            double distance = tempLine.ptSegDist(centerX+viewport.getViewportX(), centerY+viewport.getViewportY());
             
             // IS IT CLOSE ENOUGH?
             if (distance <= INT_STROKE)
             {
                 // SELECT IT
-                this.selectedRoad = r;
+//                this.selectedRoad = r;
                 //this.switchEditMode(PXLE_EditMode.ROAD_SELECTED);
-                return selectedRoad;
+                return r;
             }
         }
         return null;
     }
     
-    public ArrayList generatePath(Intersection intersection)
+    public void generatePolicePath(Police p)
     {
-        ArrayList<Intersection> path = new ArrayList();
+        // FIND NEIGHBORS, CHOOSE RANDOM NEIGHBOR, GO THERE, REPEAT
         
-        for (int i = 0; i < level.getIntersections().size(); i++)
+        ArrayList<Intersection> path = new ArrayList();
+        int x = (int) p.getX() + INTERSECTION_RADIUS;
+        int y = (int) p.getY() + INTERSECTION_RADIUS;
+        
+        Intersection currentIntersection = findIntersectionAtCanvasLocation(x, y);
+        p.initCurrentIntersection(currentIntersection);
+        
+        ArrayList<Intersection> neighbors = getNeighbors(currentIntersection);
+        if (neighbors.contains(level.startingLocation))
         {
-            Intersection i1 = level.getIntersections().get(i);
-            if (i1.x != intersection.x && i1.y != intersection.y)
-            {
-                path.add(i1);
-            }
+            neighbors.remove(level.startingLocation);
         }
-        return path;
+        
+        int random = (int) (Math.random() * neighbors.size());
+        Intersection nextIntersection = neighbors.get(random);
+        p.setNextIntersection(nextIntersection);
+        Road roadInBetween = getRoad(currentIntersection, nextIntersection);
+        if (roadInBetween != null)
+        {
+            p.setTarget(nextIntersection.x , nextIntersection.y );
+            p.startMovingToTarget(roadInBetween.speedLimit / 10);
+        }
+    }
+    
+    public void generateZombiePath(Zombie z)
+    {
+        Road currentRoad = findRoadAtSpriteLocation(z);
+        Intersection firstIntersection;
+        if (currentRoad.isOneWay())
+        {
+            firstIntersection = currentRoad.node1;
+        } else
+        {
+            firstIntersection = currentRoad.node2;
+        }
+        
+        z.getPath().add(firstIntersection);
+        
+        ArrayList<Road> roads = getNeighborRoads(firstIntersection);
     }
     
     /**
@@ -574,10 +768,13 @@ public class pathXDataModel extends MiniGameDataModel
     @Override
     public void checkMousePressOnSprites(MiniGame game, int x, int y)
     {
-        Intersection i = findIntersectionAtCanvasLocation(x, y);
+        Viewport gameViewport = this.game.getGameViewport();
+        Intersection i = findIntersectionAtCanvasLocation(x+gameViewport.getViewportX(), y+gameViewport.getViewportY());
         if (i != null)
         {
-            findShortestPathToIntersection(i);
+            ArrayList<Intersection> shortestPath = findShortestPathToIntersection(i);
+            player.resetIndex();
+            player.initPath(shortestPath);
         }
     }
     
@@ -604,20 +801,14 @@ public class pathXDataModel extends MiniGameDataModel
         {
             game.beginUsingData();
             
-            pathXTile player = ((pathXMiniGame)game).getGUICharacters().get(PLAYER_TYPE);
+//            pathXTile player = ((pathXMiniGame)game).getGUICharacters().get(PLAYER_TYPE);
             player.update(game);
             
-            for (pathXTile zombie : zombies)
+            for (Police p : level.getPolices())
             {
-                zombie.update(game);
-            }
-            for (pathXTile police : police)
-            {
-                police.update(game);
-            }
-            for (pathXTile bandit : bandits)
-            {
-                bandit.update(game);
+                if (!p.isMovingToTarget())
+                    generatePolicePath(p);
+                p.update(game);
             }
         } finally
         {

@@ -236,9 +236,10 @@ public class pathXMiniGame extends MiniGame
 
             // LOAD ALL THE AUDIO
             loadAudioCue(pathXPropertyType.AUDIO_CUE_SELECT);
+            loadAudioCue(pathXPropertyType.SONG_CUE_MENU_SCREEN);
 
             // PLAY THE WELCOME SCREEN SONG
-            
+//            audio.play(pathXPropertyType.SONG_CUE_MENU_SCREEN.toString(), true);
         }
         catch(UnsupportedAudioFileException | IOException | LineUnavailableException | InvalidMidiDataException | MidiUnavailableException e)
         {
@@ -555,6 +556,21 @@ public class pathXMiniGame extends MiniGame
         sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
         s = new Sprite(sT, GAME_SPEED_SLIDER_X, GAME_SPEED_SLIDER_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
         guiDecor.put(GAME_SPEED_SLIDER_TYPE, s);
+        
+        String spriteSheetFile = props.getProperty(pathXPropertyType.IMAGE_SPRITE_SHEET_SPECIALS);
+        try
+        {
+            ArrayList<BufferedImage> specialImages = loadSpriteSheetImages(imgPath + spriteSheetFile,
+                    16, 4, 4, 0, 0);
+            
+            for (int i = 0; i < specialImages.size(); i++)
+            {
+                
+            }
+        } catch(IOException e)
+        {
+            
+        }
         
         sT = new SpriteType(PLAYER_TYPE);
         img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_PLAYER));

@@ -1,31 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <level image="CaliforniaBackground.png" name="California1">
      <intersections>
-          <intersection id="0" open="true" x="121" y="260"/>
-          <intersection id="0" open="true" x="594" y="623"/>
-          <intersection id="0" open="true" x="489" y="263"/>
-          <intersection id="0" open="true" x="496" y="461"/>
-          <intersection id="0" open="true" x="955" y="389"/>
-          <intersection id="0" open="false" x="608" y="112"/>
+          <intersection id="0" open="true" x="121" y="274"/>
+          <intersection id="0" open="true" x="1052" y="601"/>
+          <intersection id="0" open="true" x="499" y="267"/>
+          <intersection id="0" open="true" x="730" y="109"/>
+          <intersection id="0" open="true" x="1051" y="375"/>
+          <intersection id="0" open="true" x="579" y="106"/>
           <intersection id="0" open="true" x="318" y="270"/>
           <intersection id="0" open="true" x="657" y="263"/>
-          <intersection id="0" open="false" x="962" y="155"/>
-          <intersection id="0" open="false" x="727" y="469"/>
+          <intersection id="0" open="false" x="1048" y="120"/>
+          <intersection id="0" open="true" x="498" y="452"/>
      </intersections>
+     <zombies_list>
+          <zombie id="0" x="498" y="264"/>
+     </zombies_list>
+     <polices_list>
+          <policee id="0" x="728" y="106"/>
+          <policee id="0" x="658" y="261"/>
+     </polices_list>
+     <bandits_list>
+          <bandit id="0" x="1050" y="372"/>
+     </bandits_list>
      <roads>
           <road int_id1="0" int_id2="6" one_way="false" speed_limit="30"/>
           <road int_id1="6" int_id2="2" one_way="false" speed_limit="30"/>
-          <road int_id1="2" int_id2="3" one_way="false" speed_limit="60"/>
-          <road int_id1="3" int_id2="7" one_way="false" speed_limit="30"/>
+          <road int_id1="3" int_id2="7" one_way="false" speed_limit="70"/>
           <road int_id1="7" int_id2="5" one_way="false" speed_limit="100"/>
-          <road int_id1="6" int_id2="5" one_way="false" speed_limit="30"/>
           <road int_id1="7" int_id2="2" one_way="true" speed_limit="30"/>
           <road int_id1="7" int_id2="4" one_way="false" speed_limit="30"/>
-          <road int_id1="7" int_id2="8" one_way="false" speed_limit="30"/>
+          <road int_id1="7" int_id2="8" one_way="false" speed_limit="50"/>
           <road int_id1="8" int_id2="4" one_way="true" speed_limit="30"/>
-          <road int_id1="9" int_id2="1" one_way="false" speed_limit="20"/>
-          <road int_id1="9" int_id2="4" one_way="false" speed_limit="30"/>
-          <road int_id1="6" int_id2="9" one_way="false" speed_limit="30"/>
+          <road int_id1="3" int_id2="8" one_way="false" speed_limit="60"/>
+          <road int_id1="2" int_id2="5" one_way="false" speed_limit="30"/>
+          <road int_id1="9" int_id2="6" one_way="true" speed_limit="30"/>
+          <road int_id1="9" int_id2="7" one_way="false" speed_limit="100"/>
+          <road int_id1="9" int_id2="2" one_way="false" speed_limit="30"/>
+          <road int_id1="1" int_id2="4" one_way="false" speed_limit="30"/>
+          <road int_id1="4" int_id2="9" one_way="true" speed_limit="10"/>
      </roads>
      <start_intersection id="0" image="CaliforniaStart0.png"/>
      <destination_intersection id="1" image="Safehouse.png"/>

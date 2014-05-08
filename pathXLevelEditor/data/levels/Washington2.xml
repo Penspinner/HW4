@@ -9,13 +9,13 @@
           <intersection id="0" open="true" x="276" y="291"/>
      </intersections>
      <zombies_list>
-          <zombie id="0" x="712" y="360"/>
+          <zombie id="0" x="411" y="529"/>
      </zombies_list>
      <polices_list>
-          <policee id="0" x="538" y="203"/>
+          <policee id="0" x="593" y="60"/>
      </polices_list>
      <bandits_list>
-          <bandit id="0" x="600" y="525"/>
+          <bandit id="0" x="772" y="519"/>
      </bandits_list>
      <roads>
           <road int_id1="2" int_id2="4" one_way="false" speed_limit="30"/>

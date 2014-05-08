@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import mini_game.MiniGame;
 import mini_game.Sprite;
 import mini_game.SpriteType;
+import static pathX.pathXConstants.*;
 import pathX.data.Intersection;
 
 /**
@@ -56,6 +57,11 @@ public class pathXTile extends Sprite
         return currentIntersection;
     }
     
+    public ArrayList<Intersection> getPath()
+    {
+        return path;
+    }
+    
     public void setCurrentIntersection(Intersection currentIntersection)
     {
         this.currentIntersection = currentIntersection;
@@ -65,6 +71,11 @@ public class pathXTile extends Sprite
     {
         targetX = initTargetX;
         targetY = initTargetY;
+    }
+    
+    public void resetIndex()
+    {
+        pathIndex = 0;
     }
     
     public boolean isMovingToTarget()
@@ -81,7 +92,8 @@ public class pathXTile extends Sprite
             path.add(i);
         }
         
-        setTarget(path.get(pathIndex).x, path.get(pathIndex).y);
+        setTarget(path.get(pathIndex).x - INTERSECTION_RADIUS, path.get(pathIndex).y - INTERSECTION_RADIUS);
+        startMovingToTarget(10);
     }
     
     public void startMovingToTarget(int maxVelocity)
@@ -135,10 +147,27 @@ public class pathXTile extends Sprite
     @Override
     public void update(MiniGame game)
     {
-        if (calculateDistanceToTarget() < 20)
+        if (calculateDistanceToTarget() < INTERSECTION_RADIUS)
         {
+            
+            movingToTarget = false;
             vX = 0;
             vY = 0;
+            
+            if (pathIndex < path.size() - 1)
+            {
+                pathIndex++;
+                x = targetX;
+                y = targetY;
+                
+                targetX = path.get(pathIndex).x - INTERSECTION_RADIUS;
+                targetY = path.get(pathIndex).y - INTERSECTION_RADIUS;
+
+                startMovingToTarget(10);
+            } else
+            {
+                resetIndex();
+            }
         }
         super.update(game);
     }

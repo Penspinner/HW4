@@ -3,32 +3,32 @@
      <intersections>
           <intersection id="0" open="true" x="136" y="236"/>
           <intersection id="0" open="true" x="1466" y="357"/>
-          <intersection id="0" open="false" x="465" y="108"/>
+          <intersection id="0" open="true" x="465" y="108"/>
           <intersection id="0" open="true" x="700" y="98"/>
-          <intersection id="0" open="false" x="1168" y="134"/>
+          <intersection id="0" open="true" x="1168" y="134"/>
           <intersection id="0" open="true" x="1224" y="360"/>
-          <intersection id="0" open="false" x="687" y="581"/>
+          <intersection id="0" open="true" x="687" y="581"/>
           <intersection id="0" open="false" x="465" y="337"/>
           <intersection id="0" open="true" x="352" y="232"/>
           <intersection id="0" open="true" x="632" y="326"/>
           <intersection id="0" open="true" x="469" y="578"/>
-          <intersection id="0" open="false" x="903" y="98"/>
+          <intersection id="0" open="true" x="903" y="98"/>
           <intersection id="0" open="false" x="832" y="332"/>
           <intersection id="0" open="true" x="972" y="571"/>
      </intersections>
      <zombies_list>
-          <zombie id="0" x="545" y="213"/>
-          <zombie id="0" x="745" y="325"/>
-          <zombie id="0" x="762" y="451"/>
+          <zombie id="0" x="633" y="327"/>
+          <zombie id="0" x="469" y="576"/>
+          <zombie id="0" x="685" y="579"/>
      </zombies_list>
      <polices_list>
-          <policee id="0" x="405" y="280"/>
-          <policee id="0" x="1049" y="216"/>
+          <policee id="0" x="695" y="92"/>
+          <policee id="0" x="902" y="96"/>
      </polices_list>
      <bandits_list>
-          <bandit id="0" x="1123" y="129"/>
-          <bandit id="0" x="506" y="580"/>
-          <bandit id="0" x="927" y="570"/>
+          <bandit id="0" x="465" y="107"/>
+          <bandit id="0" x="1165" y="131"/>
+          <bandit id="0" x="969" y="569"/>
      </bandits_list>
      <roads>
           <road int_id1="0" int_id2="8" one_way="false" speed_limit="30"/>
@@ -53,6 +53,7 @@
           <road int_id1="9" int_id2="6" one_way="true" speed_limit="100"/>
           <road int_id1="13" int_id2="6" one_way="true" speed_limit="30"/>
           <road int_id1="11" int_id2="5" one_way="false" speed_limit="30"/>
+          <road int_id1="10" int_id2="9" one_way="false" speed_limit="30"/>
      </roads>
      <start_intersection id="0" image="FloridaStart0.png"/>
      <destination_intersection id="1" image="Safehouse.png"/>

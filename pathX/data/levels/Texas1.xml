@@ -6,14 +6,27 @@
           <intersection id="0" open="true" x="882" y="348"/>
           <intersection id="0" open="true" x="461" y="99"/>
           <intersection id="0" open="true" x="264" y="218"/>
-          <intersection id="0" open="false" x="551" y="232"/>
+          <intersection id="0" open="true" x="551" y="232"/>
           <intersection id="0" open="true" x="671" y="370"/>
-          <intersection id="0" open="true" x="439" y="652"/>
-          <intersection id="0" open="true" x="317" y="415"/>
+          <intersection id="0" open="true" x="493" y="633"/>
+          <intersection id="0" open="true" x="391" y="397"/>
           <intersection id="0" open="false" x="569" y="489"/>
           <intersection id="0" open="true" x="793" y="526"/>
-          <intersection id="0" open="false" x="720" y="149"/>
+          <intersection id="0" open="false" x="756" y="103"/>
      </intersections>
+     <zombies_list>
+          <zombie id="0" x="392" y="397"/>
+          <zombie id="0" x="791" y="522"/>
+     </zombies_list>
+     <polices_list>
+          <policee id="0" x="550" y="230"/>
+          <policee id="0" x="669" y="366"/>
+     </polices_list>
+     <bandits_list>
+          <bandit id="0" x="456" y="96"/>
+          <bandit id="0" x="491" y="632"/>
+          <bandit id="0" x="879" y="345"/>
+     </bandits_list>
      <roads>
           <road int_id1="0" int_id2="4" one_way="false" speed_limit="30"/>
           <road int_id1="4" int_id2="3" one_way="true" speed_limit="30"/>
@@ -38,6 +51,6 @@
      <destination_intersection id="1" image="Safehouse.png"/>
      <money amount="1100"/>
      <police num="2"/>
-     <bandits num="1"/>
-     <zombies num="3"/>
+     <bandits num="3"/>
+     <zombies num="2"/>
 </level>

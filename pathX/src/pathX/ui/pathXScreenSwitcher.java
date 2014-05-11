@@ -36,6 +36,7 @@ public class pathXScreenSwitcher
             game.getGUIButtons().get(HOME_BUTTON_TYPE).setY(0);
             game.getGUIButtons().get(EXIT_BUTTON_TYPE).setX(EXIT_BUTTON_X);
             game.getGUIButtons().get(EXIT_BUTTON_TYPE).setY(0);
+            enableSpecialButtons(false);
         } 
         
         // CHANGE THE BACKGROUND
@@ -98,8 +99,8 @@ public class pathXScreenSwitcher
             game.getGUIButtons().get(MUSIC_MUTE_BOX_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
             game.getGUIButtons().get(MUSIC_MUTE_BOX_BUTTON_TYPE).setEnabled(true);
         }
-        game.getGUIDecor().get(GAME_SPEED_SLIDER_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
-        game.getGUIDecor().get(GAME_SPEED_SLIDER_TYPE).setEnabled(true);
+        game.getGUIButtons().get(CHANGE_SPEED_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
+        game.getGUIButtons().get(CHANGE_SPEED_BUTTON_TYPE).setEnabled(true);
     }
     
     /**
@@ -108,6 +109,7 @@ public class pathXScreenSwitcher
      */
     public void switchToGameScreen()
     {
+        enableSpecialButtons(true);
         disableLevelButtons();
         
         // CHANGE THE BACKGROUND
@@ -147,8 +149,8 @@ public class pathXScreenSwitcher
             game.getGUIButtons().get(SOUND_MUTE_BOX_BUTTON_TYPE).setEnabled(false);
             game.getGUIButtons().get(MUSIC_MUTE_BOX_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
             game.getGUIButtons().get(MUSIC_MUTE_BOX_BUTTON_TYPE).setEnabled(false);
-            game.getGUIDecor().get(GAME_SPEED_SLIDER_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-            game.getGUIDecor().get(GAME_SPEED_SLIDER_TYPE).setEnabled(false);
+            game.getGUIButtons().get(CHANGE_SPEED_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+            game.getGUIButtons().get(CHANGE_SPEED_BUTTON_TYPE).setEnabled(false);
         } else if (game.isCurrentScreenState(LEVEL_SELECT_SCREEN_STATE))
         {
             game.getGUIDecor().get(MAP_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
@@ -167,6 +169,7 @@ public class pathXScreenSwitcher
             game.getGUIButtons().get(HOME_BUTTON_TYPE).setY(0);
             game.getGUIButtons().get(EXIT_BUTTON_TYPE).setX(EXIT_BUTTON_X);
             game.getGUIButtons().get(EXIT_BUTTON_TYPE).setY(0);
+            enableSpecialButtons(false);
             disableScrollButtons();
         } else if (game.isCurrentScreenState(HELP_SCREEN_STATE))
         {
@@ -245,6 +248,18 @@ public class pathXScreenSwitcher
             {
                 level.setEnabled(false);
             }
+        }
+    }
+    
+    public void enableSpecialButtons(boolean b)
+    {
+        for (int i = 0; i < game.getSpecials().getSpecialTiles().size(); i++)
+        {
+            game.getGUIButtons().get(SPECIALS_NAME_LIST[i]).setEnabled(b);
+            if (b)
+                game.getGUIButtons().get(SPECIALS_NAME_LIST[i]).setState(pathXTileState.VISIBLE_STATE.toString());
+            else
+                game.getGUIButtons().get(SPECIALS_NAME_LIST[i]).setState(pathXTileState.INVISIBLE_STATE.toString());
         }
     }
 }

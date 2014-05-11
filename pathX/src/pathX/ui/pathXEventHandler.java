@@ -3,10 +3,14 @@ package pathX.ui;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import javax.sound.sampled.Clip;
 import mini_game.MiniGameState;
 import mini_game.Sprite;
 import mini_game.Viewport;
 import pathX.data.pathXDataModel;
+import pathX.pathX.pathXPropertyType;
 import static pathX.pathXConstants.*;
 /**
  *
@@ -58,13 +62,14 @@ public class pathXEventHandler
 //        else
         {
             game.getScreenSwitcher().switchToLevelSelectScreen();
+            game.getAudio().play(pathXPropertyType.AUDIO_CUE_SELECT.toString(), false);
         }
     }
     
     /**
      * Called when the user clicks on a level.
      */
-    public void respondToLevelSelectRequest(pathXTile px)
+    public void respondToLevelSelectRequest(String fileName)
     {
 //        ArrayList<String> levels = ((pathXDataModel)game.getDataModel()).getLevelNames();
 //        String levelName = "";
@@ -75,7 +80,7 @@ public class pathXEventHandler
 //                levelName = px.getSpriteType().getSpriteTypeID().substring(17);
 //            }
 //        }
-        File file = new File(LEVELS_PATH + px.getName());
+        File file = new File(LEVELS_PATH + fileName);
         boolean loadedSuccessfully = game.getXMLLevelIO().loadLevel(file, ((pathXDataModel)game.getDataModel()));
         if (loadedSuccessfully)
         {
@@ -92,6 +97,7 @@ public class pathXEventHandler
     public void respondToResetButtonRequest()
     {
         game.reset();
+        game.getAudio().play(pathXPropertyType.AUDIO_CUE_SELECT.toString(), false);
     }
     
     /**
@@ -101,6 +107,7 @@ public class pathXEventHandler
     {
         if (!game.isCurrentScreenState(SETTINGS_SCREEN_STATE))
             game.getScreenSwitcher().switchToSettingsScreen();
+        game.getAudio().play(pathXPropertyType.AUDIO_CUE_SELECT.toString(), false);
     }
     
     /**
@@ -110,6 +117,7 @@ public class pathXEventHandler
     {
         if (!game.isCurrentScreenState(HELP_SCREEN_STATE))
             game.getScreenSwitcher().switchToHelpScreen();
+        game.getAudio().play(pathXPropertyType.AUDIO_CUE_SELECT.toString(), false);
     }
     
     /**
@@ -118,6 +126,7 @@ public class pathXEventHandler
     public void respondToHomeButtonRequest()
     {
         game.getScreenSwitcher().switchToMenuScreen();
+        game.getAudio().play(pathXPropertyType.AUDIO_CUE_SELECT.toString(), false);
     }
     
     /**
@@ -125,7 +134,7 @@ public class pathXEventHandler
      * 
      * @param muteButton 
      */
-    public void respondToMuteButtonRequest(Sprite muteButton)
+    public void respondToMuteButtonRequest(Sprite muteButton, String cue)
     {
         if (!muteButton.getState().equals(pathXTileState.SELECTED_STATE.toString()))
         {
@@ -133,6 +142,18 @@ public class pathXEventHandler
         } else
         {
             muteButton.setState(pathXTileState.VISIBLE_STATE.toString());
+        }
+        
+        // MUTE THE SOUNDS
+        HashMap<String, Clip> soundMap = game.getAudio().getWavAudio();
+        Iterator<String> it = soundMap.keySet().iterator();
+        while (it.hasNext())
+        {
+            String soundName = it.next();
+            if (soundName.contains(cue))
+            {
+                game.getAudio().mute(soundName);
+            }
         }
     }
     
@@ -158,6 +179,14 @@ public class pathXEventHandler
         {
             game.getDataModel().beginGame();
         }
+    }
+    
+    /**
+     * Called when the user clicks on the try again button.
+     */
+    public void respondToTryAgainButtonRequest()
+    {
+        
     }
     
     /**
@@ -278,16 +307,22 @@ public class pathXEventHandler
             switch (keyCode)
             {
                 // SCROLL UP
+                case KeyEvent.VK_W:
                 case KeyEvent.VK_UP:    {   scroll("UP");   } break;
                     
                 // SCROLL DOWN
+                case KeyEvent.VK_S:
                 case KeyEvent.VK_DOWN:  {   scroll("DOWN"); } break;
                     
                 // SCROLL LEFT
+                case KeyEvent.VK_A:
                 case KeyEvent.VK_LEFT:  {   scroll("LEFT"); } break;
                     
                 // SCROLL RIGHT
+                case KeyEvent.VK_D:
                 case KeyEvent.VK_RIGHT: {   scroll("RIGHT");} break;
+                    
+                case KeyEvent.VK_B:     {   game.getSpecialsHandler().useSpecial(ID_ATT);} break;
             }
         }
     }

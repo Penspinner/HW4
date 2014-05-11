@@ -154,6 +154,9 @@ public class pathXTile extends Sprite
             vX = 0;
             vY = 0;
             
+            x = targetX;
+            y = targetY;
+            
             if (pathIndex < path.size() - 1)
             {
                 pathIndex++;

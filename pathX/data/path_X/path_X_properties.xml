@@ -43,12 +43,18 @@
         <property name="IMAGE_BUTTON_HOME_MOUSE_OVER"           value="./pathX/ButtonHomeMouseOver.png"></property>
         <property name="IMAGE_BUTTON_EXIT"                      value="./pathX/ButtonExit.png"></property>
         <property name="IMAGE_BUTTON_EXIT_MOUSE_OVER"           value="./pathX/ButtonExitMouseOver.png"></property>
+        <property name="IMAGE_BUTTON_CHANGE_SPEED"              value="./pathX/ButtonChangeSpeed.png"></property>
+        <property name="IMAGE_BUTTON_CHANGE_SPEED_MOUSE_OVER"   value="./pathX/ButtonChangeSpeedMouseOver.png"></property>
         <property name="IMAGE_BUTTON_START"                     value="./pathX/ButtonStart.png"></property>
         <property name="IMAGE_BUTTON_START_MOUSE_OVER"          value="./pathX/ButtonStartMouseOver.png"></property>
         <property name="IMAGE_BUTTON_CLOSE"                     value="./pathX/ButtonClose.png"></property>
         <property name="IMAGE_BUTTON_CLOSE_MOUSE_OVER"          value="./pathX/ButtonCloseMouseOver.png"></property>
         <property name="IMAGE_BUTTON_PAUSE"                     value="./pathX/ButtonPause.png"></property>
         <property name="IMAGE_BUTTON_PAUSE_MOUSE_OVER"          value="./pathX/ButtonPauseMouseOver.png"></property>
+        <property name="IMAGE_BUTTON_TRY_AGAIN"                 value="./pathX/ButtonTryAgain.png"></property>
+        <property name="IMAGE_BUTTON_TRY_AGAIN_MOUSE_OVER"      value="./pathX/ButtonTryAgainMouseOver.png"></property>
+        <property name="IMAGE_BUTTON_LEAVE"                     value="./pathX/ButtonLeave.png"></property>
+        <property name="IMAGE_BUTTON_LEAVE_MOUSE_OVER"          value="./pathX/ButtonLeaveMouseOver.png"></property>
         
         <!-- AUDIO AND SONG CUES -->
         <property name="AUDIO_CUE_SELECT"                       value="./pathX/Select.wav"></property>
@@ -82,7 +88,27 @@
             <option>Zucker.xml</option>
             <option>Gates.xml</option>
         </property_options>
-        <property_options name="LEVEL_IMAGE_OPTIONS">
+        <property_options name="LEVEL_NAME_OPTIONS">
+            <option>Seattle Bank, WA</option>
+            <option>Washington State Bank, WA</option>
+            <option>Columbia Bank, WA</option>
+            <option>Mansion 1, MT</option>
+            <option>Mansion 2, MT</option>
+            <option>Mansion 3, MT</option>
+            <option>Eagle Mountain Casino, CA</option>
+            <option>Thunder Valley Casino, CA</option>
+            <option>Commerce Casino, CA</option>
+            <option>Rosewood Crescent Hotel, TX</option>
+            <option>One Shell Plaza, TX</option>
+            <option>JP Morgan Chase, TX</option>
+            <option>Epcot Amusement Park, FL</option>
+            <option>Typhoon Lagoon, FL</option>
+            <option>Magic Kingdom, FL</option>
+            <option>Google Building, NY</option>
+            <option>TWC Headquarters, NY</option>
+            <option>Verizon Headquarters, NY</option>
+            <option>Mark Zuckerberg's Home, CA</option>
+            <option>Bill Gates' Home, WA</option>
         </property_options>
         <property_options name="MENU_BUTTON_OPTIONS">
             <option>./pathX/ButtonPlayGame.png</option>

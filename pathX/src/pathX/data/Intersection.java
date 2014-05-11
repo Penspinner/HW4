@@ -16,6 +16,8 @@ public class Intersection
     public int x;
     public int y;
     
+    public double weight;
+    
     // IS IT OPEN OR NOT
     public boolean open;
 
@@ -28,11 +30,13 @@ public class Intersection
         x = initX;
         y = initY;
         open = true;
+        weight = Integer.MAX_VALUE;
     }
 
     // ACCESSOR METHODS
     public int getX()       {   return x;       }
     public int getY()       {   return y;       }
+    public double getWeight()  {   return weight;  }
     public boolean isOpen() {   return open;    }
     
     // MUTATOR METHODS
@@ -40,6 +44,8 @@ public class Intersection
     {   this.x = x;         }
     public void setY(int y)
     {   this.y = y;         }
+    public void setWeight(double weight)
+    {   this.weight = weight;}
     public void setOpen(boolean open)
     {   this.open = open;   }
     
@@ -47,9 +53,7 @@ public class Intersection
      * This toggles the intersection open/closed.
      */
     public void toggleOpen()
-    {
-        open = !open;
-    }
+    {   open = !open;     }
     
     /**
      * Returns a textual representation of this intersection.

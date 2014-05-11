@@ -7,10 +7,16 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Stroke;
+import java.awt.font.FontRenderContext;
+import java.awt.font.LineBreakMeasurer;
+import java.awt.font.TextAttribute;
+import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
+import java.text.AttributedCharacterIterator;
+import java.text.AttributedString;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -109,6 +115,8 @@ public class pathXPanel extends JPanel
                 renderLevel(g2);
                 renderBackground(g2);
                 renderDetails(g2);
+                
+                renderGUIControls(g2);
             } else if (((pathXMiniGame)game).isCurrentScreenState(GAME_SCREEN_STATE))
             {
                 renderLevelBackground(g2);
@@ -117,6 +125,10 @@ public class pathXPanel extends JPanel
                 renderPlayer(g2);
                 renderC(g2);
                 renderBackground(g2);
+                renderSpecialTiles(g2);
+                renderGUIControls(g2);
+                if (game.isDisplayingInfo())
+                    renderLevelDetails(g2);
             } else
             {
                 // RENDER THE BACKGROUND, WHICHEVER SCREEN WE'RE ON
@@ -133,9 +145,9 @@ public class pathXPanel extends JPanel
                 {
                     renderGameSpeed(g2);
                 }
+                // AND THE BUTTONS AND DECOR
+                renderGUIControls(g2);
             }
-            // AND THE BUTTONS AND DECOR
-            renderGUIControls(g2);
         } 
         finally
         {
@@ -255,6 +267,11 @@ public class pathXPanel extends JPanel
         g2.drawString("Balance: $" + data.getBalance(), DETAILS_X, BALANCE_Y);
         g2.drawString("Goal: $" + GOAL_MONEY, DETAILS_X, GOAL_Y);
     }
+    
+    public void renderLevelDescription(Graphics2D g2)
+    {
+        
+    }
 
     public void renderLevel(Graphics2D g2)
     {
@@ -271,6 +288,11 @@ public class pathXPanel extends JPanel
                 else
                     level.setEnabled(true);
                 g2.drawImage(img, (int) level.getX(), (int) level.getY(), sTLevel.getWidth(), sTLevel.getHeight(), null);
+                if (level.containsPoint(data.getLastMouseX(), data.getLastMouseY()))
+                {
+                    g2.setFont(FONT_TEXT_DISPLAY);
+                    g2.drawString(((pathXTile)level).getName(), 500, 520);
+                }
             }
         }
     }
@@ -278,7 +300,44 @@ public class pathXPanel extends JPanel
     public void renderGameSpeed(Graphics2D g2)
     {
         g2.setFont(FONT_TEXT_DISPLAY);
-        g2.drawString("Speed: ", 400, 440);
+        g2.drawString("" + data.getGameSpeed(), 500, 358);
+    }
+    
+    public void renderLevelTitle(Graphics2D g2)
+    {
+        g2.setFont(STATS_TEXT_FONT);
+        g2.drawString("" + data.getLevel().getMoney(), WIDTH, WIDTH);
+    }
+    
+    public void renderLevelDetails(Graphics2D g2)
+    {
+        // FIRST RENDER THE STATE AND CITY OF THE LEVEL
+        g2.setFont(FONT_TEXT_DISPLAY);
+        g2.drawString(data.getLevel().getLevelName(), 220, 90);
+        
+        // THEN RENDER THE DESCRIPTION
+        HashMap<TextAttribute, Object> map = new HashMap<TextAttribute, Object>();
+        map.put(TextAttribute.FONT, FONT_TEXT_DISPLAY);
+        AttributedString s1 = new AttributedString("Hello, this is Steven. \n How are you? \n\n WLHSGLDKJGH", map);
+        AttributedCharacterIterator paragraph = s1.getIterator();
+        int paragraphStart = paragraph.getBeginIndex();
+        int paragraphEnd = paragraph.getEndIndex();
+        FontRenderContext frc = g2.getFontRenderContext();
+        LineBreakMeasurer lineMeasurer = new LineBreakMeasurer(paragraph, frc);
+        
+        float breakWidth = 560;
+        float drawPosY = 150;
+        float drawPosX = 220;
+        lineMeasurer.setPosition(paragraphStart);
+        
+        while (lineMeasurer.getPosition() < paragraphEnd)
+        {
+            TextLayout layout = lineMeasurer.nextLayout(breakWidth);
+            
+            drawPosY += layout.getAscent();
+            layout.draw(g2, drawPosX, drawPosY);
+            drawPosY += layout.getDescent() + layout.getLeading();
+        }
     }
     
         // HELPER METHOD FOR RENDERING THE LEVEL BACKGROUND
@@ -569,6 +628,17 @@ public class pathXPanel extends JPanel
                     (int) data.getBandits().get(i).getX() - gameViewport.getViewportX(), 
                     (int) data.getBandits().get(i).getY() - gameViewport.getViewportY(), 
                     null);
+        }
+    }
+    
+    public void renderSpecialTiles(Graphics2D g2)
+    {
+        Viewport gameViewport = ((pathXMiniGame)game).getGameViewport();
+        for(pathXTile tile : game.getSpecials().getSpecialTiles())
+        {
+            tile.setState(pathXTileState.VISIBLE_STATE.toString());
+//            Image img = tile.getSpriteType().getStateImage(tile.getState());
+//            g2.drawImage(img, (int) tile.getX(), (int) tile.getY(), null);
         }
     }
 }

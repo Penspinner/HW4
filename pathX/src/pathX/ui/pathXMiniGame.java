@@ -21,6 +21,7 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import mini_game.MiniGame;
 import mini_game.SpriteType;
 import mini_game.Sprite;
@@ -51,6 +52,8 @@ public class pathXMiniGame extends MiniGame
     // MANAGES LOADING OF LEVELS AND THE PLAYER RECORDS FILES
     private pathXFileManager fileManager;
     
+    private pathXSpecials specials;
+    
     // HANDLES GAME SPECIALS
     private pathXSpecialsHandler specialsHandler;
     
@@ -71,6 +74,9 @@ public class pathXMiniGame extends MiniGame
     
     // THE MUSIC IS MUTED OR NOT
     private boolean musicMuted;
+    
+    // DISPLAYING INFO DIALOG?
+    private boolean displayingInfo;
     
     // THE VIEWPORT FOR THE MAP
     private Viewport mapViewport;
@@ -115,6 +121,15 @@ public class pathXMiniGame extends MiniGame
     public pathXFileManager getFileManager()
     {
         return fileManager;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    public pathXSpecials getSpecials()
+    {
+        return specials;
     }
     
     /**
@@ -192,6 +207,11 @@ public class pathXMiniGame extends MiniGame
         return musicMuted;
     }
     
+    public boolean isDisplayingInfo()
+    {
+        return displayingInfo;
+    }
+    
     /**
      * Used to get the map viewport.
      * 
@@ -239,11 +259,12 @@ public class pathXMiniGame extends MiniGame
             loadAudioCue(pathXPropertyType.SONG_CUE_MENU_SCREEN);
 
             // PLAY THE WELCOME SCREEN SONG
-//            audio.play(pathXPropertyType.SONG_CUE_MENU_SCREEN.toString(), true);
+            audio.play(pathXPropertyType.SONG_CUE_MENU_SCREEN.toString(), true);
         }
         catch(UnsupportedAudioFileException | IOException | LineUnavailableException | InvalidMidiDataException | MidiUnavailableException e)
         {
 //            errorHandler.processError(SortingHatPropertyType.TEXT_ERROR_LOADING_AUDIO);
+            e.printStackTrace();
         }        
     }
 
@@ -311,6 +332,8 @@ public class pathXMiniGame extends MiniGame
         
         // INIT OUR DATA MANAGER
         data = new pathXDataModel(this);
+        
+        specials = new pathXSpecials(this, (pathXDataModel)data);
         
         gamePanel = new pathXGamePanel(this);
         
@@ -483,13 +506,15 @@ public class pathXMiniGame extends MiniGame
         guiButtons.put(PAUSE_BUTTON_TYPE, s);
         
         // ADD THE LEVELS WITH STATUS
-        ArrayList<String> levels = ((pathXDataModel)data).getLevelNames();
+        ArrayList<String> levels = ((pathXDataModel)data).getLevelFiles();
+        ArrayList<String> levelNames = ((pathXDataModel)data).getLevelNames();
         ArrayList<String> levelStates = ((pathXDataModel)data).getLevelStates();
         for (int i = 0; i < levels.size(); i++)
         {
-            String levelName = levels.get(i);
+            String level = levels.get(i);
+            String levelName = levelNames.get(i);
             String levelState = levelStates.get(i);
-            sT = new SpriteType(LEVEL_BUTTON_TYPE + levelName);
+            sT = new SpriteType(LEVEL_BUTTON_TYPE);
             img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_LOCKED_LOCATION));
             sT.addState(pathXTileState.LOCKED_STATE.toString(), img);
             img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_SUCCESSFUL_LOCATION));
@@ -497,16 +522,25 @@ public class pathXMiniGame extends MiniGame
             img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_UNSUCCESSFUL_LOCATION));
             sT.addState(pathXTileState.UNSUCCESSFUL_STATE.toString(), img);
             px = new pathXTile(sT, LEVEL_X_COORDINATES[i],LEVEL_Y_COORDINATES[i], 0, 0, levelState, levelName);
+            px.setActionCommand(level);
             // ADD THE LISTENER NOW SO THAT WE DON'T HAVE TO ADD IT LATER
             px.setActionListener(new ActionListener()
             {
+                pathXTile px;
+                public ActionListener init(pathXTile initPX)
+                {
+                    px = initPX;
+                    return this;
+                }
                 public void actionPerformed(ActionEvent e)
                 {
-                    pathXTile px = (pathXTile) e.getSource();
                     if (!px.getState().equals(pathXTileState.LOCKED_STATE.toString()))
-                        eventHandler.respondToLevelSelectRequest(px);
+                    {
+                        eventHandler.respondToLevelSelectRequest(px.getActionCommand());
+                        displayingInfo = true;
+                    }
                 }
-            });
+            }.init(px));
             guiButtons.put(levelName, px);
         }
         
@@ -523,6 +557,24 @@ public class pathXMiniGame extends MiniGame
         sT.addState(pathXTileState.MOUSE_OVER_STATE.toString(), img);
         s = new Sprite(sT, CLOSE_BUTTON_X, CLOSE_BUTTON_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
         guiButtons.put(CLOSE_BUTTON_TYPE, s);
+        
+        // ADD THE TRY AGAIN BUTTON
+        sT = new SpriteType(TRY_AGAIN_BUTTON_TYPE);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_TRY_AGAIN));
+        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_TRY_AGAIN_MOUSE_OVER));
+        sT.addState(pathXTileState.MOUSE_OVER_STATE.toString(), img);
+        s = new Sprite(sT, TRY_AGAIN_BUTTON_X, TRY_AGAIN_BUTTON_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
+        guiButtons.put(TRY_AGAIN_BUTTON_TYPE, s);
+        
+        // ADD THE LEAVE BUTTON
+        sT = new SpriteType(LEAVE_BUTTON_TYPE);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_LEAVE));
+        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_LEAVE_MOUSE_OVER));
+        sT.addState(pathXTileState.MOUSE_OVER_STATE.toString(), img);
+        s = new Sprite(sT, LEAVE_BUTTON_X, LEAVE_BUTTON_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
+        guiButtons.put(LEAVE_BUTTON_TYPE, s);
         
         // ADD SOUND AND MUSIC MUTE BOX -- THEY BOTH USE THE SAME IMAGE
         
@@ -550,27 +602,21 @@ public class pathXMiniGame extends MiniGame
         guiButtons.put(MUSIC_MUTE_BOX_BUTTON_TYPE, s);
         guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE).setEnabled(false);
         
+        // ADD THE SPEED CHANGING BUTTON
+        sT = new SpriteType(CHANGE_SPEED_BUTTON_TYPE);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_CHANGE_SPEED));
+        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
+        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_CHANGE_SPEED_MOUSE_OVER));
+        sT.addState(pathXTileState.MOUSE_OVER_STATE.toString(), img);
+        s = new Sprite(sT, CHANGE_SPEED_X, CHANGE_SPEED_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
+        guiButtons.put(CHANGE_SPEED_BUTTON_TYPE, s);
+        
         // ADD THE GAME SPEED SLIDER
         sT = new SpriteType(GAME_SPEED_SLIDER_TYPE);
         img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_GAME_SPEED_SLIDER));
         sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
         s = new Sprite(sT, GAME_SPEED_SLIDER_X, GAME_SPEED_SLIDER_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
         guiDecor.put(GAME_SPEED_SLIDER_TYPE, s);
-        
-        String spriteSheetFile = props.getProperty(pathXPropertyType.IMAGE_SPRITE_SHEET_SPECIALS);
-        try
-        {
-            ArrayList<BufferedImage> specialImages = loadSpriteSheetImages(imgPath + spriteSheetFile,
-                    16, 4, 4, 0, 0);
-            
-            for (int i = 0; i < specialImages.size(); i++)
-            {
-                
-            }
-        } catch(IOException e)
-        {
-            
-        }
         
         sT = new SpriteType(PLAYER_TYPE);
         img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_PLAYER));
@@ -595,6 +641,8 @@ public class pathXMiniGame extends MiniGame
         sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
         px = new pathXTile(sT, 0, 0, 0, 0, pathXTileState.VISIBLE_STATE.toString(), "BANDIT");
         guiCharacters.put(BANDIT_TYPE, px);
+        
+        specials.initSpecials();
     }
     
     /**
@@ -606,6 +654,7 @@ public class pathXMiniGame extends MiniGame
     {
         // WE'LL RELAY UI EVENTS TO THIS OBJECT FOR HANDLING
         eventHandler = new pathXEventHandler(this);
+        specialsHandler = new pathXSpecialsHandler(this, (pathXDataModel)data);
         
         // WE'LL HAVE A CUSTOM RESPONSE FOR WHEN THE USER CLOSES THE WINDOW
         window.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -663,6 +712,7 @@ public class pathXMiniGame extends MiniGame
             public void actionPerformed(ActionEvent e)
             {
                 eventHandler.respondToHomeButtonRequest();
+                displayingInfo = false;
             }
         });
         
@@ -672,6 +722,7 @@ public class pathXMiniGame extends MiniGame
             public void actionPerformed(ActionEvent e)
             {
                 eventHandler.respondToExitRequest();
+                displayingInfo = false;
             }
         });
         
@@ -753,6 +804,7 @@ public class pathXMiniGame extends MiniGame
             {
                 guiDecor.get(INFO_DIALOG_BOX_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
                 guiButtons.get(CLOSE_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+                displayingInfo = false;
             }
         });
         
@@ -761,7 +813,7 @@ public class pathXMiniGame extends MiniGame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                eventHandler.respondToMuteButtonRequest(guiButtons.get(SOUND_MUTE_BOX_BUTTON_TYPE));
+                eventHandler.respondToMuteButtonRequest(guiButtons.get(SOUND_MUTE_BOX_BUTTON_TYPE), "AUDIO_CUE");
                 if (soundMuted)
                     soundMuted = false;
                 else
@@ -774,13 +826,51 @@ public class pathXMiniGame extends MiniGame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                eventHandler.respondToMuteButtonRequest(guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE));
+                eventHandler.respondToMuteButtonRequest(guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE), "SONG_CUE");
                 if (musicMuted)
                     musicMuted = false;
                 else
                     musicMuted = true;
             }
         });
+        
+        guiButtons.get(CHANGE_SPEED_BUTTON_TYPE).setActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                String inputGameSpeed = JOptionPane.showInputDialog(null, "Enter a game speed");
+                try
+                {
+                    if (inputGameSpeed != null)
+                    {
+                        float gameSpeed = Float.parseFloat(inputGameSpeed);
+                        if (gameSpeed > 0)
+                        {
+                            ((pathXDataModel)data).updateGameSpeed(gameSpeed);
+                        }
+                    }
+                } catch (Exception ee)
+                {
+                    ee.printStackTrace();
+                }
+            }
+        });
+        
+        guiDecor.get(GAME_SPEED_SLIDER_TYPE).setActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                if (isCurrentScreenState(SETTINGS_SCREEN_STATE))
+                {
+                    Sprite gameSpeedSlider = guiDecor.get(GAME_SPEED_SLIDER_TYPE);
+                    gameSpeedSlider.setEnabled(true);
+                }
+            }
+        });
+        
+        specials.initSpecialsControls();
         
         this.setKeyListener(new KeyAdapter()
         {

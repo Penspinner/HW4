@@ -60,6 +60,24 @@ public class pathXConstants
     public static final String HELP_BUTTON_TYPE = "HELP_BUTTON_TYPE";
     public static final String EXIT_BUTTON_TYPE = "EXIT_BUTTON>TYPE";
     
+    // SPECIALS NAME ID
+    public static final String[] SPECIALS_NAME_LIST =  {"MAKE_LIGHT_GREEN",
+                                                        "MAKE_LIGHT_RED",
+                                                        "FLAT_TIRE",
+                                                        "EMPTY_GAS_TANK",
+                                                        "DECREASE_SPEED_LIMIT",
+                                                        "INCREASE_SPEED_LIMIT",
+                                                        "INCREASE_PLAYER_SPEED",
+                                                        "CLOSE_ROAD",
+                                                        "CLOSE_INTERSECTION",
+                                                        "OPEN_INTERSECTION",
+                                                        "STEAL",
+                                                        "MIND_CONTROL",
+                                                        "INTANGIBILITY",
+                                                        "MINDLESS_TERROR",
+                                                        "FLYING",
+                                                        "INVINCIBILITY"};
+    
     // LEVEL SELECT SCREEN USER INTERFACE CONTROLS
     public static final String[] SCROLL_BUTTON_TYPE = {"SCROLL_UP_BUTTON_TYPE",
                                                         "SCROLL_DOWN_BUTTON_TYPE",
@@ -76,10 +94,13 @@ public class pathXConstants
     public static final String SOUND_MUTE_BOX_BUTTON_TYPE = "SOUND_MUTE_BOX_TYPE";
     public static final String MUSIC_MUTE_BOX_BUTTON_TYPE = "MUSIC_MUTE_BOX_TYPE";
     public static final String GAME_SPEED_SLIDER_TYPE = "GAME_SPEED_SLIDER_TYPE";
+    public static final String CHANGE_SPEED_BUTTON_TYPE = "CHANGE_SPEED_BUTTON_TYPE";
     
     // GAMEPLAY BUTTONS
     public static final String START_BUTTON_TYPE = "START_BUTTON_TYPE";
     public static final String CLOSE_BUTTON_TYPE = "CLOSE_BUTTON_TYPE";
+    public static final String TRY_AGAIN_BUTTON_TYPE = "TRY_AGAIN_BUTTON_TYPE";
+    public static final String LEAVE_BUTTON_TYPE = "LEAVE_BUTTON_TYPE";
     
     // STATES TO SWITCH BETWEEN SCREENS
     public static final String MENU_SCREEN_STATE = "MENU_SCREEN_STATE";
@@ -101,30 +122,38 @@ public class pathXConstants
     public static final int START_BUTTON_X = 20;
     public static final int START_BUTTON_Y = 140;
     public static final int MAP_Y = 80;
-    public static final int SCROLL_UP_BUTTON_X = 50;
+    public static final int SCROLL_UP_BUTTON_X = 60;
     public static final int SCROLL_UP_BUTTON_Y = WINDOW_HEIGHT - 133;
-    public static final int SCROLL_DOWN_BUTTON_X = 50;
+    public static final int SCROLL_DOWN_BUTTON_X = SCROLL_UP_BUTTON_X;
     public static final int SCROLL_DOWN_BUTTON_Y = WINDOW_HEIGHT - 73;
-    public static final int SCROLL_LEFT_BUTTON_X = 20;
+    public static final int SCROLL_LEFT_BUTTON_X = 30;
     public static final int SCROLL_LEFT_BUTTON_Y = WINDOW_HEIGHT - 103;
-    public static final int SCROLL_RIGHT_BUTTON_X = 80;
+    public static final int SCROLL_RIGHT_BUTTON_X = SCROLL_LEFT_BUTTON_X + 60;
     public static final int SCROLL_RIGHT_BUTTON_Y = WINDOW_HEIGHT - 103;
-    public static final int PAUSE_BUTTON_X = 50;
+    public static final int PAUSE_BUTTON_X = SCROLL_UP_BUTTON_X;
     public static final int PAUSE_BUTTON_Y = WINDOW_HEIGHT - 103;
-    public static final int INFO_DIALOG_BOX_X = 150;
+    public static final int INFO_DIALOG_BOX_X = 200;
     public static final int INFO_DIALOG_BOX_Y = 50;
-    public static final int CLOSE_BUTTON_X = 350;
+    public static final int CLOSE_BUTTON_X = 400;
     public static final int CLOSE_BUTTON_Y = 400;
+    public static final int TRY_AGAIN_BUTTON_X = CLOSE_BUTTON_X + 100;
+    public static final int TRY_AGAIN_BUTTON_Y = CLOSE_BUTTON_Y + 350;
+    public static final int LEAVE_BUTTON_X = TRY_AGAIN_BUTTON_X + 250;
+    public static final int LEAVE_BUTTON_Y = TRY_AGAIN_BUTTON_Y;
     public static final int SOUND_MUTE_BOX_BUTTON_X = 400;
     public static final int SOUND_MUTE_BOX_BUTTON_Y = 160;
     public static final int MUSIC_MUTE_BOX_BUTTON_X = SOUND_MUTE_BOX_BUTTON_X;
     public static final int MUSIC_MUTE_BOX_BUTTON_Y = SOUND_MUTE_BOX_BUTTON_Y + 80;
+    public static final int CHANGE_SPEED_X = 375;
+    public static final int CHANGE_SPEED_Y = 400;
     public static final int GAME_SPEED_SLIDER_X = 450;
     public static final int GAME_SPEED_SLIDER_Y = 370;
     public static final int DETAILS_X = 400;
     public static final int BALANCE_Y = 30;
     public static final int GOAL_Y = 60;
     public static final int GOAL_MONEY = 140000;
+    public static final int SPECIALS_X_COORDINATE = 20;
+    public static final int SPECIALS_Y_COORDINATE = 200;
     
     // COORDINATES OF THE LEVELS
     public static final int[] LEVEL_X_COORDINATES = {150,200,180,345,500,

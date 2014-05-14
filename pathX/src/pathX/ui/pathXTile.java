@@ -6,6 +6,8 @@ import mini_game.Sprite;
 import mini_game.SpriteType;
 import static pathX.pathXConstants.*;
 import pathX.data.Intersection;
+import pathX.data.pathXDataModel;
+import pathX.data.Road;
 
 /**
  *
@@ -14,6 +16,7 @@ import pathX.data.Intersection;
 public class pathXTile extends Sprite
 {
     private String name;
+    private String description;
     
     // COORDINATES OF THE TARGETED LOCATION
     private float targetX;
@@ -52,6 +55,11 @@ public class pathXTile extends Sprite
         return name;
     }
     
+    public String getDescription()
+    {
+        return description;
+    }
+    
     public Intersection getCurrentIntersection()
     {
         return currentIntersection;
@@ -60,6 +68,11 @@ public class pathXTile extends Sprite
     public ArrayList<Intersection> getPath()
     {
         return path;
+    }
+    
+    public void setDescription(String description)
+    {
+        this.description = description;
     }
     
     public void setCurrentIntersection(Intersection currentIntersection)
@@ -96,7 +109,7 @@ public class pathXTile extends Sprite
         startMovingToTarget(10);
     }
     
-    public void startMovingToTarget(int maxVelocity)
+    public void startMovingToTarget(float maxVelocity)
     {
                 // LET ITS POSITIONG GET UPDATED
         movingToTarget = true;
@@ -144,34 +157,44 @@ public class pathXTile extends Sprite
         return distance;
     }
     
+    /**
+     * Stop moving to the target and places the tile on the Intersection.
+     */
+    public void stopMovingToTarget()
+    {
+        movingToTarget = false;
+        vX = 0;
+        vY = 0;
+
+        x = targetX;
+        y = targetY;
+
+        currentIntersection = path.get(pathIndex);
+    }
+    
     @Override
     public void update(MiniGame game)
     {
         if (calculateDistanceToTarget() < INTERSECTION_RADIUS)
         {
-            
-            movingToTarget = false;
-            vX = 0;
-            vY = 0;
-            
-            x = targetX;
-            y = targetY;
-            
+            // STOP MOVING THE 
+            stopMovingToTarget();
+
             if (pathIndex < path.size() - 1)
-            {
+            {   
                 pathIndex++;
-                x = targetX;
-                y = targetY;
+                
+                Road roadInBetween = ((pathXDataModel)game.getDataModel()).getRoad(currentIntersection, path.get(pathIndex));
                 
                 targetX = path.get(pathIndex).x - INTERSECTION_RADIUS;
                 targetY = path.get(pathIndex).y - INTERSECTION_RADIUS;
 
-                startMovingToTarget(10);
-            } else
-            {
-                resetIndex();
+                startMovingToTarget(roadInBetween.getSpeedLimit() / 10 * ((pathXDataModel)game.getDataModel()).getGameSpeed());
             }
         }
-        super.update(game);
+        else
+        {
+            super.update(game);
+        }
     }
 }

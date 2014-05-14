@@ -14,14 +14,14 @@ public class Police extends Sprite
 {
     private Intersection firstIntersection;
     
-    private Intersection nextIntersection;
-    
     // COORDINATES OF THE TARGETED LOCATION
     private float targetX;
     private float targetY;
     
     private boolean movingToTarget;
     private boolean collided;
+    
+    private int money;
     
     public Police(SpriteType initSpriteType,
             float initX, float initY,
@@ -30,10 +30,17 @@ public class Police extends Sprite
     {
         // SEND ALL THE Sprite DATA TO A Sprite CONSTRUCTOR
         super(initSpriteType, initX, initY, initVx, initVy, initState);
+        
+        movingToTarget = false;
+        collided = false;
+        
+        money = (int) Math.round(Math.random() * 150);
     }
     
     // ACCESSOR METHODS
-    public boolean isMovingToTarget()           {   return movingToTarget;}
+    public boolean isMovingToTarget()           {   return movingToTarget;  }
+    public boolean isCollided()                 {   return collided;        }
+    public int getMoney()                       {   return money;           }
     
     // MUTATOR METHODS
     public void setX(int x)
@@ -45,12 +52,13 @@ public class Police extends Sprite
         targetX = initTargetX;
         targetY = initTargetY;
     }
-    public void setNextIntersection(Intersection nextIntersection)
-    {
-        this.nextIntersection = nextIntersection;
-    }
+    public void setCollided(boolean collided)
+    {   this.collided = collided;   }
     
-    public void startMovingToTarget(int maxVelocity)
+    public void toggleColided()
+    {   collided = !collided;   }
+    
+    public void startMovingToTarget(float maxVelocity)
     {
                 // LET ITS POSITIONG GET UPDATED
         movingToTarget = true;
@@ -106,24 +114,11 @@ public class Police extends Sprite
         startMovingToTarget(speedLimit / 20);
     }
     
-    public void initCurrentIntersection(Intersection firstIntersection)
+    public void setCurrentIntersection(Intersection firstIntersection)
     {
         this.firstIntersection = firstIntersection;
         x = firstIntersection.x;
         y = firstIntersection.y;
-    }
-    
-    public void moveRandomly(MiniGame game)
-    {
-        x = targetX;
-        y = targetY;
-        pathXMiniGame miniGame = (pathXMiniGame) game;
-        ArrayList<Intersection> neighbors = ((pathXDataModel)game.getDataModel()).getNeighbors(firstIntersection);
-        int random = (int) (Math.random() * neighbors.size());
-        nextIntersection = neighbors.get(random);
-        setTarget(nextIntersection.x, nextIntersection.y);
-        Road roadInBetween = ((pathXDataModel)game.getDataModel()).getRoad(firstIntersection, nextIntersection);
-        startMovingToTarget(roadInBetween.speedLimit);
     }
     
     @Override
@@ -133,6 +128,10 @@ public class Police extends Sprite
         {
             vX = 0;
             vY = 0;
+            
+            x = targetX;
+            y = targetY;
+            
             movingToTarget = false;
         }
         else

@@ -14,6 +14,10 @@ public class pathXLevel
     // EVERY LEVEL HAS A NAME
     String levelName;
     
+    String name;
+    
+    String description;
+    
     String state;
 
     // THE LEVEL BACKGROUND
@@ -96,6 +100,8 @@ public class pathXLevel
     
     // ACCESSOR METHODS
     public String                   getLevelName()                      {   return levelName;                       }
+    public String                   getName()                           {   return name;                            }
+    public String                   getDescription()                    {   return description;                     }
     public String                   getStartingLocationImageFileName()  {   return startingLocationImageFileName;   }
     public String                   getBackgroundImageFileName()        {   return backgroundImageFileName;         }
     public String                   getDestinationImageFileName()       {   return destinationImageFileName;        }
@@ -113,8 +119,12 @@ public class pathXLevel
     public int                      getNumZombies()                     {   return numZombies;                      }
     
     // MUTATOR METHODS
-    public void setLevelName(String levelName)    
+    public void setLevelName(String levelName)
     {   this.levelName = levelName;                                             }
+    public void setName(String name)
+    {   this.name = name;                                                       }
+    public void setDescription(String description)
+    {   this.description = description;                                         }
     public void setNumBandits(int numBandits)
     {   this.numBandits = numBandits;                                           }
     public void setBackgroundImageFileName(String backgroundImageFileName)    

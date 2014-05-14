@@ -187,9 +187,9 @@ public class pathXXMLLevelIO
             NamedNodeMap zombieAttributes = zombieNode.getAttributes();
             String idText = zombieAttributes.getNamedItem(ID_ATT).getNodeValue();
             String xText = zombieAttributes.getNamedItem(X_ATT).getNodeValue();
-            int x = Integer.parseInt(xText) + GAME_OFFSET - 17;
+            int x = Integer.parseInt(xText) + GAME_OFFSET;
             String yText = zombieAttributes.getNamedItem(Y_ATT).getNodeValue();
-            int y = Integer.parseInt(yText) - 17;
+            int y = Integer.parseInt(yText);
             
             Zombie newZombie = new Zombie(zT, (float) x, (float) y, 0, 0, pathXTileState.VISIBLE_STATE.toString());
             zombies.add(newZombie);
@@ -211,9 +211,9 @@ public class pathXXMLLevelIO
             NamedNodeMap policeAttributes = policeNode.getAttributes();
             String idText = policeAttributes.getNamedItem(ID_ATT).getNodeValue();
             String xText = policeAttributes.getNamedItem(X_ATT).getNodeValue();
-            int x = Integer.parseInt(xText) + GAME_OFFSET - 17;
+            int x = Integer.parseInt(xText) + GAME_OFFSET;
             String yText = policeAttributes.getNamedItem(Y_ATT).getNodeValue();
-            int y = Integer.parseInt(yText) - 17;
+            int y = Integer.parseInt(yText);
             
             Police newPolice = new Police(pT, (float) x, (float) y, 0, 0, pathXTileState.VISIBLE_STATE.toString());
             polices.add(newPolice);
@@ -235,9 +235,9 @@ public class pathXXMLLevelIO
             NamedNodeMap banditAttributes = banditNode.getAttributes();
             String idText = banditAttributes.getNamedItem(ID_ATT).getNodeValue();
             String xText = banditAttributes.getNamedItem(X_ATT).getNodeValue();
-            int x = Integer.parseInt(xText) + GAME_OFFSET - 17;
+            int x = Integer.parseInt(xText) + GAME_OFFSET;
             String yText = banditAttributes.getNamedItem(Y_ATT).getNodeValue();
-            int y = Integer.parseInt(yText) - 17;
+            int y = Integer.parseInt(yText);
             
             Bandit newBandit = new Bandit(bT, (float) x, (float) y, 0, 0, pathXTileState.VISIBLE_STATE.toString());
             bandits.add(newBandit);
@@ -273,6 +273,7 @@ public class pathXXMLLevelIO
             newRoad.setNode1(intersections.get(int_id1));
             newRoad.setNode2(intersections.get(int_id2));
             newRoad.setOneWay(oneWay);
+            newRoad.setOpen(true);
             newRoad.setSpeedLimit(speedLimit);
             newRoad.calculateDistance();
             roads.add(newRoad);

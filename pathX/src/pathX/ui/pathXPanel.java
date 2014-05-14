@@ -123,9 +123,10 @@ public class pathXPanel extends JPanel
                 renderRoads(g2);
                 renderIntersections(g2);
                 renderPlayer(g2);
-                renderC(g2);
+                renderEnemies(g2);
                 renderBackground(g2);
-                renderSpecialTiles(g2);
+//                renderSpecialTiles(g2);
+                renderLevelTitle(g2);
                 renderGUIControls(g2);
                 if (game.isDisplayingInfo())
                     renderLevelDetails(g2);
@@ -243,9 +244,9 @@ public class pathXPanel extends JPanel
         SpriteType bgST = map.getSpriteType();
         Image img = bgST.getStateImage(map.getState());
         g2.drawImage(img, (int) map.getX(), (int) map.getY(), bgST.getWidth(), bgST.getHeight(), null);
-        Viewport viewport = ((pathXMiniGame)game).getMapViewport();
-        int viewportX = viewport.getViewportX();
-        int viewportY = viewport.getViewportY();
+//        Viewport viewport = ((pathXMiniGame)game).getMapViewport();
+//        int viewportX = viewport.getViewportX();
+//        int viewportY = viewport.getViewportY();
 //        g2.drawImage(img, 0, NORTH_PANEL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT,
 //                viewportX, viewportY, WINDOW_WIDTH + viewportX, WINDOW_HEIGHT + viewportY, null);
         
@@ -306,37 +307,99 @@ public class pathXPanel extends JPanel
     public void renderLevelTitle(Graphics2D g2)
     {
         g2.setFont(STATS_TEXT_FONT);
-        g2.drawString("" + data.getLevel().getMoney(), WIDTH, WIDTH);
+        g2.drawString(data.getLevel().getName(), 210, 30);
+        g2.drawString("$" + data.getLevel().getMoney(), 210, 50);
+        g2.drawString("Balance: " + data.getBalance(), 20, 400);
     }
     
+    /**
+     * Draws the strings on the info dialog box depending on the game state.
+     * If level just loaded, it will draw a description of the level.
+     * Otherwise it will draw a description based on whether you won or lost.
+     * 
+     * @param g2 
+     */
     public void renderLevelDetails(Graphics2D g2)
     {
-        // FIRST RENDER THE STATE AND CITY OF THE LEVEL
-        g2.setFont(FONT_TEXT_DISPLAY);
-        g2.drawString(data.getLevel().getLevelName(), 220, 90);
+        // GET THE CURRENT LEVEL
+        pathXLevel level = data.getLevel();
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
         
-        // THEN RENDER THE DESCRIPTION
+        g2.setFont(FONT_TEXT_DISPLAY);
         HashMap<TextAttribute, Object> map = new HashMap<TextAttribute, Object>();
         map.put(TextAttribute.FONT, FONT_TEXT_DISPLAY);
-        AttributedString s1 = new AttributedString("Hello, this is Steven. \n How are you? \n\n WLHSGLDKJGH", map);
-        AttributedCharacterIterator paragraph = s1.getIterator();
-        int paragraphStart = paragraph.getBeginIndex();
-        int paragraphEnd = paragraph.getEndIndex();
-        FontRenderContext frc = g2.getFontRenderContext();
-        LineBreakMeasurer lineMeasurer = new LineBreakMeasurer(paragraph, frc);
-        
-        float breakWidth = 560;
+        float breakWidth = BREAKWIDTH;
         float drawPosY = 150;
         float drawPosX = 220;
-        lineMeasurer.setPosition(paragraphStart);
         
-        while (lineMeasurer.getPosition() < paragraphEnd)
+        if (!data.won() && !data.lost())
         {
-            TextLayout layout = lineMeasurer.nextLayout(breakWidth);
+            // FIRST RENDER THE STATE AND CITY OF THE LEVEL
+            g2.drawString(level.getName(), 220, 90);
+
+            // THEN RENDER THE DESCRIPTION
+            AttributedString s1 = new AttributedString(level.getDescription() + level.getMoney() + "!", map);
+            AttributedCharacterIterator paragraph = s1.getIterator();
+            int paragraphStart = paragraph.getBeginIndex();
+            int paragraphEnd = paragraph.getEndIndex();
+            FontRenderContext frc = g2.getFontRenderContext();
+
+            LineBreakMeasurer lineMeasurer = new LineBreakMeasurer(paragraph, frc);
+            lineMeasurer.setPosition(paragraphStart);
+
+            while (lineMeasurer.getPosition() < paragraphEnd)
+            {
+                TextLayout layout = lineMeasurer.nextLayout(breakWidth);
+                drawPosY += layout.getAscent();
+                layout.draw(g2, drawPosX, drawPosY);
+                drawPosY += layout.getDescent() + layout.getLeading();
+            }
+        } else if (data.won())
+        {
+            String winTextTop = props.getProperty(pathXPropertyType.TEXT_WIN_TOP);
+            g2.drawString(winTextTop, 220, 90);
             
-            drawPosY += layout.getAscent();
-            layout.draw(g2, drawPosX, drawPosY);
-            drawPosY += layout.getDescent() + layout.getLeading();
+            // THEN RENDER THE DESCRIPTION
+            String winTextBottom = props.getProperty(pathXPropertyType.TEXT_WIN_BOTTOM);
+            AttributedString s1 = new AttributedString(winTextBottom + level.getMoney() + "!", map);
+            AttributedCharacterIterator paragraph = s1.getIterator();
+            int paragraphStart = paragraph.getBeginIndex();
+            int paragraphEnd = paragraph.getEndIndex();
+            FontRenderContext frc = g2.getFontRenderContext();
+
+            LineBreakMeasurer lineMeasurer = new LineBreakMeasurer(paragraph, frc);
+            lineMeasurer.setPosition(paragraphStart);
+
+            while (lineMeasurer.getPosition() < paragraphEnd)
+            {
+                TextLayout layout = lineMeasurer.nextLayout(breakWidth);
+                drawPosY += layout.getAscent();
+                layout.draw(g2, drawPosX, drawPosY);
+                drawPosY += layout.getDescent() + layout.getLeading();
+            }
+        } else if (data.lost())
+        {
+            String loseTextTop = props.getProperty(pathXPropertyType.TEXT_LOSE_TOP);
+            g2.drawString(loseTextTop, 220, 90);
+            
+            // THEN RENDER THE DESCRIPTION
+            String loseTextBottom = props.getProperty(pathXPropertyType.TEXT_LOSE_BOTTOM);
+            AttributedString s1 = new AttributedString(loseTextBottom + level.getMoney() + "!", map);
+            AttributedCharacterIterator paragraph = s1.getIterator();
+            int paragraphStart = paragraph.getBeginIndex();
+            int paragraphEnd = paragraph.getEndIndex();
+            FontRenderContext frc = g2.getFontRenderContext();
+
+            LineBreakMeasurer lineMeasurer = new LineBreakMeasurer(paragraph, frc);
+            lineMeasurer.setPosition(paragraphStart);
+
+            while (lineMeasurer.getPosition() < paragraphEnd)
+            {
+                TextLayout layout = lineMeasurer.nextLayout(breakWidth);
+                drawPosY += layout.getAscent();
+                layout.draw(g2, drawPosX, drawPosY);
+                drawPosY += layout.getDescent() + layout.getLeading();
+            }
         }
     }
     
@@ -552,7 +615,7 @@ public class pathXPanel extends JPanel
                 null);
     }
     
-    private void renderC(Graphics2D g2)
+    private void renderEnemies(Graphics2D g2)
     {
         Viewport gameViewport = ((pathXMiniGame)game).getGameViewport();
         PropertiesManager props = PropertiesManager.getPropertiesManager();
@@ -563,8 +626,8 @@ public class pathXPanel extends JPanel
         {
             Zombie currentZombie = itZ.next();
             Image zombieImage = game.loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_ZOMBIE));
-            g2.drawImage(zombieImage, (int) currentZombie.getX() - gameViewport.getViewportX(), 
-                    (int) currentZombie.getY() - gameViewport.getViewportY(), null);
+            g2.drawImage(zombieImage, (int) currentZombie.getX() - gameViewport.getViewportX() - INTERSECTION_RADIUS, 
+                    (int) currentZombie.getY() - gameViewport.getViewportY() - INTERSECTION_RADIUS, null);
         }
         
         Iterator<Police> itP = data.policesIterator();
@@ -572,8 +635,8 @@ public class pathXPanel extends JPanel
         {
             Police currentPolice = itP.next();
             Image policeImage = game.loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_POLICE));
-            g2.drawImage(policeImage, (int) currentPolice.getX() - gameViewport.getViewportX(), 
-                    (int) currentPolice.getY() - gameViewport.getViewportY(), null);
+            g2.drawImage(policeImage, (int) currentPolice.getX() - gameViewport.getViewportX() - INTERSECTION_RADIUS, 
+                    (int) currentPolice.getY() - gameViewport.getViewportY() - INTERSECTION_RADIUS, null);
         }
         
         Iterator<Bandit> itB = data.banditsIterator();
@@ -581,64 +644,64 @@ public class pathXPanel extends JPanel
         {
             Bandit currentBandit = itB.next();
             Image banditImage = game.loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BANDIT));
-            g2.drawImage(banditImage, (int)currentBandit.getX() - gameViewport.getViewportX(), 
-                    (int) currentBandit.getY() - gameViewport.getViewportY(), null);
+            g2.drawImage(banditImage, (int)currentBandit.getX() - gameViewport.getViewportX() - INTERSECTION_RADIUS, 
+                    (int) currentBandit.getY() - gameViewport.getViewportY() - INTERSECTION_RADIUS, null);
         }
     }
     
-    public void renderZombies(Graphics2D g2)
-    {
-        pathXTile zombie = game.getGUICharacters().get(ZOMBIE_TYPE);
-        SpriteType sT = zombie.getSpriteType();
-        Image img = sT.getStateImage(zombie.getState());
-        Viewport gameViewport = ((pathXMiniGame)game).getGameViewport();
-        for (int i = 0; i < data.getZombies().size(); i++)
-        {
-            g2.drawImage(img, 
-                    (int) data.getZombies().get(i).getX() - gameViewport.getViewportX() - 17, 
-                    (int) data.getZombies().get(i).getY() - gameViewport.getViewportY() - 17, 
-                    null);
-        }
-    }
+//    public void renderZombies(Graphics2D g2)
+//    {
+//        pathXTile zombie = game.getGUICharacters().get(ZOMBIE_TYPE);
+//        SpriteType sT = zombie.getSpriteType();
+//        Image img = sT.getStateImage(zombie.getState());
+//        Viewport gameViewport = ((pathXMiniGame)game).getGameViewport();
+//        for (int i = 0; i < data.getZombies().size(); i++)
+//        {
+//            g2.drawImage(img, 
+//                    (int) data.getZombies().get(i).getX() - gameViewport.getViewportX() - 17, 
+//                    (int) data.getZombies().get(i).getY() - gameViewport.getViewportY() - 17, 
+//                    null);
+//        }
+//    }
+//    
+//    public void renderPolice(Graphics2D g2)
+//    {
+//        pathXTile police = game.getGUICharacters().get(POLICE_TYPE);
+//        SpriteType sT = police.getSpriteType();
+//        Image img = sT.getStateImage(police.getState());
+//        Viewport gameViewport = ((pathXMiniGame)game).getGameViewport();
+//        for (int i = 0; i < data.getPolice().size(); i++)
+//        {
+//            g2.drawImage(img, 
+//                    (int) data.getPolice().get(i).getX() - gameViewport.getViewportX(), 
+//                    (int) data.getPolice().get(i).getY() - gameViewport.getViewportY(), 
+//                    null);
+//        }
+//    }
+//    
+//    public void renderBandits(Graphics2D g2)
+//    {
+//        pathXTile bandit = game.getGUICharacters().get(BANDIT_TYPE);
+//        SpriteType sT = bandit.getSpriteType();
+//        Image img = sT.getStateImage(bandit.getState());
+//        Viewport gameViewport = ((pathXMiniGame)game).getGameViewport();
+//        for (int i = 0; i < data.getBandits().size(); i++)
+//        {
+//            g2.drawImage(img, 
+//                    (int) data.getBandits().get(i).getX() - gameViewport.getViewportX(), 
+//                    (int) data.getBandits().get(i).getY() - gameViewport.getViewportY(), 
+//                    null);
+//        }
+//    }
     
-    public void renderPolice(Graphics2D g2)
-    {
-        pathXTile police = game.getGUICharacters().get(POLICE_TYPE);
-        SpriteType sT = police.getSpriteType();
-        Image img = sT.getStateImage(police.getState());
-        Viewport gameViewport = ((pathXMiniGame)game).getGameViewport();
-        for (int i = 0; i < data.getPolice().size(); i++)
-        {
-            g2.drawImage(img, 
-                    (int) data.getPolice().get(i).getX() - gameViewport.getViewportX(), 
-                    (int) data.getPolice().get(i).getY() - gameViewport.getViewportY(), 
-                    null);
-        }
-    }
-    
-    public void renderBandits(Graphics2D g2)
-    {
-        pathXTile bandit = game.getGUICharacters().get(BANDIT_TYPE);
-        SpriteType sT = bandit.getSpriteType();
-        Image img = sT.getStateImage(bandit.getState());
-        Viewport gameViewport = ((pathXMiniGame)game).getGameViewport();
-        for (int i = 0; i < data.getBandits().size(); i++)
-        {
-            g2.drawImage(img, 
-                    (int) data.getBandits().get(i).getX() - gameViewport.getViewportX(), 
-                    (int) data.getBandits().get(i).getY() - gameViewport.getViewportY(), 
-                    null);
-        }
-    }
-    
-    public void renderSpecialTiles(Graphics2D g2)
-    {
-        Viewport gameViewport = ((pathXMiniGame)game).getGameViewport();
-        for(pathXTile tile : game.getSpecials().getSpecialTiles())
-        {
-            tile.setState(pathXTileState.VISIBLE_STATE.toString());
-//            Image img = tile.getSpriteType().getStateImage(tile.getState());
-//            g2.drawImage(img, (int) tile.getX(), (int) tile.getY(), null);
-        }
-    }
+//    public void renderSpecialTiles(Graphics2D g2)
+//    {
+//        Viewport gameViewport = ((pathXMiniGame)game).getGameViewport();
+//        for(pathXTile tile : game.getSpecials().getSpecialTiles())
+//        {
+//            tile.setState(pathXTileState.VISIBLE_STATE.toString());
+////            Image img = tile.getSpriteType().getStateImage(tile.getState());
+////            g2.drawImage(img, (int) tile.getX(), (int) tile.getY(), null);
+//        }
+//    }
 }

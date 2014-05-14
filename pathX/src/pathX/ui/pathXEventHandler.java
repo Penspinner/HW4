@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import javax.sound.sampled.Clip;
+import javax.swing.JOptionPane;
 import mini_game.MiniGameState;
 import mini_game.Sprite;
 import mini_game.Viewport;
@@ -20,13 +21,17 @@ public class pathXEventHandler
 {
     // THE PATHX GAME, IT PROVIDES ACCESS TO EVERYTHING
     private pathXMiniGame game;
+    
+    // PROVIDES QUICK ACCESS TO THE DATA MODEL
+    private pathXDataModel data;
 
     /**
      * Constructor, it just keeps the game for when the events happen.
      */
-    public pathXEventHandler(pathXMiniGame initGame)
+    public pathXEventHandler(pathXMiniGame initGame, pathXDataModel initData)
     {
         game = initGame;
+        data = initData;
     }
     
     /**
@@ -42,7 +47,8 @@ public class pathXEventHandler
 //        else 
         if (game.isCurrentScreenState(GAME_SCREEN_STATE))
         {
-            game.reset();
+            data.setGameState(MiniGameState.NOT_STARTED);
+            data.unpause();
             game.getScreenSwitcher().switchToLevelSelectScreen();
             return;
         }
@@ -69,24 +75,19 @@ public class pathXEventHandler
     /**
      * Called when the user clicks on a level.
      */
-    public void respondToLevelSelectRequest(String fileName)
+    public void respondToLevelSelectRequest(pathXTile level)
     {
-//        ArrayList<String> levels = ((pathXDataModel)game.getDataModel()).getLevelNames();
-//        String levelName = "";
-//        for (String l : levels)
-//        {
-//            if (px.getSpriteType().getSpriteTypeID().contains(l))
-//            {
-//                levelName = px.getSpriteType().getSpriteTypeID().substring(17);
-//            }
-//        }
+        String fileName = level.getActionCommand();
         File file = new File(LEVELS_PATH + fileName);
-        boolean loadedSuccessfully = game.getXMLLevelIO().loadLevel(file, ((pathXDataModel)game.getDataModel()));
+        boolean loadedSuccessfully = game.getXMLLevelIO().loadLevel(file, data);
         if (loadedSuccessfully)
         {
             game.initGameViewport();
-            ((pathXDataModel)game.getDataModel()).initPlayerStartingLocation();
-            //((pathXDataModel)game.getDataModel()).initZombieLocation();
+            data.setCurrentLevel(fileName);
+            data.initPlayerStartingLocation();
+            data.generateZombiePath();
+            data.getLevel().setName(level.getName());
+            data.getLevel().setDescription(level.getDescription());
             game.getScreenSwitcher().switchToGameScreen();
         }
     }
@@ -159,14 +160,20 @@ public class pathXEventHandler
     
     public void respondToPauseButtonRequest()
     {
-        if (game.isCurrentScreenState(GAME_SCREEN_STATE) &&
-            game.getDataModel().isPaused())
+        // ONLY TOGGLE IF DIDN'T WIN OR LOSE
+        if (!data.won() && !data.lost())
         {
-            game.getDataModel().unpause();
-        } else if (game.isCurrentScreenState(GAME_SCREEN_STATE) &&
-                !game.getDataModel().isPaused())
-        {
-            game.getDataModel().pause();
+            if (game.isCurrentScreenState(GAME_SCREEN_STATE))
+            {
+                if (data.isPaused())
+                {
+                    data.unpause();
+                } else
+                {
+                    data.pause();
+                }
+                game.getAudio().play(pathXPropertyType.AUDIO_CUE_SELECT.toString(), false);
+            }
         }
     }
     
@@ -177,7 +184,33 @@ public class pathXEventHandler
     {
         if (game.isCurrentScreenState(GAME_SCREEN_STATE))
         {
-            game.getDataModel().beginGame();
+            data.beginGame();
+            game.getAudio().play(pathXPropertyType.AUDIO_CUE_SELECT.toString(), false);
+        }
+    }
+    
+    /**
+     * Called when the user clicks on the Game Speed button in the settings screen.
+     */
+    public void respondToChangeGameSpeedRequest()
+    {
+        game.getAudio().play(pathXPropertyType.AUDIO_CUE_SELECT.toString(), false);
+        
+        // OPEN UP JOPTIONPANE TO OBTAIN USER INPUT
+        String inputGameSpeed = JOptionPane.showInputDialog(null, "Enter a game speed between 0 and 3");
+        try
+        {
+            if (inputGameSpeed != null && !inputGameSpeed.equals(""))
+            {
+                float gameSpeed = Float.parseFloat(inputGameSpeed);
+                if (gameSpeed > 0 && gameSpeed <= 3)
+                {
+                    data.updateGameSpeed(gameSpeed);
+                }
+            }
+        } catch (NumberFormatException nfe)
+        {
+            nfe.printStackTrace();
         }
     }
     
@@ -186,7 +219,44 @@ public class pathXEventHandler
      */
     public void respondToTryAgainButtonRequest()
     {
+        // CHANGE GAME STATE
+        data.setGameState(MiniGameState.NOT_STARTED);
+        data.unpause();
         
+        game.getGUIButtons().get(TRY_AGAIN_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+        game.getGUIButtons().get(TRY_AGAIN_BUTTON_TYPE).setEnabled(false);
+        game.getGUIButtons().get(LEAVE_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+        game.getGUIButtons().get(LEAVE_BUTTON_TYPE).setEnabled(false);
+        
+        // RESTART THE SAME LEVEL
+        String fileName = data.getCurrentLevel();
+        File currentFile = new File(LEVELS_PATH + fileName);
+        boolean loadedSuccessfully = game.getXMLLevelIO().loadLevel(currentFile, data);
+        if (loadedSuccessfully)
+        {
+            data.initPlayerStartingLocation();
+            data.generateZombiePath();
+            
+            // STOP DISPLAYING THE WIN/LOSE DIALOG
+            game.toggleInfoDisplay();
+            
+            game.getScreenSwitcher().switchToGameScreen();    
+        }
+    }
+    
+    /**
+     * Called when the user clicks on the leave button.
+     */
+    public void respondToLeaveButtonRequest()
+    {
+        game.getGUIButtons().get(TRY_AGAIN_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+        game.getGUIButtons().get(TRY_AGAIN_BUTTON_TYPE).setEnabled(false);
+        game.getGUIButtons().get(LEAVE_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
+        game.getGUIButtons().get(LEAVE_BUTTON_TYPE).setEnabled(false);
+        game.toggleInfoDisplay();
+        data.unpause();
+        
+        respondToExitRequest();
     }
     
     /**
@@ -301,6 +371,8 @@ public class pathXEventHandler
      */    
     public void respondToKeyPress(int keyCode)
     {
+        pathXSpecialsHandler specialsHandler = game.getSpecialsHandler();
+        
         if (game.isCurrentScreenState(LEVEL_SELECT_SCREEN_STATE) ||
             game.isCurrentScreenState(GAME_SCREEN_STATE))
         {
@@ -322,7 +394,26 @@ public class pathXEventHandler
                 case KeyEvent.VK_D:
                 case KeyEvent.VK_RIGHT: {   scroll("RIGHT");} break;
                     
+                // PAUSE
+                case KeyEvent.VK_F:
+                {
+                    if (!data.won() && !data.lost())
+                    {
+                        if (game.isCurrentScreenState(GAME_SCREEN_STATE))
+                        {
+                            if (data.isPaused())
+                            {
+                                data.unpause();
+                            } else
+                            {
+                                data.pause();
+                            }
+                        }
+                    }
+                } break;
+                    
                 case KeyEvent.VK_B:     {   game.getSpecialsHandler().useSpecial(ID_ATT);} break;
+                case KeyEvent.VK_I:     {   data.increaseBalance(100);} break;
             }
         }
     }

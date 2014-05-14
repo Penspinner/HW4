@@ -60,9 +60,6 @@ public class pathXMiniGame extends MiniGame
     // HANDLES THE SCREEN SWITCHES
     private pathXScreenSwitcher screenSwitcher;
     
-    // SHOULD RENDER THE GAME VIEW
-    private pathXGamePanel gamePanel;
-    
     // HANDLES THE LEVEL LOADLING
     private pathXXMLLevelIO xmlLevelIO;
     
@@ -153,16 +150,6 @@ public class pathXMiniGame extends MiniGame
     }
     
     /**
-     * Accessor method for getting the game panel.
-     * 
-     * @return 
-     */
-    public pathXGamePanel getGamePanel()
-    {
-        return gamePanel;
-    }
-    
-    /**
      * Accessor method for getting the XML level loader.
      * 
      * @return 
@@ -242,6 +229,15 @@ public class pathXMiniGame extends MiniGame
         currentScreenState = initCurrentScreenState;
     }
     
+    public void toggleInfoDisplay()
+    {
+//        Sprite idb = guiDecor.get(INFO_DIALOG_BOX_TYPE);
+//        if (idb.getState().equals(pathXTileState.INVISIBLE_STATE.toString()))
+//            idb.setState(pathXTileState.VISIBLE_STATE.toString());
+//        else
+//            idb.setState(pathXTileState.INVISIBLE_STATE.toString());
+        displayingInfo = !displayingInfo;
+    }
     
     @Override
     /**
@@ -255,11 +251,13 @@ public class pathXMiniGame extends MiniGame
             String audioPath = props.getProperty(pathXPropertyType.PATH_AUDIO);
 
             // LOAD ALL THE AUDIO
+            loadAudioCue(pathXPropertyType.AUDIO_CUE_INCREASE_MONEY);
             loadAudioCue(pathXPropertyType.AUDIO_CUE_SELECT);
+            loadAudioCue(pathXPropertyType.AUDIO_CUE_ZOMBIE);
             loadAudioCue(pathXPropertyType.SONG_CUE_MENU_SCREEN);
 
             // PLAY THE WELCOME SCREEN SONG
-            audio.play(pathXPropertyType.SONG_CUE_MENU_SCREEN.toString(), true);
+//            audio.play(pathXPropertyType.SONG_CUE_MENU_SCREEN.toString(), true);
         }
         catch(UnsupportedAudioFileException | IOException | LineUnavailableException | InvalidMidiDataException | MidiUnavailableException e)
         {
@@ -335,7 +333,7 @@ public class pathXMiniGame extends MiniGame
         
         specials = new pathXSpecials(this, (pathXDataModel)data);
         
-        gamePanel = new pathXGamePanel(this);
+//        gamePanel = new pathXGamePanel(this);
         
         // INITIALIZE THE XML LEVEL IO PARSER
         xmlLevelIO = new pathXXMLLevelIO(new File(PATH_DATA + LEVEL_SCHEMA));
@@ -508,11 +506,13 @@ public class pathXMiniGame extends MiniGame
         // ADD THE LEVELS WITH STATUS
         ArrayList<String> levels = ((pathXDataModel)data).getLevelFiles();
         ArrayList<String> levelNames = ((pathXDataModel)data).getLevelNames();
+        ArrayList<String> levelDescriptions = ((pathXDataModel)data).getLevelDescriptions();
         ArrayList<String> levelStates = ((pathXDataModel)data).getLevelStates();
         for (int i = 0; i < levels.size(); i++)
         {
             String level = levels.get(i);
             String levelName = levelNames.get(i);
+            String levelDescription = levelDescriptions.get(i);
             String levelState = levelStates.get(i);
             sT = new SpriteType(LEVEL_BUTTON_TYPE);
             img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_LOCKED_LOCATION));
@@ -523,6 +523,7 @@ public class pathXMiniGame extends MiniGame
             sT.addState(pathXTileState.UNSUCCESSFUL_STATE.toString(), img);
             px = new pathXTile(sT, LEVEL_X_COORDINATES[i],LEVEL_Y_COORDINATES[i], 0, 0, levelState, levelName);
             px.setActionCommand(level);
+            px.setDescription(levelDescription);
             // ADD THE LISTENER NOW SO THAT WE DON'T HAVE TO ADD IT LATER
             px.setActionListener(new ActionListener()
             {
@@ -536,8 +537,7 @@ public class pathXMiniGame extends MiniGame
                 {
                     if (!px.getState().equals(pathXTileState.LOCKED_STATE.toString()))
                     {
-                        eventHandler.respondToLevelSelectRequest(px.getActionCommand());
-                        displayingInfo = true;
+                        eventHandler.respondToLevelSelectRequest(px);
                     }
                 }
             }.init(px));
@@ -609,6 +609,7 @@ public class pathXMiniGame extends MiniGame
         img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_CHANGE_SPEED_MOUSE_OVER));
         sT.addState(pathXTileState.MOUSE_OVER_STATE.toString(), img);
         s = new Sprite(sT, CHANGE_SPEED_X, CHANGE_SPEED_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
+        s.setEnabled(false);
         guiButtons.put(CHANGE_SPEED_BUTTON_TYPE, s);
         
         // ADD THE GAME SPEED SLIDER
@@ -624,23 +625,23 @@ public class pathXMiniGame extends MiniGame
         px = new pathXTile(sT, 0, 0, 0, 0, pathXTileState.VISIBLE_STATE.toString(), "PLAYER");
         guiCharacters.put(PLAYER_TYPE, px);
         
-        sT = new SpriteType(ZOMBIE_TYPE);
-        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_ZOMBIE));
-        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
-        px = new pathXTile(sT, 0, 0, 0, 0, pathXTileState.VISIBLE_STATE.toString(), "ZOMBIE");
-        guiCharacters.put(ZOMBIE_TYPE, px);
-        
-        sT = new SpriteType(POLICE_TYPE);
-        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_POLICE));
-        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
-        px = new pathXTile(sT, 0, 0, 0, 0, pathXTileState.VISIBLE_STATE.toString(), "POLICE");
-        guiCharacters.put(POLICE_TYPE, px);
-        
-        sT = new SpriteType(BANDIT_TYPE);
-        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BANDIT));
-        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
-        px = new pathXTile(sT, 0, 0, 0, 0, pathXTileState.VISIBLE_STATE.toString(), "BANDIT");
-        guiCharacters.put(BANDIT_TYPE, px);
+//        sT = new SpriteType(ZOMBIE_TYPE);
+//        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_ZOMBIE));
+//        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
+//        px = new pathXTile(sT, 0, 0, 0, 0, pathXTileState.VISIBLE_STATE.toString(), "ZOMBIE");
+//        guiCharacters.put(ZOMBIE_TYPE, px);
+//        
+//        sT = new SpriteType(POLICE_TYPE);
+//        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_POLICE));
+//        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
+//        px = new pathXTile(sT, 0, 0, 0, 0, pathXTileState.VISIBLE_STATE.toString(), "POLICE");
+//        guiCharacters.put(POLICE_TYPE, px);
+//        
+//        sT = new SpriteType(BANDIT_TYPE);
+//        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BANDIT));
+//        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
+//        px = new pathXTile(sT, 0, 0, 0, 0, pathXTileState.VISIBLE_STATE.toString(), "BANDIT");
+//        guiCharacters.put(BANDIT_TYPE, px);
         
         specials.initSpecials();
     }
@@ -653,7 +654,7 @@ public class pathXMiniGame extends MiniGame
     public void initGUIHandlers()
     {
         // WE'LL RELAY UI EVENTS TO THIS OBJECT FOR HANDLING
-        eventHandler = new pathXEventHandler(this);
+        eventHandler = new pathXEventHandler(this, (pathXDataModel)data);
         specialsHandler = new pathXSpecialsHandler(this, (pathXDataModel)data);
         
         // WE'LL HAVE A CUSTOM RESPONSE FOR WHEN THE USER CLOSES THE WINDOW
@@ -780,23 +781,6 @@ public class pathXMiniGame extends MiniGame
             }
         });
         
-        Iterator i = guiButtons.keySet().iterator();
-//        while(i.hasNext())
-//        {
-//            String level = (String) i.next();
-//            if (level.contains(LEVEL_BUTTON_TYPE))
-//            {
-//            level.setActionListener(new ActionListener()
-//            {
-//                @Override
-//                public void actionPerformed(ActionEvent e)
-//                {
-//                    eventHandler.respondToLevelSelectRequest();
-//                }
-//            });
-//            }
-//        }
-        
         guiButtons.get(CLOSE_BUTTON_TYPE).setActionListener(new ActionListener()
         {
             @Override
@@ -804,7 +788,8 @@ public class pathXMiniGame extends MiniGame
             {
                 guiDecor.get(INFO_DIALOG_BOX_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
                 guiButtons.get(CLOSE_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-                displayingInfo = false;
+                toggleInfoDisplay();
+                guiButtons.get(CLOSE_BUTTON_TYPE).setEnabled(false);
             }
         });
         
@@ -814,10 +799,7 @@ public class pathXMiniGame extends MiniGame
             public void actionPerformed(ActionEvent e)
             {
                 eventHandler.respondToMuteButtonRequest(guiButtons.get(SOUND_MUTE_BOX_BUTTON_TYPE), "AUDIO_CUE");
-                if (soundMuted)
-                    soundMuted = false;
-                else
-                    soundMuted = true;
+                soundMuted = !soundMuted;
             }
         });
         
@@ -827,10 +809,7 @@ public class pathXMiniGame extends MiniGame
             public void actionPerformed(ActionEvent e)
             {
                 eventHandler.respondToMuteButtonRequest(guiButtons.get(MUSIC_MUTE_BOX_BUTTON_TYPE), "SONG_CUE");
-                if (musicMuted)
-                    musicMuted = false;
-                else
-                    musicMuted = true;
+                musicMuted = !musicMuted;
             }
         });
         
@@ -839,21 +818,25 @@ public class pathXMiniGame extends MiniGame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                String inputGameSpeed = JOptionPane.showInputDialog(null, "Enter a game speed");
-                try
-                {
-                    if (inputGameSpeed != null)
-                    {
-                        float gameSpeed = Float.parseFloat(inputGameSpeed);
-                        if (gameSpeed > 0)
-                        {
-                            ((pathXDataModel)data).updateGameSpeed(gameSpeed);
-                        }
-                    }
-                } catch (Exception ee)
-                {
-                    ee.printStackTrace();
-                }
+                eventHandler.respondToChangeGameSpeedRequest();
+            }
+        });
+        
+        guiButtons.get(TRY_AGAIN_BUTTON_TYPE).setActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                eventHandler.respondToTryAgainButtonRequest();
+            }
+        });
+        
+        guiButtons.get(LEAVE_BUTTON_TYPE).setActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                eventHandler.respondToLeaveButtonRequest();
             }
         });
         
@@ -865,7 +848,6 @@ public class pathXMiniGame extends MiniGame
                 if (isCurrentScreenState(SETTINGS_SCREEN_STATE))
                 {
                     Sprite gameSpeedSlider = guiDecor.get(GAME_SPEED_SLIDER_TYPE);
-                    gameSpeedSlider.setEnabled(true);
                 }
             }
         });
@@ -909,7 +891,8 @@ public class pathXMiniGame extends MiniGame
             {
                 if (button.containsPoint(data.getLastMouseX(), data.getLastMouseY()))
                 {
-                    button.setState(pathXTileState.MOUSE_OVER_STATE.toString());
+                    if (!(button instanceof pathXTile))
+                        button.setState(pathXTileState.MOUSE_OVER_STATE.toString());
                 }
             }
             // ARE WE EXITING A BUTTON?

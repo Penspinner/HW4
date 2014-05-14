@@ -4,11 +4,11 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group name="1">
             <file>file:/C:/Users/Dell/Documents/NetBeansProjects/HW4/pathX/src/pathX/ui/pathXMiniGame.java</file>
-            <file>file:/C:/Users/Dell/Documents/NetBeansProjects/HW4/pathX/src/pathX/data/Zombie.java</file>
-            <file>file:/C:/Users/Dell/Documents/NetBeansProjects/HW4/pathX/src/pathX/ui/pathXTile.java</file>
             <file>file:/C:/Users/Dell/Documents/NetBeansProjects/HW4/pathX/src/pathX/data/pathXDataModel.java</file>
-            <file>file:/C:/Users/Dell/Documents/NetBeansProjects/HW4/pathX/src/pathX/data/Police.java</file>
-            <file>file:/C:/Users/Dell/Documents/NetBeansProjects/HW4/pathX/src/pathX/data/Bandit.java</file>
+            <file>file:/C:/Users/Dell/Documents/NetBeansProjects/HW4/pathX/src/pathX/pathXConstants.java</file>
+            <file>file:/C:/Users/Dell/Documents/NetBeansProjects/HW4/pathX/src/pathX/ui/pathXEventHandler.java</file>
+            <file>file:/C:/Users/Dell/Documents/NetBeansProjects/HW4/pathX/src/pathX/ui/pathXSpecialsHandler.java</file>
+            <file>file:/C:/Users/Dell/Documents/NetBeansProjects/HW4/pathX/src/pathX/ui/pathXScreenSwitcher.java</file>
             <file>file:/C:/Users/Dell/Documents/NetBeansProjects/HW4/pathX/src/pathX/ui/pathXPanel.java</file>
         </group>
     </open-files>

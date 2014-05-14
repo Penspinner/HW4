@@ -1,6 +1,7 @@
 package pathX.ui;
 
 import java.util.Iterator;
+import mini_game.MiniGameState;
 import mini_game.Sprite;
 import pathX.data.pathXLevel;
 import static pathX.pathXConstants.*;
@@ -120,6 +121,7 @@ public class pathXScreenSwitcher
         
 //        game.getGUIButtons().get(LEVEL_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
         
+        game.toggleInfoDisplay();
         game.getGUIDecor().get(INFO_DIALOG_BOX_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
         game.getGUIButtons().get(START_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
         game.getGUIButtons().get(START_BUTTON_TYPE).setEnabled(true);
@@ -158,6 +160,8 @@ public class pathXScreenSwitcher
             disableLevelButtons();
         } else if (game.isCurrentScreenState(GAME_SCREEN_STATE))
         {
+            game.getDataModel().setGameState(MiniGameState.NOT_STARTED);
+            game.getDataModel().unpause();
             game.getGUIDecor().get(INFO_DIALOG_BOX_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
             game.getGUIButtons().get(START_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
             game.getGUIButtons().get(START_BUTTON_TYPE).setEnabled(false);

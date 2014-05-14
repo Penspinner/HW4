@@ -37,15 +37,6 @@ public class pathXConstants
     public static final String POLICE_TYPE = "POLICE_TYPE";
     public static final String BANDIT_TYPE = "BANDIT_TYPE";
     
-    // LEVELS
-    public static final String[] LEVEL_NAMES = 
-    {
-        "Washington0.xml",
-        "Washington1.xml",
-        "Washington2.xml",
-        "Montana0.xml"
-    };
-    
     // IN GAME MENU SCREEN USER INTERFACE CONTROLS
     public static final String[] MENU_BUTTON_TYPE = {"PLAY_BUTTON_TYPE",
                                                      "RESET_BUTTON_TYPE",
@@ -109,6 +100,9 @@ public class pathXConstants
     public static final String GAME_SCREEN_STATE = "GAME_SCREEN_STATE";
     public static final String SETTINGS_SCREEN_STATE = "SETTINGS_SCREEN_STATE";
     
+    // GAME VIEWPORT OFFSET
+    public static final int GAME_OFFSET = 200;
+    
     // UI CONTROL SIZE AND OFFSETS
     public static final int WINDOW_WIDTH = 900;
     public static final int WINDOW_HEIGHT = 553;
@@ -136,10 +130,10 @@ public class pathXConstants
     public static final int INFO_DIALOG_BOX_Y = 50;
     public static final int CLOSE_BUTTON_X = 400;
     public static final int CLOSE_BUTTON_Y = 400;
-    public static final int TRY_AGAIN_BUTTON_X = CLOSE_BUTTON_X + 100;
-    public static final int TRY_AGAIN_BUTTON_Y = CLOSE_BUTTON_Y + 350;
-    public static final int LEAVE_BUTTON_X = TRY_AGAIN_BUTTON_X + 250;
-    public static final int LEAVE_BUTTON_Y = TRY_AGAIN_BUTTON_Y;
+    public static final int TRY_AGAIN_BUTTON_X = INFO_DIALOG_BOX_X + 75;
+    public static final int TRY_AGAIN_BUTTON_Y = CLOSE_BUTTON_Y;
+    public static final int LEAVE_BUTTON_X = INFO_DIALOG_BOX_X + 375;
+    public static final int LEAVE_BUTTON_Y = CLOSE_BUTTON_Y;
     public static final int SOUND_MUTE_BOX_BUTTON_X = 400;
     public static final int SOUND_MUTE_BOX_BUTTON_Y = 160;
     public static final int MUSIC_MUTE_BOX_BUTTON_X = SOUND_MUTE_BOX_BUTTON_X;
@@ -148,12 +142,15 @@ public class pathXConstants
     public static final int CHANGE_SPEED_Y = 400;
     public static final int GAME_SPEED_SLIDER_X = 450;
     public static final int GAME_SPEED_SLIDER_Y = 370;
-    public static final int DETAILS_X = 400;
+    public static final int DETAILS_X = 380;
     public static final int BALANCE_Y = 30;
     public static final int GOAL_Y = 60;
     public static final int GOAL_MONEY = 140000;
     public static final int SPECIALS_X_COORDINATE = 20;
     public static final int SPECIALS_Y_COORDINATE = 200;
+    public static final int HELP_DESCRIPTION_X = 50;
+    public static final int HELP_DESCRIPTION_Y = 95;
+    public static final int BREAKWIDTH = 560;
     
     // COORDINATES OF THE LEVELS
     public static final int[] LEVEL_X_COORDINATES = {150,200,180,345,500,
@@ -164,13 +161,6 @@ public class pathXConstants
                                                     230,640,460,645,830,
                                                     940,900,955,950,980,
                                                     365,400,405,500,120};
-    
-    // HELP SCREEN OFFSET AND DESCRIPTION
-    public static final int HELP_DESCRIPTION_X = 50;
-    public static final int HELP_DESCRIPTION_Y = 95;
-    
-    // GAME VIEWPORT OFFSET
-    public static final int GAME_OFFSET = 200;
     
     // SCROLLING CONSTANT
     public static final int SCROLL_PIXELS = 5;

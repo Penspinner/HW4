@@ -49,7 +49,7 @@
           <road int_id1="11" int_id2="4" one_way="true" speed_limit="100"/>
           <road int_id1="4" int_id2="13" one_way="false" speed_limit="10"/>
           <road int_id1="5" int_id2="1" one_way="false" speed_limit="30"/>
-          <road int_id1="9" int_id2="9" one_way="false" speed_limit="30"/>
+          <!--<road int_id1="9" int_id2="9" one_way="false" speed_limit="30"/>-->
           <road int_id1="9" int_id2="3" one_way="false" speed_limit="30"/>
           <road int_id1="9" int_id2="6" one_way="true" speed_limit="100"/>
           <road int_id1="8" int_id2="10" one_way="false" speed_limit="30"/>

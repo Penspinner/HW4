@@ -57,8 +57,20 @@
         <property name="IMAGE_BUTTON_LEAVE_MOUSE_OVER"          value="./pathX/ButtonLeaveMouseOver.png"></property>
         
         <!-- AUDIO AND SONG CUES -->
+        <property name="AUDIO_CUE_LOSE"                         value="./pathX/"></property>
+        <property name="AUDIO_CUE_WIN"                          value="./pathX/"></property>
+        <property name="AUDIO_CUE_INCREASE_MONEY"               value="./pathX/IncreaseMoney.wav"></property>
         <property name="AUDIO_CUE_SELECT"                       value="./pathX/Select.wav"></property>
+        <property name="AUDIO_CUE_ZOMBIE"                       value=""></property>
+        <property name="AUDIO_CUE_BANDIT"                       value=""></property>
+        <property name="AUDIO_CUE_POLICE"                       value=""></property>
         <property name="SONG_CUE_MENU_SCREEN"                   value="./pathX/SongRealAmerican.wav"></property>
+        
+        <!-- TEXT -->
+        <property name="TEXT_LOSE_TOP"                          value="Bad News!"></property>
+        <property name="TEXT_LOSE_BOTTOM"                       value="You've been caught. That means you have some legal bills to pay."></property>
+        <property name="TEXT_WIN_TOP"                           value="Congratulations!"></property>
+        <property name="TEXT_WIN_BOTTOM"                        value="You have successfully fled from the crime scene. You have earned $"></property>
     </property_list>
     
     <!-- PLAYABLE LEVELS CREATED WITH THE LEVEL EDITOR -->
@@ -109,6 +121,28 @@
             <option>Verizon Headquarters, NY</option>
             <option>Mark Zuckerberg's Home, CA</option>
             <option>Bill Gates' Home, WA</option>
+        </property_options>
+        <property_options name="LEVEL_DESCRIPTIONS">
+            <option>You just robbed Seattle Bank. Get back to your safehouse to earn $</option>
+            <option>You just robbed Washington State Bank. Get back to your safehouse to earn $</option>
+            <option>You just robbed Columbia Bank. Get back to your safehouse to earn $</option>
+            <option>You just robbed the first mansion you saw. Get back to your safehouse to earn $</option>
+            <option>You just robbed another mansion. Get back to your safehouse to earn $</option>
+            <option>You just robbed ANOTHER mansion. Get back to your safehouse to earn $</option>
+            <option>You just robbed Eagle Mountain Casino. Get back to your safehouse to earn $</option>
+            <option>You just robbed Thunder Valley Casino. Get back to your safehouse to earn $</option>
+            <option>You just robbed Commerce Casino. Get back to your safehouse to earn $</option>
+            <option>You just performed a massacre and robbed everyone's money in the Rosewood Crescent Hotel. RUN AWAY TO KEEP $</option>
+            <option>You just performed another massacre and robbed everyone's money in the One Shell Plaza. RUN AWAY TO KEEP $</option>
+            <option>You just killed and robbed everyone's money in JP Morgan Chase building. RUN AWAY TO KEEP $</option>
+            <option>You just robbed the Epcot Amusement Park. /FLEE TO EARN $</option>
+            <option>You just robbed the Typhoon Lagoon Park. /FLEE TO KEEP $</option>
+            <option>You just robbed the Magic Kingdom, /FLEE TO KEEP $</option>
+            <option>You just robbed the Google Building. /FLEE TO KEEP $</option>
+            <option>You just robbed the Time Warner Center. /FLEE TO KEEP $</option>
+            <option>You just robbed the Verizon Headquarters. /FLEE TO KEEP $</option>
+            <option>You just robbed Mark Zuckerberg. Run away from his defense to keep $</option>
+            <option>You just robbed Bill Gates... If you can get through all the obstacles, you may keep the $</option>
         </property_options>
         <property_options name="MENU_BUTTON_OPTIONS">
             <option>./pathX/ButtonPlayGame.png</option>

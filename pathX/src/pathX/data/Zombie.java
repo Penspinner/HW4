@@ -5,6 +5,7 @@ import mini_game.MiniGame;
 import mini_game.Sprite;
 import mini_game.SpriteType;
 import static pathX.pathXConstants.*;
+import pathX.ui.pathXMiniGame;
 
 /**
  *
@@ -21,6 +22,13 @@ public class Zombie extends Sprite
     private boolean movingToTarget;
     private boolean collided;
     
+    private Intersection currentIntersection;
+    private Intersection loopDestination;
+    
+    private int money;
+    
+    private int pathIndex;
+    
     public Zombie(SpriteType initSpriteType,
             float initX, float initY,
             float initVx, float initVy,
@@ -30,11 +38,19 @@ public class Zombie extends Sprite
         super(initSpriteType, initX, initY, initVx, initVy, initState);
         
         path = new ArrayList();
+        movingToTarget = false;
+        collided = false;
+        
+        money = (int) Math.round(Math.random() * 50);
     }
     
     // ACCESSOR METHODS
-    public ArrayList<Intersection> getPath()    {  return path;    }
-    public boolean isMovingToTarget()           {   return movingToTarget;}
+    public ArrayList<Intersection> getPath()    {   return path;                }
+    public boolean isMovingToTarget()           {   return movingToTarget;      }
+    public boolean isCollided()                 {   return collided;            }
+    public Intersection getCurrentIntersection(){   return currentIntersection; }
+    public Intersection getLoopDestination()    {   return loopDestination;     }
+    public int getMoney()                       {   return money;               }
     
     // MUTATOR METHODS
     public void setX(int x)
@@ -46,8 +62,16 @@ public class Zombie extends Sprite
         targetX = initTargetX;
         targetY = initTargetY;
     }
+    public void setCurrentIntersection(Intersection currentIntersection)
+    {   this.currentIntersection = currentIntersection; }
+    public void setLoopDestination(Intersection loopDestination)
+    {   this.loopDestination = loopDestination;         }
+    public void setCollided(boolean collided)
+    {   this.collided = collided;   }
+    public void toggleColided()
+    {   collided = !collided;   }
     
-    public void startMovingToTarget(int maxVelocity)
+    public void startMovingToTarget(float maxVelocity)
     {
                 // LET ITS POSITIONG GET UPDATED
         movingToTarget = true;
@@ -95,12 +119,63 @@ public class Zombie extends Sprite
         return distance;
     }
     
+    public void initPath(ArrayList<Intersection> initPath, pathXDataModel data)
+    {
+        path = new ArrayList(initPath.size());
+        
+        for (Intersection i : initPath)
+        {
+            path.add(i);
+        }
+        
+        setTarget(path.get(pathIndex).x, path.get(pathIndex).y);
+        Road roadInBetween = data.getRoad(currentIntersection, path.get(pathIndex));
+        startMovingToTarget(roadInBetween.getSpeedLimit() * data.getGameSpeed() / 10);
+    }
+    
+    /**
+     * Stop moving to the target and places the tile on the Intersection.
+     */
+    public void stopMovingToTarget()
+    {
+        movingToTarget = false;
+        vX = 0;
+        vY = 0;
+
+        x = targetX;
+        y = targetY;
+
+        currentIntersection = path.get(pathIndex);
+    }
+    
+    public void updatePath(MiniGame game)
+    {
+        Intersection nextIntersection = path.get(pathIndex);
+        Road roadInBetween = ((pathXDataModel)game.getDataModel()).getRoad(currentIntersection, nextIntersection);
+        float gameSpeed = ((pathXDataModel)game.getDataModel()).getGameSpeed();
+        float carSpeed = ((pathXDataModel)game.getDataModel()).getPlayerSpeed();
+
+        targetX = nextIntersection.x;
+        targetY = nextIntersection.y;
+
+        startMovingToTarget(roadInBetween.getSpeedLimit() * gameSpeed * carSpeed / 10);
+    }
+    
     @Override
     public void update(MiniGame game)
     {
         if (calculateDistanceToTarget() < INTERSECTION_RADIUS)
         {
+            stopMovingToTarget();
             
+            if (pathIndex < path.size() - 1)
+            {   
+                pathIndex++;
+            } else
+            {
+                pathIndex = 0;
+            }
+            updatePath(game);
         }
         super.update(game);
     }

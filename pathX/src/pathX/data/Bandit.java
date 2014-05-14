@@ -1,8 +1,10 @@
 package pathX.data;
 
 import java.util.ArrayList;
+import mini_game.MiniGame;
 import mini_game.Sprite;
 import mini_game.SpriteType;
+import static pathX.pathXConstants.*;
 
 /**
  *
@@ -19,6 +21,12 @@ public class Bandit extends Sprite
     private boolean movingToTarget;
     private boolean collided;
     
+    private Intersection currentIntersection;
+    
+    private int money;
+    
+    private int pathIndex;
+    
     public Bandit(SpriteType initSpriteType,
             float initX, float initY,
             float initVx, float initVy,
@@ -28,11 +36,18 @@ public class Bandit extends Sprite
         super(initSpriteType, initX, initY, initVx, initVy, initState);
         
         path = new ArrayList();
+        movingToTarget = false;
+        collided = false;
+        
+        money = (int) Math.round(Math.random() * 100);
     }
     
     // ACCESSOR METHODS
-    public ArrayList<Intersection> getPath()    {  return path;    }
-    public boolean isMovingToTarget()           {   return movingToTarget;}
+    public ArrayList<Intersection> getPath()    {   return path;                }
+    public boolean isMovingToTarget()           {   return movingToTarget;      }
+    public boolean isCollided()                 {   return collided;            }
+    public Intersection getCurrentIntersection(){   return currentIntersection; }
+    public int getMoney()                       {   return money;               }
     
     // MUTATOR METHODS
     public void setX(int x)
@@ -44,8 +59,14 @@ public class Bandit extends Sprite
         targetX = initTargetX;
         targetY = initTargetY;
     }
+    public void setCurrentIntersection(Intersection currentIntersection)
+    {   this.currentIntersection = currentIntersection; }
+    public void setCollided(boolean collided)
+    {   this.collided = collided;   }
+    public void toggleCollided()
+    {   collided = !collided;   }
     
-    public void startMovingToTarget(int maxVelocity)
+    public void startMovingToTarget(float maxVelocity)
     {
                 // LET ITS POSITIONG GET UPDATED
         movingToTarget = true;
@@ -91,6 +112,53 @@ public class Bandit extends Sprite
         
         // AND RETURN THE DISTANCE
         return distance;
+    }
+    
+    /**
+     * Stop moving to the target and places the tile on the Intersection.
+     */
+    public void stopMovingToTarget()
+    {
+        movingToTarget = false;
+        vX = 0;
+        vY = 0;
+
+        x = targetX;
+        y = targetY;
+
+        currentIntersection = path.get(pathIndex);
+    }
+    
+    public void updatePath(MiniGame game)
+    {
+        Intersection nextIntersection = path.get(pathIndex);
+        Road roadInBetween = ((pathXDataModel)game.getDataModel()).getRoad(currentIntersection, nextIntersection);
+        float gameSpeed = ((pathXDataModel)game.getDataModel()).getGameSpeed();
+        float playerSpeed = ((pathXDataModel)game.getDataModel()).getPlayerSpeed();
+
+        targetX = nextIntersection.x;
+        targetY = nextIntersection.y;
+
+        startMovingToTarget(roadInBetween.getSpeedLimit() * gameSpeed * playerSpeed / 10);
+    }
+    
+    @Override
+    public void update(MiniGame game)
+    {
+        if (calculateDistanceToTarget() < INTERSECTION_RADIUS)
+        {
+            stopMovingToTarget();
+            
+            if (pathIndex < path.size() - 1)
+            {   
+                pathIndex++;
+            } else
+            {
+                pathIndex = 0;
+            }
+            updatePath(game);
+        }
+        super.update(game);
     }
 }
 

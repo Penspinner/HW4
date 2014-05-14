@@ -125,6 +125,7 @@ public class pathX
         // AUDIO CUES
         AUDIO_CUE_LOSE,
         AUDIO_CUE_WIN,
+        AUDIO_CUE_INCREASE_MONEY,
         AUDIO_CUE_SELECT,
         AUDIO_CUE_ZOMBIE,
         AUDIO_CUE_BANDIT,
@@ -132,9 +133,16 @@ public class pathX
         SONG_CUE_MENU_SCREEN,
         SONG_CUE_GAME_SCREEN,
         
+        // TEXT
+        TEXT_LOSE_TOP,
+        TEXT_LOSE_BOTTOM,
+        TEXT_WIN_TOP,
+        TEXT_WIN_BOTTOM,
+        
         // MENU BUTTONS
         LEVEL_OPTIONS,
         LEVEL_NAME_OPTIONS,
+        LEVEL_DESCRIPTIONS,
         MENU_BUTTON_OPTIONS,
         MENU_MOUSE_OVER_OPTIONS,
     }

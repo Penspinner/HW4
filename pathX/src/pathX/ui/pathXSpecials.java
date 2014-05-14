@@ -116,9 +116,24 @@ public class pathXSpecials
 //        }
     }
     
-    public enum pathXSpecialsState
+    public enum pathXSpecialsMode
     {
-        LOCKED_STATE,
-        UNLOCKED_STATE
+        MAKE_LIGHT_GREEN_MODE,
+        MAKE_LIGHT_RED_MODE,
+        FLAT_TIRE_MODE,
+        EMPTY_GAS_TANK_MODE,
+        DECREASE_SPEED_LIMIT_MODE,
+        INCREASE_SPEED_LIMIT_MODE,
+        INCREASE_PLAYER_SPEED_MODE,
+        CLOSE_ROAD_MODE,
+        CLOSE_INTERSECTION_MODE,
+        OPEN_INTERSECTION_MODE,
+        STEAL_MODE,
+        MIND_CONTROL_MODE,
+        INTANGIBILITY_MODE,
+        MINDLESS_TERROR_MODE,
+        FLYING_MODE,
+        INVINCIBILITY_MODE,
+        NORMAL_MODE
     }
 }

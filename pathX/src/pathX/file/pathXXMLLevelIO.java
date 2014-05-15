@@ -1,6 +1,7 @@
 package pathX.file;
 
 import java.awt.HeadlessException;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
@@ -25,9 +26,13 @@ import pathX.data.Road;
 import pathX.data.Zombie;
 import pathX.data.pathXDataModel;
 import pathX.data.pathXLevel;
+import pathX.pathX;
 import xml_utilities.XMLUtilities;
 import static pathX.pathXConstants.*;
+import pathX.ui.pathXMiniGame;
 import pathX.ui.pathXTileState;
+import properties_manager.PropertiesManager;
+import pathX.pathX.pathXPropertyType;
 /**
  *
  * @author Dell
@@ -39,19 +44,23 @@ public class pathXXMLLevelIO
     
     // THIS IS THE SCHEMA WE'LL USE
     private File levelSchema;
+    
+    private pathXMiniGame game;
 
     /**
      * Constructor for making our importer/exporter. Note that it
      * initializes the XML utility for processing XML files and it
      * sets up the schema for use.
      */
-    public pathXXMLLevelIO(File initLevelSchema)
+    public pathXXMLLevelIO(File initLevelSchema, pathXMiniGame initGame)
     {
         // THIS KNOWS HOW TO READ AND ACCESS XML FILES
         xmlUtil = new XMLUtilities();
         
         // WE'LL USE THE SCHEMA FILE TO VALIDATE THE XML FILES
         levelSchema = initLevelSchema;
+        
+        game = initGame;
     }
     
     /**
@@ -178,6 +187,10 @@ public class pathXXMLLevelIO
         Node zombiesListNode = doc.getElementsByTagName(ZOMBIE_LIST_NODE).item(0);
         ArrayList<Zombie> zombies = levelToLoad.getZombies();
         SpriteType zT = new SpriteType(ZOMBIE_TYPE);
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
+        String imgPath = props.getProperty(pathXPropertyType.PATH_IMG);
+        BufferedImage img = game.loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_ZOMBIE));
+        zT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
         
         ArrayList<Node> zombiesList = xmlUtil.getChildNodesWithName(zombiesListNode, ZOMBIE_NODE);
         for (int i = 0; i < zombiesList.size(); i++)
@@ -202,6 +215,10 @@ public class pathXXMLLevelIO
         Node policeListNode = doc.getElementsByTagName(POLICE_LIST_NODE).item(0);
         ArrayList<Police> polices = levelToLoad.getPolices();
         SpriteType pT = new SpriteType(POLICE_TYPE);
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
+        String imgPath = props.getProperty(pathXPropertyType.PATH_IMG);
+        BufferedImage img = game.loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_POLICE));
+        pT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
         
         ArrayList<Node> policeList = xmlUtil.getChildNodesWithName(policeListNode, POLICE_NODE2);
         for (int i = 0; i < policeList.size(); i++)
@@ -226,6 +243,10 @@ public class pathXXMLLevelIO
         Node banditListNode = doc.getElementsByTagName(BANDIT_LIST_NODE).item(0);
         ArrayList<Bandit> bandits = levelToLoad.getBandits();
         SpriteType bT = new SpriteType(BANDIT_TYPE);
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
+        String imgPath = props.getProperty(pathXPropertyType.PATH_IMG);
+        BufferedImage img = game.loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BANDIT));
+        bT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
         
         ArrayList<Node> banditList = xmlUtil.getChildNodesWithName(banditListNode, BANDIT_NODE);
         for (int i = 0; i < banditList.size(); i++)

@@ -35,6 +35,10 @@ public abstract class MiniGameDataModel
     protected int lastMouseX;
     protected int lastMouseY;
     
+    // LAST MOUSE DRAGGED POSITION
+    protected int lastMouseDraggedX;
+    protected int lastMouseDraggedY;
+    
     // THIS ALLOWS US TO PAUSE THE GAME IF WE LIKE
     protected boolean paused;
 
@@ -133,6 +137,28 @@ public abstract class MiniGameDataModel
     public int getLastMouseY()
     {
         return lastMouseY;
+    }
+    
+    /**
+     * Accessor for getting the last known dragged pixel's x location of the
+     * mouse on the canvas.
+     * 
+     * @return The last known dragged x location of the mouse.
+     */
+    public int getLastMouseDraggedX()
+    {
+        return lastMouseDraggedX;
+    }
+    
+    /**
+     * Accessor for getting the last known dragged pixel's y location of the
+     * mouse on the canvas.
+     * 
+     * @return The last known dragged y location of the mouse.
+     */
+    public int getLastMouseDraggedY()
+    {
+        return lastMouseDraggedY;
     }
 
     /**
@@ -338,6 +364,26 @@ public abstract class MiniGameDataModel
     public void setLastMouseY(int initY)
     {
         lastMouseY = initY;
+    }
+    
+    /**
+     * Mutator method to set the last known dragged pixel's x location of the mouse.
+     *
+     * @param initX X location of mouse.
+     */
+    public void setLastMouseDraggedX(int initDraggedX)
+    {
+        lastMouseDraggedX = initDraggedX;
+    }
+    
+    /**
+     * Mutator method to set the last known dragged pixel's y location of the mouse.
+     *
+     * @param initX X location of mouse.
+     */
+    public void setLastMouseDraggedY(int initDraggedY)
+    {
+        lastMouseDraggedY = initDraggedY;
     }
     
     public void setViewport(Viewport initViewport)

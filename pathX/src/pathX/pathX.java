@@ -40,13 +40,14 @@ public class pathX
             // GET THE PROPER WINDOW DIMENSIONS
             miniGame.startGame();
             
+            // INITIALIZE THE MAP VIEWPORT AFTER START GAME BECAUSE THE GAME 
+            // INSETS ARE NOT INITIALIZED UNTIL THE WINDOW IS SET VISIBLE
             ((pathXMiniGame)miniGame).initMapViewport();
         } 
         // CATCH THE ESCEPTION IF THERE WAS AN ERROR WITH THE XML FILE
         catch (InvalidXMLFileFormatException ixmlffe)
         {
-            pathXErrorHandler errorHandler = miniGame.getErrorHandler();
-            System.out.println("ixmlffe");
+            ixmlffe.printStackTrace();
         }
     }
     
@@ -66,7 +67,7 @@ public class pathX
         PATH_IMG,
         
         // LOADED FROM THE GAME FLAVOR PROPERTIES XML FILE
-            // pathX_properties.xml
+        // pathX_properties.xml
         IMAGE_BACKGROUND_MENU,
         IMAGE_BACKGROUND_GAME,
         IMAGE_BACKGROUND_SETTINGS,
@@ -124,16 +125,20 @@ public class pathX
         
         // AUDIO CUES
         AUDIO_CUE_LOSE,
-        AUDIO_CUE_WIN,
         AUDIO_CUE_INCREASE_MONEY,
+        AUDIO_CUE_INVINCIBILITY,
+        AUDIO_CUE_SELECT_LEVEL,
+        AUDIO_CUE_SPECIAL_SUCCESS,
+        AUDIO_CUE_FAIL,
         AUDIO_CUE_SELECT,
         AUDIO_CUE_ZOMBIE,
         AUDIO_CUE_BANDIT,
         AUDIO_CUE_POLICE,
         SONG_CUE_MENU_SCREEN,
         SONG_CUE_GAME_SCREEN,
+        SONG_CUE_WIN,
         
-        // TEXT
+        // TEXT FOR WIN OR LOSE
         TEXT_LOSE_TOP,
         TEXT_LOSE_BOTTOM,
         TEXT_WIN_TOP,

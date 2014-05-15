@@ -61,7 +61,7 @@ public class SpriteType
     }
 
     /**
-     * Accessor method for accessing and returning the Image that correponds to
+     * Accessor method for accessing and returning the Image that corresponds to
      * a given state.
      *
      * @param stateName the state for which one wishes to access the image.

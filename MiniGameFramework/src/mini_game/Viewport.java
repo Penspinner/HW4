@@ -120,4 +120,26 @@ public class Viewport
         viewportX += incX;
         viewportY += incY;
     }
+    
+    /**
+     * Returns true if the test rect is inside the viewport,
+     * returns false otherwise.
+     */
+    public boolean isRectInsideViewport(int x1, int y1, int x2, int y2)
+    {
+        if (x2 < viewportX) return false;
+        if (x1 > (viewportX + viewportWidth)) return false;
+        if (y2 < viewportY) return false;
+        if (y1 > (viewportY + viewportHeight)) return false;
+        return true;
+    }
+
+    /**
+     * Returns true if the circle argument's bounding box is inside the
+     * viewport, false otherwise.
+     */
+    public boolean isCircleBoundingBoxInsideViewport(int centerX, int centerY, int radius)
+    {
+        return isRectInsideViewport(centerX-radius, centerY-radius, centerX+radius, centerY+radius);
+    }
 }

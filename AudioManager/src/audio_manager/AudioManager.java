@@ -14,6 +14,7 @@ import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.BooleanControl;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
@@ -21,7 +22,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  *
- * @author McKillaGorilla
+ * @author McKillaGorilla & Steven Liao
  */
 public class AudioManager
 {
@@ -42,6 +43,9 @@ public class AudioManager
         wavAudio = new HashMap();
    //     mp3Audio = new HashMap();
     }
+    
+    public HashMap<String, Sequencer> getMidiAudio() {  return midiAudio;  }
+    public HashMap<String, Clip> getWavAudio()       {  return wavAudio;    }
     
     public void loadAudio(String audioName, String audioFileName) throws UnsupportedAudioFileException, IOException, LineUnavailableException, InvalidMidiDataException, MidiUnavailableException
     {
@@ -69,17 +73,22 @@ public class AudioManager
     public void play(String audioName, boolean loop)
     {
         Sequencer sequencer = midiAudio.get(audioName);
+        Clip clip = wavAudio.get(audioName);
+        //MediaPlayer mediaPlayer = mp3Audio.get(audioName);
         if (sequencer != null)
         {
             sequencer.setTickPosition(0);
             sequencer.start();
+            if (loop)
+            	sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
         }
-        else
+        else if (clip != null)
         {
-            Clip clip = wavAudio.get(audioName);
             clip.setFramePosition(0);
             clip.start();
-        }   
+            if (loop)
+            	clip.loop(Clip.LOOP_CONTINUOUSLY);
+        }
     }
     
     public boolean isPlaying(String audioName)
@@ -107,6 +116,33 @@ public class AudioManager
         {
             Clip clip = wavAudio.get(audioName);
             clip.stop();
+        }
+    }
+    
+    public void mute(String audioName)
+    {
+        Sequencer sequencer = midiAudio.get(audioName);
+        if (sequencer != null)
+        {
+            if (sequencer.getTrackMute(0))
+            {
+                sequencer.setTrackMute(0, false);
+            } else
+            {
+                sequencer.setTrackMute(0, true);
+            }
+        }
+        else
+        {
+            Clip clip = wavAudio.get(audioName);
+            BooleanControl volume = (BooleanControl) clip.getControl(BooleanControl.Type.MUTE);
+            if (volume.getValue())
+            {
+                volume.setValue(false);
+            } else
+            {
+                volume.setValue(true);
+            }
         }
     }
 }

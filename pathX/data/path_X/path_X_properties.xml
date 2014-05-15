@@ -57,14 +57,19 @@
         <property name="IMAGE_BUTTON_LEAVE_MOUSE_OVER"          value="./pathX/ButtonLeaveMouseOver.png"></property>
         
         <!-- AUDIO AND SONG CUES -->
-        <property name="AUDIO_CUE_LOSE"                         value="./pathX/"></property>
-        <property name="AUDIO_CUE_WIN"                          value="./pathX/"></property>
+        <property name="AUDIO_CUE_LOSE"                         value="./pathX/Lose.wav"></property>
         <property name="AUDIO_CUE_INCREASE_MONEY"               value="./pathX/IncreaseMoney.wav"></property>
+        <property name="AUDIO_CUE_INVINCIBILITY"                value="./pathX/Invincibility.wav"></property>
+        <property name="AUDIO_CUE_SELECT_LEVEL"                 value="./pathX/SelectLevel.wav"></property>
+        <property name="AUDIO_CUE_SPECIAL_SUCCESS"              value="./pathX/SpecialSuccess.wav"></property>
+        <property name="AUDIO_CUE_FAIL"                         value="./pathX/Failure.wav"></property>
         <property name="AUDIO_CUE_SELECT"                       value="./pathX/Select.wav"></property>
-        <property name="AUDIO_CUE_ZOMBIE"                       value=""></property>
-        <property name="AUDIO_CUE_BANDIT"                       value=""></property>
+        <property name="AUDIO_CUE_ZOMBIE"                       value="./pathX/Zombie.wav"></property>
+        <property name="AUDIO_CUE_BANDIT"                       value="./pathX/Bandit.wav"></property>
         <property name="AUDIO_CUE_POLICE"                       value=""></property>
         <property name="SONG_CUE_MENU_SCREEN"                   value="./pathX/SongRealAmerican.wav"></property>
+        <property name="SONG_CUE_GAME_SCREEN"                   value="./pathX/SongGameScreen.wav"></property>
+        <property name="SONG_CUE_WIN"                           value="./pathX/Congratulation.wav"></property>
         
         <!-- TEXT -->
         <property name="TEXT_LOSE_TOP"                          value="Bad News!"></property>

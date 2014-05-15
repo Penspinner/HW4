@@ -96,7 +96,7 @@ public class pathXTile extends Sprite
         return movingToTarget;
     }
     
-    public void initPath(ArrayList<Intersection> initPath)
+    public void initPath(ArrayList<Intersection> initPath, MiniGame game)
     {
         path = new ArrayList(initPath.size());
         
@@ -105,8 +105,11 @@ public class pathXTile extends Sprite
             path.add(i);
         }
         
+        Road roadInBetween = ((pathXDataModel)game.getDataModel()).getRoad(currentIntersection, path.get(++pathIndex));
+        float gameSpeed = ((pathXDataModel)game.getDataModel()).getGameSpeed();
+        float playerSpeed = ((pathXDataModel)game.getDataModel()).getPlayerSpeed();
         setTarget(path.get(pathIndex).x - INTERSECTION_RADIUS, path.get(pathIndex).y - INTERSECTION_RADIUS);
-        startMovingToTarget(10);
+        startMovingToTarget(roadInBetween.getSpeedLimit() * gameSpeed * playerSpeed / 10);
     }
     
     public void startMovingToTarget(float maxVelocity)
@@ -185,11 +188,13 @@ public class pathXTile extends Sprite
                 pathIndex++;
                 
                 Road roadInBetween = ((pathXDataModel)game.getDataModel()).getRoad(currentIntersection, path.get(pathIndex));
+                float gameSpeed = ((pathXDataModel)game.getDataModel()).getGameSpeed();
+                float playerSpeed = ((pathXDataModel)game.getDataModel()).getPlayerSpeed();
                 
                 targetX = path.get(pathIndex).x - INTERSECTION_RADIUS;
                 targetY = path.get(pathIndex).y - INTERSECTION_RADIUS;
 
-                startMovingToTarget(roadInBetween.getSpeedLimit() / 10 * ((pathXDataModel)game.getDataModel()).getGameSpeed());
+                startMovingToTarget(roadInBetween.getSpeedLimit() * gameSpeed * playerSpeed / 10);
             }
         }
         else

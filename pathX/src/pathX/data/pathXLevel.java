@@ -39,8 +39,6 @@ public class pathXLevel
     String backgroundImageFileName;
     Intersection destination;
     String destinationImageFileName;
-    
-    pathXTile player;
 
     // THE AMOUNT OF MONEY TO BE EARNED BY THE LEVEL
     int money;
@@ -49,6 +47,8 @@ public class pathXLevel
     int numPolice;
     int numBandits;
     int numZombies;
+    
+    int levelNumber;
 
     /**
      * Default constructor, it just constructs the graph data structures
@@ -89,8 +89,6 @@ public class pathXLevel
         destination = new Intersection(destinationX, destinationY);
         intersections.add(destination);
         
-        // MAKE A NEW TILE FOR EACH CHARACTER
-        
         // THESE THINGS WILL BE PROVIDED DURING LEVEL EDITING
         money = 0;
         numPolice = 0;
@@ -112,11 +110,11 @@ public class pathXLevel
     public ArrayList<Bandit>        getBandits()                        {   return bandits;                         }
     public Intersection             getStartingLocation()               {   return startingLocation;                }
     public Intersection             getDestination()                    {   return destination;                     }
-    public pathXTile                getPlayer()                         {   return player;                          }
     public int                      getMoney()                          {   return money;                           }
     public int                      getNumPolice()                      {   return numPolice;                       }
     public int                      getNumBandits()                     {   return numBandits;                      }
     public int                      getNumZombies()                     {   return numZombies;                      }
+    public int                      getLevelNumber()                    {   return levelNumber;                     }
     
     // MUTATOR METHODS
     public void setLevelName(String levelName)
@@ -125,8 +123,6 @@ public class pathXLevel
     {   this.name = name;                                                       }
     public void setDescription(String description)
     {   this.description = description;                                         }
-    public void setNumBandits(int numBandits)
-    {   this.numBandits = numBandits;                                           }
     public void setBackgroundImageFileName(String backgroundImageFileName)    
     {   this.backgroundImageFileName = backgroundImageFileName;                 }
     public void setStartingLocationImageFileName(String startingLocationImageFileName)    
@@ -139,6 +135,10 @@ public class pathXLevel
     {   this.numPolice = numPolice;                                             }
     public void setNumZombies(int numZombies)
     {   this.numZombies = numZombies;                                           }
+    public void setNumBandits(int numBandits)
+    {   this.numBandits = numBandits;                                           }
+    public void setLevelNumber(int levelNumber)
+    {   this.levelNumber = levelNumber;                                         }
     public void setStartingLocation(Intersection startingLocation)
     {   this.startingLocation = startingLocation;                               }
     public void setDestination(Intersection destination)

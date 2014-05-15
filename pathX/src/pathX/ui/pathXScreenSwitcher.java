@@ -3,8 +3,11 @@ package pathX.ui;
 import java.util.Iterator;
 import mini_game.MiniGameState;
 import mini_game.Sprite;
+import pathX.data.pathXDataModel;
 import pathX.data.pathXLevel;
+import pathX.pathX;
 import static pathX.pathXConstants.*;
+import pathX.pathX.pathXPropertyType;
 /**
  *
  * @author Dell
@@ -13,9 +16,12 @@ public class pathXScreenSwitcher
 {
     private pathXMiniGame game;
     
-    public pathXScreenSwitcher(pathXMiniGame initGame)
+    private pathXDataModel data;
+    
+    public pathXScreenSwitcher(pathXMiniGame initGame, pathXDataModel initData)
     {
         game = initGame;
+        data = initData;
     }
     
     /**
@@ -37,7 +43,7 @@ public class pathXScreenSwitcher
             game.getGUIButtons().get(HOME_BUTTON_TYPE).setY(0);
             game.getGUIButtons().get(EXIT_BUTTON_TYPE).setX(EXIT_BUTTON_X);
             game.getGUIButtons().get(EXIT_BUTTON_TYPE).setY(0);
-            enableSpecialButtons(false);
+            enableSpecialButtons(false, data.getSpecialsCounter());
         } 
         
         // CHANGE THE BACKGROUND
@@ -60,7 +66,6 @@ public class pathXScreenSwitcher
         game.getGUIButtons().get(SCROLL_LEFT_BUTTON_TYPE).setEnabled(true);
         game.getGUIButtons().get(SCROLL_RIGHT_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
         game.getGUIButtons().get(SCROLL_RIGHT_BUTTON_TYPE).setEnabled(true);
-        //guiButtons.get(LOCATION_BUTTON_TYPE).setEnabled(true);
     }
     
     /**
@@ -110,7 +115,7 @@ public class pathXScreenSwitcher
      */
     public void switchToGameScreen()
     {
-        enableSpecialButtons(true);
+        enableSpecialButtons(true, data.getSpecialsCounter());
         disableLevelButtons();
         
         // CHANGE THE BACKGROUND
@@ -160,6 +165,11 @@ public class pathXScreenSwitcher
             disableLevelButtons();
         } else if (game.isCurrentScreenState(GAME_SCREEN_STATE))
         {
+            if (data.inProgress())
+                game.getAudio().stop(pathXPropertyType.SONG_CUE_GAME_SCREEN.toString());
+            else if (data.won())
+                game.getAudio().stop(pathXPropertyType.SONG_CUE_WIN.toString());
+            game.getAudio().play(pathXPropertyType.SONG_CUE_MENU_SCREEN.toString(), true);
             game.getDataModel().setGameState(MiniGameState.NOT_STARTED);
             game.getDataModel().unpause();
             game.getGUIDecor().get(INFO_DIALOG_BOX_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
@@ -173,7 +183,7 @@ public class pathXScreenSwitcher
             game.getGUIButtons().get(HOME_BUTTON_TYPE).setY(0);
             game.getGUIButtons().get(EXIT_BUTTON_TYPE).setX(EXIT_BUTTON_X);
             game.getGUIButtons().get(EXIT_BUTTON_TYPE).setY(0);
-            enableSpecialButtons(false);
+            enableSpecialButtons(false, data.getSpecialsCounter());
             disableScrollButtons();
         } else if (game.isCurrentScreenState(HELP_SCREEN_STATE))
         {
@@ -255,9 +265,9 @@ public class pathXScreenSwitcher
         }
     }
     
-    public void enableSpecialButtons(boolean b)
+    public void enableSpecialButtons(boolean b, int numSpecials)
     {
-        for (int i = 0; i < game.getSpecials().getSpecialTiles().size(); i++)
+        for (int i = 0; i < numSpecials; i++)
         {
             game.getGUIButtons().get(SPECIALS_NAME_LIST[i]).setEnabled(b);
             if (b)

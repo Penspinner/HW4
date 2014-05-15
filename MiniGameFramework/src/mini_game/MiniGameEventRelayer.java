@@ -115,10 +115,18 @@ public class MiniGameEventRelayer implements MouseListener, MouseMotionListener,
         }
     }
 
-    // WE'RE NOT USING THIS GUY AT THE MOMENT, THOUGH YOU MAY CHOOSE TO
     @Override
     public void mouseDragged(MouseEvent me)
     {
+        try
+        {
+            game.beginUsingData();
+            game.getDataModel().setLastMouseDraggedX(me.getX());
+            game.getDataModel().setLastMouseDraggedY(me.getY());
+        } finally
+        {
+            game.endUsingData();
+        }
     }
 
     /**
@@ -136,31 +144,32 @@ public class MiniGameEventRelayer implements MouseListener, MouseMotionListener,
             game.beginUsingData();
 
             // THE 'D' KEY TOGGLES DEBUG TEXT DISPLAY
-            if (ke.getKeyCode() == KeyEvent.VK_D)
-            {
-                // TOGGLE IT OFF
-                if (game.getDataModel().isDebugTextRenderingActive())
-                {
-                    game.getDataModel().deactivateDebugTextRendering();
-                } // TOGGLE IT ON
-                else
-                {
-                    game.getDataModel().activateDebugTextRendering();
-                }
-            } // THE 'P' KEY PAUSES THE GAME, WHICH MEANS 
-            // ALL UPDATE LOGIC GETS SKIPPED
-            else if (ke.getKeyCode() == KeyEvent.VK_P)
-            {
-                // TOGGLE THE OFF
-                if (game.getDataModel().isPaused())
-                {
-                    game.getDataModel().unpause();
-                } // TOGGLE IT ON
-                else
-                {
-                    game.getDataModel().pause();
-                }
-            } else
+//            if (ke.getKeyCode() == KeyEvent.VK_D)
+//            {
+//                // TOGGLE IT OFF
+//                if (game.getDataModel().isDebugTextRenderingActive())
+//                {
+//                    game.getDataModel().deactivateDebugTextRendering();
+//                } // TOGGLE IT ON
+//                else
+//                {
+//                    game.getDataModel().activateDebugTextRendering();
+//                }
+////            } // THE 'P' KEY PAUSES THE GAME, WHICH MEANS 
+////            // ALL UPDATE LOGIC GETS SKIPPED
+////            else 
+//                if (ke.getKeyCode() == KeyEvent.VK_F)
+//            {
+//                // TOGGLE THE OFF
+//                if (game.getDataModel().isPaused())
+//                {
+//                    game.getDataModel().unpause();
+//                } // TOGGLE IT ON
+//                else
+//                {
+//                    game.getDataModel().pause();
+//                }
+//            } else
             {
                 game.getKeyHandler().keyPressed(ke);
             }

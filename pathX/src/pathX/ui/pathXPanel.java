@@ -125,8 +125,7 @@ public class pathXPanel extends JPanel
                 renderPlayer(g2);
                 renderEnemies(g2);
                 renderBackground(g2);
-//                renderSpecialTiles(g2);
-                renderLevelTitle(g2);
+                renderBalance(g2);
                 renderGUIControls(g2);
                 if (game.isDisplayingInfo())
                     renderLevelDetails(g2);
@@ -249,16 +248,6 @@ public class pathXPanel extends JPanel
 //        int viewportY = viewport.getViewportY();
 //        g2.drawImage(img, 0, NORTH_PANEL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT,
 //                viewportX, viewportY, WINDOW_WIDTH + viewportX, WINDOW_HEIGHT + viewportY, null);
-        
-//        Iterator<Sprite> buttonsIt = game.getGUIButtons().values().iterator();
-//        while (buttonsIt.hasNext())
-//        {
-//            Sprite button = buttonsIt.next();
-//            if (button.getSpriteType().getSpriteTypeID().contains(LEVEL_BUTTON_TYPE))
-//            {
-//                g2.drawString("STATE", WIDTH, HEIGHT);
-//            }
-//        }
         }
     
     public void renderDetails(Graphics2D g2)
@@ -269,11 +258,6 @@ public class pathXPanel extends JPanel
         g2.drawString("Goal: $" + GOAL_MONEY, DETAILS_X, GOAL_Y);
     }
     
-    public void renderLevelDescription(Graphics2D g2)
-    {
-        
-    }
-
     public void renderLevel(Graphics2D g2)
     {
         for (Sprite level : game.getGUIButtons().values())
@@ -289,7 +273,8 @@ public class pathXPanel extends JPanel
                 else
                     level.setEnabled(true);
                 g2.drawImage(img, (int) level.getX(), (int) level.getY(), sTLevel.getWidth(), sTLevel.getHeight(), null);
-                if (level.containsPoint(data.getLastMouseX(), data.getLastMouseY()))
+                if (level.containsPoint(data.getLastMouseX(), data.getLastMouseY()) &&
+                    !level.getState().equals(pathXTileState.LOCKED_STATE.toString()))
                 {
                     g2.setFont(FONT_TEXT_DISPLAY);
                     g2.drawString(((pathXTile)level).getName(), 500, 520);
@@ -304,7 +289,7 @@ public class pathXPanel extends JPanel
         g2.drawString("" + data.getGameSpeed(), 500, 358);
     }
     
-    public void renderLevelTitle(Graphics2D g2)
+    public void renderBalance(Graphics2D g2)
     {
         g2.setFont(STATS_TEXT_FONT);
         g2.drawString(data.getLevel().getName(), 210, 30);
@@ -384,7 +369,7 @@ public class pathXPanel extends JPanel
             
             // THEN RENDER THE DESCRIPTION
             String loseTextBottom = props.getProperty(pathXPropertyType.TEXT_LOSE_BOTTOM);
-            AttributedString s1 = new AttributedString(loseTextBottom + level.getMoney() + "!", map);
+            AttributedString s1 = new AttributedString(loseTextBottom, map);
             AttributedCharacterIterator paragraph = s1.getIterator();
             int paragraphStart = paragraph.getBeginIndex();
             int paragraphEnd = paragraph.getEndIndex();
@@ -423,7 +408,7 @@ public class pathXPanel extends JPanel
         while (it.hasNext())
         {
             Road road = it.next();
-            if (!data.isSelectedRoad(road))
+            if (!data.isSelectedRoad(road) && road.open)
                 renderRoad(g2, road, INT_OUTLINE_COLOR);
         }
         
@@ -439,11 +424,11 @@ public class pathXPanel extends JPanel
 //        }
 
         // AND RENDER THE SELECTED ONE, IF THERE IS ONE
-        Road selectedRoad = data.getSelectedRoad();
-        if (selectedRoad != null)
-        {
-            renderRoad(g2, selectedRoad, HIGHLIGHTED_COLOR);
-        }
+//        Road selectedRoad = data.getSelectedRoad();
+//        if (selectedRoad != null)
+//        {
+//            renderRoad(g2, selectedRoad, HIGHLIGHTED_COLOR);
+//        }
     }
     
     // HELPER METHOD FOR RENDERING A SINGLE ROAD
@@ -486,8 +471,8 @@ public class pathXPanel extends JPanel
             // ONLY RENDER IT THIS WAY IF IT'S NOT THE START OR DESTINATION
             // AND IT IS IN THE VIEWPORT
             if ((!data.isStartingLocation(intersection))
-                    && (!data.isDestination(intersection))
-                    && gameViewport.isCircleBoundingBoxInsideViewport(intersection.x, intersection.y, INTERSECTION_RADIUS))
+                && (!data.isDestination(intersection))
+                && gameViewport.isCircleBoundingBoxInsideViewport(intersection.x, intersection.y, INTERSECTION_RADIUS))
             {
                 // FIRST FILL
                 if (intersection.isOpen())
@@ -620,12 +605,14 @@ public class pathXPanel extends JPanel
         Viewport gameViewport = ((pathXMiniGame)game).getGameViewport();
         PropertiesManager props = PropertiesManager.getPropertiesManager();
         String imgPath = props.getProperty(pathXPropertyType.PATH_IMG);
+        SpriteType spriteType;
         
         Iterator<Zombie> itZ = data.zombiesIterator();
         while (itZ.hasNext())
         {
             Zombie currentZombie = itZ.next();
-            Image zombieImage = game.loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_ZOMBIE));
+            spriteType = currentZombie.getSpriteType();
+            Image zombieImage = spriteType.getStateImage(currentZombie.getState());
             g2.drawImage(zombieImage, (int) currentZombie.getX() - gameViewport.getViewportX() - INTERSECTION_RADIUS, 
                     (int) currentZombie.getY() - gameViewport.getViewportY() - INTERSECTION_RADIUS, null);
         }
@@ -634,7 +621,8 @@ public class pathXPanel extends JPanel
         while (itP.hasNext())
         {
             Police currentPolice = itP.next();
-            Image policeImage = game.loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_POLICE));
+            spriteType = currentPolice.getSpriteType();
+            Image policeImage = spriteType.getStateImage(currentPolice.getState());
             g2.drawImage(policeImage, (int) currentPolice.getX() - gameViewport.getViewportX() - INTERSECTION_RADIUS, 
                     (int) currentPolice.getY() - gameViewport.getViewportY() - INTERSECTION_RADIUS, null);
         }
@@ -643,65 +631,10 @@ public class pathXPanel extends JPanel
         while (itB.hasNext())
         {
             Bandit currentBandit = itB.next();
-            Image banditImage = game.loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BANDIT));
+            spriteType = currentBandit.getSpriteType();
+            Image banditImage = spriteType.getStateImage(currentBandit.getState());
             g2.drawImage(banditImage, (int)currentBandit.getX() - gameViewport.getViewportX() - INTERSECTION_RADIUS, 
                     (int) currentBandit.getY() - gameViewport.getViewportY() - INTERSECTION_RADIUS, null);
         }
     }
-    
-//    public void renderZombies(Graphics2D g2)
-//    {
-//        pathXTile zombie = game.getGUICharacters().get(ZOMBIE_TYPE);
-//        SpriteType sT = zombie.getSpriteType();
-//        Image img = sT.getStateImage(zombie.getState());
-//        Viewport gameViewport = ((pathXMiniGame)game).getGameViewport();
-//        for (int i = 0; i < data.getZombies().size(); i++)
-//        {
-//            g2.drawImage(img, 
-//                    (int) data.getZombies().get(i).getX() - gameViewport.getViewportX() - 17, 
-//                    (int) data.getZombies().get(i).getY() - gameViewport.getViewportY() - 17, 
-//                    null);
-//        }
-//    }
-//    
-//    public void renderPolice(Graphics2D g2)
-//    {
-//        pathXTile police = game.getGUICharacters().get(POLICE_TYPE);
-//        SpriteType sT = police.getSpriteType();
-//        Image img = sT.getStateImage(police.getState());
-//        Viewport gameViewport = ((pathXMiniGame)game).getGameViewport();
-//        for (int i = 0; i < data.getPolice().size(); i++)
-//        {
-//            g2.drawImage(img, 
-//                    (int) data.getPolice().get(i).getX() - gameViewport.getViewportX(), 
-//                    (int) data.getPolice().get(i).getY() - gameViewport.getViewportY(), 
-//                    null);
-//        }
-//    }
-//    
-//    public void renderBandits(Graphics2D g2)
-//    {
-//        pathXTile bandit = game.getGUICharacters().get(BANDIT_TYPE);
-//        SpriteType sT = bandit.getSpriteType();
-//        Image img = sT.getStateImage(bandit.getState());
-//        Viewport gameViewport = ((pathXMiniGame)game).getGameViewport();
-//        for (int i = 0; i < data.getBandits().size(); i++)
-//        {
-//            g2.drawImage(img, 
-//                    (int) data.getBandits().get(i).getX() - gameViewport.getViewportX(), 
-//                    (int) data.getBandits().get(i).getY() - gameViewport.getViewportY(), 
-//                    null);
-//        }
-//    }
-    
-//    public void renderSpecialTiles(Graphics2D g2)
-//    {
-//        Viewport gameViewport = ((pathXMiniGame)game).getGameViewport();
-//        for(pathXTile tile : game.getSpecials().getSpecialTiles())
-//        {
-//            tile.setState(pathXTileState.VISIBLE_STATE.toString());
-////            Image img = tile.getSpriteType().getStateImage(tile.getState());
-////            g2.drawImage(img, (int) tile.getX(), (int) tile.getY(), null);
-//        }
-//    }
 }

@@ -52,34 +52,39 @@ public class pathXConstants
     public static final String EXIT_BUTTON_TYPE = "EXIT_BUTTON>TYPE";
     
     // SPECIALS NAME ID
-    public static final String[] SPECIALS_NAME_LIST =  {"MAKE_LIGHT_GREEN",
-                                                        "MAKE_LIGHT_RED",
-                                                        "FLAT_TIRE",
-                                                        "EMPTY_GAS_TANK",
-                                                        "DECREASE_SPEED_LIMIT",
-                                                        "INCREASE_SPEED_LIMIT",
-                                                        "INCREASE_PLAYER_SPEED",
-                                                        "CLOSE_ROAD",
-                                                        "CLOSE_INTERSECTION",
-                                                        "OPEN_INTERSECTION",
-                                                        "STEAL",
-                                                        "MIND_CONTROL",
-                                                        "INTANGIBILITY",
-                                                        "MINDLESS_TERROR",
-                                                        "FLYING",
-                                                        "INVINCIBILITY"};
+    public static final String[] SPECIALS_NAME_LIST =   {
+                                                            "MAKE_LIGHT_GREEN",
+                                                            "MAKE_LIGHT_RED",
+                                                            "FLAT_TIRE",
+                                                            "EMPTY_GAS_TANK",
+                                                            "INCREASE_SPEED_LIMIT",
+                                                            "DECREASE_SPEED_LIMIT",
+                                                            "INCREASE_PLAYER_SPEED",
+                                                            "CLOSE_ROAD",
+                                                            "CLOSE_INTERSECTION",
+                                                            "OPEN_INTERSECTION",
+                                                            "MIND_CONTROL",
+                                                            "MINDLESS_TERROR",
+                                                            "STEAL",
+                                                            "INTANGIBILITY",
+                                                            "FLYING",
+                                                            "INVINCIBILITY"
+                                                        };
     
     // LEVEL SELECT SCREEN USER INTERFACE CONTROLS
-    public static final String[] SCROLL_BUTTON_TYPE = {"SCROLL_UP_BUTTON_TYPE",
-                                                        "SCROLL_DOWN_BUTTON_TYPE",
-                                                        "SCROLL_LEFT_BUTTON_TYPE",
-                                                        "SCROLL_RIGHT_BUTTON_TYPE"};
+    public static final String[] SCROLL_BUTTON_TYPE =   {
+                                                            "SCROLL_UP_BUTTON_TYPE",
+                                                            "SCROLL_DOWN_BUTTON_TYPE",
+                                                            "SCROLL_LEFT_BUTTON_TYPE",
+                                                            "SCROLL_RIGHT_BUTTON_TYPE"
+                                                        };
     public static final String SCROLL_UP_BUTTON_TYPE = "SCROLL_UP_BUTTON_TYPE";
     public static final String SCROLL_DOWN_BUTTON_TYPE = "SCROLL_DOWN_BUTTON_TYPE";
     public static final String SCROLL_LEFT_BUTTON_TYPE = "SCROLL_LEFT_BUTTON_TYPE";
     public static final String SCROLL_RIGHT_BUTTON_TYPE = "SCROLL_RIGHT_BUTTON_TYPE";
     public static final String PAUSE_BUTTON_TYPE = "PAUSE_BUTTON_TYPE";
     public static final String LEVEL_BUTTON_TYPE = "LEVEL_BUTTON_TYPE";
+    public static final String SPECIALS_BUTTON_TYPE = "SPECIALS_BUTTON_TYPE";
     
     // SETTINGS BUTTONS
     public static final String SOUND_MUTE_BOX_BUTTON_TYPE = "SOUND_MUTE_BOX_TYPE";
@@ -153,14 +158,18 @@ public class pathXConstants
     public static final int BREAKWIDTH = 560;
     
     // COORDINATES OF THE LEVELS
-    public static final int[] LEVEL_X_COORDINATES = {150,200,180,345,500,
-                                                    450,150,70,80,740,
-                                                    760,780,1215,1250,1230,
-                                                    1325,1350,1375,25,125};
-    public static final int[] LEVEL_Y_COORDINATES = {120,130,160,155,195,
-                                                    230,640,460,645,830,
-                                                    940,900,955,950,980,
-                                                    365,400,405,500,120};
+    public static final int[] LEVEL_X_COORDINATES = {
+                                                        150,200,180,345,500,
+                                                        450,150,70,80,740,
+                                                        760,780,1215,1250,1230,
+                                                        1325,1350,1375,25,125
+                                                    };
+    public static final int[] LEVEL_Y_COORDINATES = {
+                                                        120,130,160,155,195,
+                                                        230,640,460,645,830,
+                                                        940,900,955,950,980,
+                                                        365,400,405,500,120
+                                                    };
     
     // SCROLLING CONSTANT
     public static final int SCROLL_PIXELS = 5;

@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.TreeMap;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.sampled.LineUnavailableException;
@@ -27,8 +26,6 @@ import mini_game.SpriteType;
 import mini_game.Sprite;
 import mini_game.Viewport;
 import pathX.data.pathXDataModel;
-import pathX.data.pathXRecord;
-import pathX.file.pathXFileManager;
 import pathX.file.pathXXMLLevelIO;
 import pathX.pathX.pathXPropertyType;
 import static pathX.pathXConstants.*;
@@ -40,21 +37,13 @@ import properties_manager.PropertiesManager;
  */
 public class pathXMiniGame extends MiniGame
 {
-    // THE PLAYER RECORD FOR EACH LEVEL, WHICH LIVES BEYOND ONE SESSION
-    private pathXRecord record;
-
     // HANDLES GAME UI EVENTS
     private pathXEventHandler eventHandler;
     
-    // HANDLES ERROR CONDITIONS
-    private pathXErrorHandler errorHandler;
-    
-    // MANAGES LOADING OF LEVELS AND THE PLAYER RECORDS FILES
-    private pathXFileManager fileManager;
-    
+    // MANAGES SPECIALS
     private pathXSpecials specials;
     
-    // HANDLES GAME SPECIALS
+    // HANDLES GAME SPECIALS EVENTS
     private pathXSpecialsHandler specialsHandler;
     
     // HANDLES THE SCREEN SWITCHES
@@ -81,83 +70,11 @@ public class pathXMiniGame extends MiniGame
     // THE VIEWPORT FOR THE GAME
     private Viewport gameViewport;
     
-    private TreeMap<String, pathXTile> guiCharacters;
-    
     // ACCESSOR METHODS
-        // - getPlayerRecord
-        // - getErrorHandler
-        // - getFileManager
-        // - isCurrentScreenState
-    
-    /**
-     * Accessor method for getting the player record object, which
-     * summarizes the player's record on all levels.
-     * 
-     * @return The player's complete record.
-     */
-    public pathXRecord getPlayerRecord() 
-    { 
-        return record; 
-    }
-
-    /**
-     * Accessor method for getting the application's error handler.
-     * 
-     * @return The error handler.
-     */
-    public pathXErrorHandler getErrorHandler()
-    {
-        return errorHandler;
-    }
-
-    /**
-     * Accessor method for getting the app's file manager.
-     * 
-     * @return The file manager.
-     */
-    public pathXFileManager getFileManager()
-    {
-        return fileManager;
-    }
-    
-    /**
-     * 
-     * @return 
-     */
-    public pathXSpecials getSpecials()
-    {
-        return specials;
-    }
-    
-    /**
-     * Accessor method for getting the application's specials handler.
-     * 
-     * @return The specials handler.
-     */
-    public pathXSpecialsHandler getSpecialsHandler()
-    {
-        return specialsHandler;
-    }
-    
-    /**
-     * Accessor method for getting the application's screen switcher.
-     * 
-     * @return 
-     */
-    public pathXScreenSwitcher getScreenSwitcher()
-    {
-        return screenSwitcher;
-    }
-    
-    /**
-     * Accessor method for getting the XML level loader.
-     * 
-     * @return 
-     */
-    public pathXXMLLevelIO getXMLLevelIO()
-    {
-        return xmlLevelIO;
-    }
+    public pathXSpecials getSpecials()                  {   return specials;            }
+    public pathXSpecialsHandler getSpecialsHandler()    {   return specialsHandler;     }
+    public pathXScreenSwitcher getScreenSwitcher()      {   return screenSwitcher;      }
+    public pathXXMLLevelIO getXMLLevelIO()              {   return xmlLevelIO;          }
 
     /**
      * Used for testing to see if the current screen state matches
@@ -173,71 +90,19 @@ public class pathXMiniGame extends MiniGame
     {
         return testScreenState.equals(currentScreenState);
     }
+    public boolean isSoundMuted()           {   return soundMuted;      }
+    public boolean isMusicMuted()           {   return musicMuted;      }
+    public boolean isDisplayingInfo()       {   return displayingInfo;  }
+    public Viewport getMapViewport()        {   return mapViewport;     }
+    public Viewport getGameViewport()       {   return gameViewport;    }
     
-    /**
-     * Used to get the state of the sound mute box.
-     * 
-     * @return true if the sound is muted, false otherwise
-     */
-    public boolean isSoundMuted()
-    {
-        return soundMuted;
-    }
-    
-    /**
-     * Used to get the state of the music mute box.
-     * 
-     * @return true if the music is muted, false otherwise
-     */
-    public boolean isMusicMuted()
-    {
-        return musicMuted;
-    }
-    
-    public boolean isDisplayingInfo()
-    {
-        return displayingInfo;
-    }
-    
-    /**
-     * Used to get the map viewport.
-     * 
-     * @return the map viewport
-     */
-    public Viewport getMapViewport()
-    {
-        return mapViewport;
-    }
-    
-    public Viewport getGameViewport()
-    {
-        return gameViewport;
-    }
-    
-    public TreeMap<String, pathXTile> getGUICharacters()
-    {
-        return guiCharacters;
-    }
-    
-    /**
-     * Sets the current screen state
-     * 
-     * @param initCurrentScreenState the current screen state
-     */
+    // MUTATOR METHOD
     public void setCurrentScreenState(String initCurrentScreenState)
     {
         currentScreenState = initCurrentScreenState;
     }
-    
-    public void toggleInfoDisplay()
-    {
-//        Sprite idb = guiDecor.get(INFO_DIALOG_BOX_TYPE);
-//        if (idb.getState().equals(pathXTileState.INVISIBLE_STATE.toString()))
-//            idb.setState(pathXTileState.VISIBLE_STATE.toString());
-//        else
-//            idb.setState(pathXTileState.INVISIBLE_STATE.toString());
-        displayingInfo = !displayingInfo;
-    }
+    // TOGGLES INFO DISPLAY
+    public void toggleInfoDisplay()         {displayingInfo = !displayingInfo;}
     
     @Override
     /**
@@ -251,17 +116,24 @@ public class pathXMiniGame extends MiniGame
             String audioPath = props.getProperty(pathXPropertyType.PATH_AUDIO);
 
             // LOAD ALL THE AUDIO
+            loadAudioCue(pathXPropertyType.AUDIO_CUE_LOSE);
             loadAudioCue(pathXPropertyType.AUDIO_CUE_INCREASE_MONEY);
+            loadAudioCue(pathXPropertyType.AUDIO_CUE_INVINCIBILITY);
+            loadAudioCue(pathXPropertyType.AUDIO_CUE_SELECT_LEVEL);
+            loadAudioCue(pathXPropertyType.AUDIO_CUE_SPECIAL_SUCCESS);
+            loadAudioCue(pathXPropertyType.AUDIO_CUE_FAIL);
             loadAudioCue(pathXPropertyType.AUDIO_CUE_SELECT);
             loadAudioCue(pathXPropertyType.AUDIO_CUE_ZOMBIE);
+            loadAudioCue(pathXPropertyType.AUDIO_CUE_BANDIT);
             loadAudioCue(pathXPropertyType.SONG_CUE_MENU_SCREEN);
+            loadAudioCue(pathXPropertyType.SONG_CUE_GAME_SCREEN);
+            loadAudioCue(pathXPropertyType.SONG_CUE_WIN);
 
             // PLAY THE WELCOME SCREEN SONG
-//            audio.play(pathXPropertyType.SONG_CUE_MENU_SCREEN.toString(), true);
+            audio.play(pathXPropertyType.SONG_CUE_MENU_SCREEN.toString(), true);
         }
         catch(UnsupportedAudioFileException | IOException | LineUnavailableException | InvalidMidiDataException | MidiUnavailableException e)
         {
-//            errorHandler.processError(SortingHatPropertyType.TEXT_ERROR_LOADING_AUDIO);
             e.printStackTrace();
         }        
     }
@@ -316,29 +188,17 @@ public class pathXMiniGame extends MiniGame
     @Override
     public void initData()
     {
-        // INIT OUR ERROR HANDLER
-        errorHandler = new pathXErrorHandler(window);
-        
-        // INIT OUR FILE MANAGER
-        
-
-        // LOAD THE PLAYER'S RECORD FROM A FILE
-        
-        
-        // INIT OUR SCREEN SWITCHER
-        screenSwitcher = new pathXScreenSwitcher(this);
-        
         // INIT OUR DATA MANAGER
         data = new pathXDataModel(this);
         
+        // INIT OUR SCREEN SWITCHER
+        screenSwitcher = new pathXScreenSwitcher(this, (pathXDataModel)data);
+        
+        // SPECIALS
         specials = new pathXSpecials(this, (pathXDataModel)data);
         
-//        gamePanel = new pathXGamePanel(this);
-        
         // INITIALIZE THE XML LEVEL IO PARSER
-        xmlLevelIO = new pathXXMLLevelIO(new File(PATH_DATA + LEVEL_SCHEMA));
-        
-        guiCharacters = new TreeMap<String, pathXTile>();
+        xmlLevelIO = new pathXXMLLevelIO(new File(PATH_DATA + LEVEL_SCHEMA), this);
     }
     
     /**
@@ -363,7 +223,6 @@ public class pathXMiniGame extends MiniGame
         
         // CONSTRUCT THE PANEL WHERE WE'LL DRAW EVERYTHING
         canvas = new pathXPanel(this, (pathXDataModel) data);
-//        canvas.add(gamePanel);
         
         // LOAD THE BACKGROUNDS, WHICH ARE GUI DECOR
         currentScreenState = MENU_SCREEN_STATE;
@@ -514,7 +373,7 @@ public class pathXMiniGame extends MiniGame
             String levelName = levelNames.get(i);
             String levelDescription = levelDescriptions.get(i);
             String levelState = levelStates.get(i);
-            sT = new SpriteType(LEVEL_BUTTON_TYPE);
+            sT = new SpriteType(LEVEL_BUTTON_TYPE + i);
             img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_LOCKED_LOCATION));
             sT.addState(pathXTileState.LOCKED_STATE.toString(), img);
             img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_SUCCESSFUL_LOCATION));
@@ -538,16 +397,14 @@ public class pathXMiniGame extends MiniGame
                     if (!px.getState().equals(pathXTileState.LOCKED_STATE.toString()))
                     {
                         eventHandler.respondToLevelSelectRequest(px);
+                    } else
+                    {
+                        audio.play(pathXPropertyType.AUDIO_CUE_FAIL.toString(), false);
                     }
                 }
             }.init(px));
             guiButtons.put(levelName, px);
         }
-        
-        // ADD THE PLAYER TILE
-        sT = new SpriteType("PLAYER");
-        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_PLAYER));
-        px = new pathXTile(sT, 0 , 0, 0, 0, pathXTileState.INVISIBLE_STATE.toString(), "PLAYER");
         
         // ADD THE CLOSE BUTTON
         sT = new SpriteType(CLOSE_BUTTON_TYPE);
@@ -565,6 +422,7 @@ public class pathXMiniGame extends MiniGame
         img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_TRY_AGAIN_MOUSE_OVER));
         sT.addState(pathXTileState.MOUSE_OVER_STATE.toString(), img);
         s = new Sprite(sT, TRY_AGAIN_BUTTON_X, TRY_AGAIN_BUTTON_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
+        s.setEnabled(false);
         guiButtons.put(TRY_AGAIN_BUTTON_TYPE, s);
         
         // ADD THE LEAVE BUTTON
@@ -574,6 +432,7 @@ public class pathXMiniGame extends MiniGame
         img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_LEAVE_MOUSE_OVER));
         sT.addState(pathXTileState.MOUSE_OVER_STATE.toString(), img);
         s = new Sprite(sT, LEAVE_BUTTON_X, LEAVE_BUTTON_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
+        s.setEnabled(false);
         guiButtons.put(LEAVE_BUTTON_TYPE, s);
         
         // ADD SOUND AND MUSIC MUTE BOX -- THEY BOTH USE THE SAME IMAGE
@@ -618,30 +477,6 @@ public class pathXMiniGame extends MiniGame
         sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
         s = new Sprite(sT, GAME_SPEED_SLIDER_X, GAME_SPEED_SLIDER_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
         guiDecor.put(GAME_SPEED_SLIDER_TYPE, s);
-        
-        sT = new SpriteType(PLAYER_TYPE);
-        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_PLAYER));
-        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
-        px = new pathXTile(sT, 0, 0, 0, 0, pathXTileState.VISIBLE_STATE.toString(), "PLAYER");
-        guiCharacters.put(PLAYER_TYPE, px);
-        
-//        sT = new SpriteType(ZOMBIE_TYPE);
-//        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_ZOMBIE));
-//        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
-//        px = new pathXTile(sT, 0, 0, 0, 0, pathXTileState.VISIBLE_STATE.toString(), "ZOMBIE");
-//        guiCharacters.put(ZOMBIE_TYPE, px);
-//        
-//        sT = new SpriteType(POLICE_TYPE);
-//        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_POLICE));
-//        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
-//        px = new pathXTile(sT, 0, 0, 0, 0, pathXTileState.VISIBLE_STATE.toString(), "POLICE");
-//        guiCharacters.put(POLICE_TYPE, px);
-//        
-//        sT = new SpriteType(BANDIT_TYPE);
-//        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BANDIT));
-//        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
-//        px = new pathXTile(sT, 0, 0, 0, 0, pathXTileState.VISIBLE_STATE.toString(), "BANDIT");
-//        guiCharacters.put(BANDIT_TYPE, px);
         
         specials.initSpecials();
     }
@@ -786,10 +621,11 @@ public class pathXMiniGame extends MiniGame
             @Override
             public void actionPerformed(ActionEvent e)
             {
+                audio.play(pathXPropertyType.AUDIO_CUE_SELECT.toString(), false);
                 guiDecor.get(INFO_DIALOG_BOX_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
                 guiButtons.get(CLOSE_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
-                toggleInfoDisplay();
                 guiButtons.get(CLOSE_BUTTON_TYPE).setEnabled(false);
+                toggleInfoDisplay();
             }
         });
         

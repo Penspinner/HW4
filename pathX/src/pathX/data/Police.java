@@ -13,6 +13,7 @@ import pathX.ui.pathXMiniGame;
 public class Police extends Sprite
 {
     private Intersection firstIntersection;
+    private Intersection targetIntersection;
     
     // COORDINATES OF THE TARGETED LOCATION
     private float targetX;
@@ -20,6 +21,8 @@ public class Police extends Sprite
     
     private boolean movingToTarget;
     private boolean collided;
+    
+    private float speed;
     
     private int money;
     
@@ -34,13 +37,17 @@ public class Police extends Sprite
         movingToTarget = false;
         collided = false;
         
+        speed = 1;
+        
         money = (int) Math.round(Math.random() * 150);
     }
     
     // ACCESSOR METHODS
     public boolean isMovingToTarget()           {   return movingToTarget;  }
     public boolean isCollided()                 {   return collided;        }
+    public Intersection getTargetIntersection() {   return targetIntersection;}
     public int getMoney()                       {   return money;           }
+    public float getSpeed()                     {   return speed;           }
     
     // MUTATOR METHODS
     public void setX(int x)
@@ -52,9 +59,12 @@ public class Police extends Sprite
         targetX = initTargetX;
         targetY = initTargetY;
     }
+    public void setTargetIntersection(Intersection targetIntersection)
+    {   this.targetIntersection = targetIntersection;   }
     public void setCollided(boolean collided)
     {   this.collided = collided;   }
-    
+    public void setSpeed(float speed)
+    {   this.speed = speed;         }
     public void toggleColided()
     {   collided = !collided;   }
     
@@ -126,13 +136,15 @@ public class Police extends Sprite
     {
         if (calculateDistanceToTarget() < INTERSECTION_RADIUS)
         {
+            movingToTarget = false;
             vX = 0;
             vY = 0;
             
-            x = targetX;
-            y = targetY;
-            
-            movingToTarget = false;
+            if (targetIntersection.open)
+            {
+                x = targetX;
+                y = targetY;
+            }
         }
         else
         {

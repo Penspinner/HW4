@@ -1,6 +1,5 @@
 package pathX.data;
 
-import java.awt.Color;
 import java.awt.Image;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
@@ -32,7 +31,7 @@ public class pathXDataModel extends MiniGameDataModel
     private pathXMiniGame game;
     
     // THE CURRENT LEVEL
-    private pathXLevel level;
+    pathXLevel level;
     
     pathXSpecialsMode mode;
     
@@ -40,7 +39,7 @@ public class pathXDataModel extends MiniGameDataModel
     ArrayList<String> levelDescriptions;
     ArrayList<String> levelNames;
     ArrayList<String> levelStates;
-    ArrayList movingTiles;
+    
     ArrayList<pathXTile> specialTiles;
     ArrayList<pathXTile> zombies;
     ArrayList<pathXTile> police;
@@ -50,20 +49,15 @@ public class pathXDataModel extends MiniGameDataModel
     
     PropertiesManager props = PropertiesManager.getPropertiesManager();
 
-    // WE ONLY NEED TO TURN THIS ON ONCE
-    boolean levelBeingEdited;
     Image backgroundImage;
     Image startingLocationImage;
     Image destinationImage;
-    Image playerImage;
-    Image zombieImage;
-    Image policeImage;
-    Image banditImage;
 
     // THE SELECTED INTERSECTION OR ROAD MIGHT BE EDITED OR DELETED
     // AND IS RENDERED DIFFERENTLY
     Intersection selectedIntersection;
     Road selectedRoad;
+    Sprite selectedSprite;
     
     // WE'LL USE THIS WHEN WE'RE ADDING A NEW ROAD
     Intersection startRoadIntersection;
@@ -72,12 +66,12 @@ public class pathXDataModel extends MiniGameDataModel
     // @todo DO WE NEED THESE?
     boolean isMousePressed;
     boolean isDragging;
-    boolean dataUpdatedSinceLastSave;
     
     // THE GAME SPEED
     float gameSpeed;
     float playerSpeed;
     int currentLevelCounter;
+    int specialsCounter;
     int balance;
     
     String currentLevel;
@@ -89,18 +83,15 @@ public class pathXDataModel extends MiniGameDataModel
         levelFiles = props.getPropertyOptionsList(pathXPropertyType.LEVEL_OPTIONS);
         levelDescriptions = props.getPropertyOptionsList(pathXPropertyType.LEVEL_DESCRIPTIONS);
         levelNames = props.getPropertyOptionsList(pathXPropertyType.LEVEL_NAME_OPTIONS);
-        levelStates = new ArrayList();
-        movingTiles = new ArrayList<pathXTile>();
+        initLevelStates();
         specialTiles = new ArrayList();
         
         mode = pathXSpecialsMode.NORMAL_MODE;
         
         gameSpeed = 1;
         playerSpeed = 1;
-        currentLevelCounter = 0;
-        
-        initLevelStates();
-        initCharacterImages();
+        currentLevelCounter = 19;
+        specialsCounter = 16;
     }
     
     // ACCESSOR METHODS
@@ -110,12 +101,12 @@ public class pathXDataModel extends MiniGameDataModel
     public float                getPlayerSpeed()            {   return playerSpeed;             }
     public int                  getCurrentLevelCounter()    {   return currentLevelCounter;     }
     public int                  getBalance()                {   return balance;                 }
+    public int                  getSpecialsCounter()        {   return specialsCounter;         }
     public String               getCurrentLevel()           {   return currentLevel;            }
     public ArrayList<String>    getLevelFiles()             {   return levelFiles;              }
     public ArrayList<String>    getLevelNames()             {   return levelNames;              }
     public ArrayList<String>    getLevelDescriptions()      {   return levelDescriptions;       }
     public ArrayList<String>    getLevelStates()            {   return levelStates;             }
-    public ArrayList<pathXTile> getMovingTiles()            {   return movingTiles;             }
     public ArrayList<pathXTile> getSpecialTiles()           {   return specialTiles;            }
     public ArrayList<pathXTile> getZombies()                {   return zombies;                 }
     public ArrayList<pathXTile> getPolice()                 {   return police;                  }
@@ -123,16 +114,11 @@ public class pathXDataModel extends MiniGameDataModel
     public Image                getBackgroundImage()        {   return backgroundImage;         }
     public Image                getStartingLocationImage()  {   return startingLocationImage;   }
     public Image                getDesinationImage()        {   return destinationImage;        }
-    public Image                getPlayerImage()            {   return playerImage;             }
-    public Image                getZombieImage()            {   return zombieImage;             }
-    public Image                getPoliceImage()            {   return policeImage;             }
-    public Image                getBanditImage()            {   return banditImage;             }
     public Intersection         getSelectedIntersection()   {   return selectedIntersection;    }
     public Road                 getSelectedRoad()           {   return selectedRoad;            }
     public Intersection         getStartRoadIntersection()  {   return startRoadIntersection;   }
     public Intersection         getStartingLocation()       {   return level.startingLocation;  }
-    public Intersection         getDestination()            {   return level.destination;       }
-    public boolean              isDataUpdatedSinceLastSave(){   return dataUpdatedSinceLastSave;}    
+    public Intersection         getDestination()            {   return level.destination;       }   
     public boolean isStartingLocation(Intersection testInt)  
     {   return testInt == level.startingLocation;           }
     public boolean isDestination(Intersection testInt)
@@ -164,16 +150,8 @@ public class pathXDataModel extends MiniGameDataModel
     // MUTATOR METHODS
     public void setCurrentLevel(String initCurrentLevel)
     {   currentLevel = initCurrentLevel;                    }
-    
-    // INITIALIZES THE IMAGES FOR THE PLAYER, ZOMBIE, POLICE, AND BANDITS
-    public void initCharacterImages()
-    {
-        String imgPath = props.getProperty(pathXPropertyType.PATH_IMG);
-        playerImage = game.loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_PLAYER));
-        zombieImage = game.loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_ZOMBIE));
-        policeImage = game.loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_POLICE));
-        banditImage = game.loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BANDIT));
-    }
+    public void setPlayerSpeed(float playerSpeed)
+    {   this.playerSpeed = playerSpeed;                     }
     
     public void initPlayerStartingLocation()
     {
@@ -202,12 +180,11 @@ public class pathXDataModel extends MiniGameDataModel
         gameSpeed = newGameSpeed;
     }
     
-    public void increaseBalance(int extraMoney)
+    public void changeBalance(int extraMoney)
     {
         if (inProgress())
         {
             balance += extraMoney;
-            game.getAudio().play(pathXPropertyType.AUDIO_CUE_INCREASE_MONEY.toString(), false);
         }
     }
     
@@ -240,15 +217,42 @@ public class pathXDataModel extends MiniGameDataModel
     
     public void initLevelStates()
     {
+        levelStates = new ArrayList();
+        
         levelStates.add(pathXTileState.UNSUCCESSFUL_STATE.toString());
+        
+        for (int i = 1; i < 20; i++)
+        {
+            levelStates.add(pathXTileState.UNSUCCESSFUL_STATE.toString());
+        }
+    }        
+    
+    public void resetLevelStates()
+    {
+        // FIRST LEVEL SHOULD ALWAYS BE UNLOCKED
+        pathXTile level1 = (pathXTile) game.getGUIButtons().get(levelNames.get(0));
+        level1.setState(pathXTileState.UNSUCCESSFUL_STATE.toString());
+        
+        ArrayList<pathXTile> levels = new ArrayList();
         
         // ALL LEVEL BUTTON STATES SHOULD BE LOCKED UNTIL THE PREVIOUS LEVEL
         // HAS BEEN SUCCESSFULLY ROBBED
         for (int i = 1; i < 20; i++)
         {
-            // CHANGE BACK LATER ON TO LOCKED
-            levelStates.add(pathXTileState.UNSUCCESSFUL_STATE.toString());
+            pathXTile level = (pathXTile) game.getGUIButtons().get(levelNames.get(i));
+            level.setState(pathXTileState.LOCKED_STATE.toString());
         }
+    }
+    
+    public void unlockNextLevel()
+    {
+        if (currentLevelCounter < 19)
+            currentLevelCounter++;
+        if (specialsCounter < 15)
+            specialsCounter++;
+        
+        Sprite levelToBeUnlocked = game.getGUIButtons().get(levelNames.get(currentLevelCounter));
+        levelToBeUnlocked.setState(pathXTileState.UNSUCCESSFUL_STATE.toString());
     }
     
     /**
@@ -286,16 +290,6 @@ public class pathXDataModel extends MiniGameDataModel
     }
 
     /**
-     * Adds an intersection to the graph
-     */
-    public void addIntersection(Intersection intToAdd)
-    {
-        ArrayList<Intersection> intersections = level.getIntersections();
-        intersections.add(intToAdd);
-//        view.getCanvas().repaint();
-    }
-
-    /**
      * Calculates and returns the distance between two points.
      */
     public double calculateDistanceBetweenPoints(int x1, int y1, int x2, int y2)
@@ -306,26 +300,18 @@ public class pathXDataModel extends MiniGameDataModel
     }
 
     /**
-     * Moves the selected intersection to (canvasX, canvasY),
-     * translating it into level coordinates.
-     */
-    public void moveSelectedIntersection(int canvasX, int canvasY)
-    {
-        selectedIntersection.x = canvasX + viewport.getViewportX();
-        selectedIntersection.y = canvasY + viewport.getViewportY();
-    }
-
-    /**
      * Searches the level graph and finds and returns the intersection
      * that overlaps (canvasX, canvasY).
      */
     public Intersection findIntersectionAtCanvasLocation(int canvasX, int canvasY)
     {
+        Viewport viewport = game.getGameViewport();
         // CHECK TO SEE IF THE USER IS SELECTING AN INTERSECTION
         for (Intersection i : level.intersections)
         {
-            double distance = calculateDistanceBetweenPoints(i.x, i.y, canvasX + viewport.getViewportX(), canvasY + viewport.getViewportY());
-            if (distance < INTERSECTION_RADIUS + 5)
+            double distance = calculateDistanceBetweenPoints(i.x + viewport.getViewportX(), i.y + viewport.getViewportY(), 
+                    canvasX + viewport.getViewportX(), canvasY + viewport.getViewportY());
+            if (distance < INTERSECTION_RADIUS + 10)
             {
                 // MAKE THIS THE SELECTED INTERSECTION
                 return i;
@@ -365,8 +351,7 @@ public class pathXDataModel extends MiniGameDataModel
             level.intersections.remove(selectedIntersection);
             
             // AND FINALLY NOTHING IS SELECTED ANYMORE
-            selectedIntersection = null;
-            //switchEditMode(PXLE_EditMode.NOTHING_SELECTED);            
+            selectedIntersection = null;          
         }
         // THE SELECTED ITEM MIGHT BE A ROAD
         else if (selectedRoad != null)
@@ -374,19 +359,7 @@ public class pathXDataModel extends MiniGameDataModel
             // JUST REMOVE THE NODE, BUT NOT ANY OF THE INTERSECTIONS
             level.roads.remove(selectedRoad);
             selectedRoad = null;
-            //switchEditMode(PXLE_EditMode.NOTHING_SELECTED);
         }
-    }
-    
-    /**
-     * Unselects any intersection or road that might be selected.
-     */
-    public void unselectEverything()
-    {
-        selectedIntersection = null;
-        selectedRoad = null;
-        startRoadIntersection = null;
-//        view.getCanvas().repaint();
     }
 
     /**
@@ -411,9 +384,8 @@ public class pathXDataModel extends MiniGameDataModel
             if (distance <= INT_STROKE)
             {
                 // SELECT IT
-                this.selectedRoad = r;
-                //this.switchEditMode(PXLE_EditMode.ROAD_SELECTED);
-                return selectedRoad;
+//                this.selectedRoad = r;
+                return r;
             }
         }
         return null;
@@ -447,75 +419,63 @@ public class pathXDataModel extends MiniGameDataModel
         level.intersections.add(newInt);
     }
     
-    /**
-     * Retrieves the money, police, bandits, and zombies stats from
-     * the view and uses it to refresh the level values.
-     */
-    public void refreshLevelStats()
-    {
-//        if (!view.isRefreshingSpinners())
-        {
-            // GET THE DATA FROM THE VIEW
-//            int money = view.getCurrentMoney();
-//            int numPolice = view.getCurrentPolice();
-//            int numBandits = view.getCurrentBandits();
-//            int numZombies = view.getCurrentZombies();
-//            
-//            // AND USE IT TO UPDATE THE LEVEL
-//            level.setMoney(money);
-//            level.setNumPolice(numPolice);
-//            level.setNumBandits(numBandits);
-//            level.setNumZombies(numZombies);
-        }
-    }
-    
     public void toggleIntersectionColor(int x, int y, boolean b)
     {
         Intersection i = findIntersectionAtCanvasLocation(x, y);
         if (i != null)
         {
-            i.setOpen(b);
+            if ((i.open && !b) || (!i.open && b))
+            {
+                i.setOpen(b);
+                i.setOpen(!b);
+            }
         }
     }
     
     public void increaseRoadSpeedLimit(Road r)
     {
-        double newSpeedLimit = r.getSpeedLimit() * 1.5;
-        r.setSpeedLimit((int) newSpeedLimit);
+        if (r.getSpeedLimit() < MAX_SPEED_LIMIT)
+        {
+            double newSpeedLimit = r.getSpeedLimit() * 1.5;
+            r.setSpeedLimit((int) newSpeedLimit);
+        }
     }
     
     public void decreaseRoadSpeedLimit(Road r)
     {
-        int newSpeedLimit = r.getSpeedLimit() / 2;
-        r.setSpeedLimit(newSpeedLimit);
+        if (r.getSpeedLimit() > MIN_SPEED_LIMIT)
+        {
+            int newSpeedLimit = r.getSpeedLimit() / 2;
+            r.setSpeedLimit(newSpeedLimit);
+        }
     }
     
-    public void stopFor(int x, int y, int time)
+    public Sprite findSpriteAtCanvasLocation(int x, int y)
     {
         for (Police p : level.getPolices())
         {
-            if (p.containsPoint(x, y))
+            if (p.containsPoint(x + INTERSECTION_RADIUS, y + INTERSECTION_RADIUS))
             {
-                p.setVx(0);
-                p.setVy(0);
+                return p;
             }
         }
 
         for (Zombie z : level.getZombies())
         {
-            if (z.containsPoint(x, y))
+            if (z.containsPoint(x + INTERSECTION_RADIUS, y + INTERSECTION_RADIUS))
             {
-                
+                return z;
             }
         }
 
         for (Bandit b : level.getBandits())
         {
-            if (b.containsPoint(x, y))
+            if (b.containsPoint(x + INTERSECTION_RADIUS, y + INTERSECTION_RADIUS))
             {
-                
+                return b;
             }
         }
+        return null;
     }
     
     public void toggleIntersection(int x, int y, boolean b)
@@ -532,17 +492,28 @@ public class pathXDataModel extends MiniGameDataModel
             }
         }
     }
-
-    /**
-     * Toggles the selected road, making it one way if it's currently
-     * two-way, and two-way if it's currently one way.
-     */
-    public void toggleSelectedRoadOneWay()
+    
+    public void mindlessTerror()
     {
-        if (selectedRoad != null)
+        // SHOULD ONLY LAST FOR 20 SECONDS
+        int seconds = 20;
+        
+        for (Police p : level.getPolices())
         {
-            selectedRoad.setOneWay(!selectedRoad.isOneWay());
-            //view.getCanvas().repaint();
+            float newSpeed = p.getSpeed() * 2;
+            p.setSpeed(newSpeed);
+        }
+        
+        for (Zombie z : level.getZombies())
+        {
+            float newSpeed = z.getSpeed() * 2;
+            z.setSpeed(newSpeed);
+        }
+        
+        for (Bandit b : level.getBandits())
+        {
+            float newSpeed = b.getSpeed() * 2;
+            b.setSpeed(newSpeed);
         }
     }
     
@@ -591,6 +562,7 @@ public class pathXDataModel extends MiniGameDataModel
         
         // ADD THE CURRENT NODE TO THE VISITED LIST
         visitedNodes.add(currentIntersection);
+        notVisitedNodes.remove(currentIntersection);
         
         while (currentIntersection != selectedIntersection)
         {    
@@ -650,6 +622,8 @@ public class pathXDataModel extends MiniGameDataModel
             
             currentIntersection = nextIntersection;
             visitedNodes.add(currentIntersection);
+            notVisitedNodes.remove(currentIntersection);
+            if (notVisitedNodes.size() == 2) break;
         }
         
         Intersection predecessor = shortestPaths.get(selectedIntersection);
@@ -785,7 +759,6 @@ public class pathXDataModel extends MiniGameDataModel
             {
                 // SELECT IT
 //                this.selectedRoad = r;
-                //this.switchEditMode(PXLE_EditMode.ROAD_SELECTED);
                 return r;
             }
         }
@@ -800,19 +773,23 @@ public class pathXDataModel extends MiniGameDataModel
         int y = (int) p.getY();
         
         Intersection currentIntersection = findIntersectionAtCanvasLocation(x, y);
-        p.setCurrentIntersection(currentIntersection);
-        
-        ArrayList<Intersection> neighbors = getNeighbors(currentIntersection);
-        neighbors.remove(level.startingLocation);
-        neighbors.remove(level.destination);
-        
-        int random = (int) (Math.random() * neighbors.size());
-        Intersection nextIntersection = neighbors.get(random);
-        Road roadInBetween = getRoad(currentIntersection, nextIntersection);
-        if (roadInBetween != null)
+        if (currentIntersection.open)
         {
-            p.setTarget(nextIntersection.x, nextIntersection.y);
-            p.startMovingToTarget(roadInBetween.speedLimit * gameSpeed * playerSpeed / 10);
+            p.setCurrentIntersection(currentIntersection);
+
+            ArrayList<Intersection> neighbors = getNeighbors(currentIntersection);
+            neighbors.remove(level.startingLocation);
+            neighbors.remove(level.destination);
+
+            int random = (int) (Math.random() * neighbors.size());
+            Intersection nextIntersection = neighbors.get(random);
+            p.setTargetIntersection(nextIntersection);
+            Road roadInBetween = getRoad(currentIntersection, nextIntersection);
+            if (roadInBetween != null)
+            {
+                p.setTarget(nextIntersection.x, nextIntersection.y);
+                p.startMovingToTarget(roadInBetween.speedLimit * gameSpeed * p.getSpeed() / 10);
+            }
         }
     }
     
@@ -833,6 +810,8 @@ public class pathXDataModel extends MiniGameDataModel
 
             // GET NEIGHBORS OF THE CURRENT INTERSECTION
             ArrayList<Intersection> neighbors = getNeighbors(currentIntersection);
+            neighbors.remove(level.startingLocation);
+            neighbors.remove(level.destination);
             Intersection nextIntersection = neighbors.get(0);
             path.add(nextIntersection);
             
@@ -871,7 +850,88 @@ public class pathXDataModel extends MiniGameDataModel
 
             // FIND INTERSECTION AT THE ZOMBIE'S LOCATION
             Intersection currentIntersection = findIntersectionAtCanvasLocation(x, y);
+            b.setCurrentIntersection(currentIntersection);
             
+            Intersection farEndIntersection = getFarEndNode(currentIntersection);
+            ArrayList<Intersection> pathToFarEndNode = findShortestPathToIntersection(currentIntersection, farEndIntersection);
+//            pathToFarEndNode.remove(currentIntersection);
+            
+            for (Intersection i : pathToFarEndNode)
+            {
+                path.add(i);
+            }
+            
+            b.initPath(path, this);
+        }
+    }
+    
+    public Intersection getFarEndNode(Intersection currentIntersection)
+    {
+        int toleranceX = 40;
+        int toleranceY = 40;
+        
+        ArrayList<Intersection> neighbors = getNeighbors(currentIntersection);
+        neighbors.remove(level.startingLocation);
+        neighbors.remove(level.destination);
+        Intersection farEndIntersection = null;
+        double distance = 0;
+        
+        // Find the farthest in the VERTICAL LOCATION
+        for (Intersection i : level.intersections)
+        {
+            if (!neighbors.contains(i) && 
+                i != level.startingLocation && 
+                i != level.destination && 
+                i != currentIntersection)
+            {
+                int differenceX = i.x - currentIntersection.x;
+                if ((differenceX > 0 && differenceX <= toleranceX) ||
+                    (differenceX < 0 && differenceX >= -toleranceX))
+                {
+                    double distanceBetweenPoints = calculateDistanceBetweenPoints(currentIntersection.x, currentIntersection.y, i.x, i.y);
+                    if (distance < distanceBetweenPoints)
+                    {
+                        farEndIntersection = i;
+                        distance = distanceBetweenPoints;
+                    }
+                }
+            }
+        }
+        
+        // IF THERE WAS A FAR END NODE WITH SIMILAR X-AXIS
+        if (farEndIntersection != null)
+        {
+            return farEndIntersection;
+        } else
+        {
+            for (Intersection i : level.intersections)
+            {
+                if (!neighbors.contains(i) && 
+                    i != level.startingLocation && 
+                    i != level.destination && 
+                    i != currentIntersection)
+                {
+                    int differenceY = i.y - currentIntersection.y;
+                    if ((differenceY > 0 && differenceY <= toleranceY) ||
+                        (differenceY < 0 && differenceY >= -toleranceY))
+                    {
+                        double distanceBetweenPoints = calculateDistanceBetweenPoints(currentIntersection.x, currentIntersection.y, i.x, i.y);
+                        if (distance < distanceBetweenPoints)
+                        {
+                            farEndIntersection = i;
+                            distance = distanceBetweenPoints;
+                        }
+                    }
+                }
+            }
+            if (farEndIntersection != null)
+            {
+                return farEndIntersection;
+            } else
+            {
+                int random = (int) (Math.random() * neighbors.size());
+                return neighbors.get(random);
+            }
         }
     }
     
@@ -883,15 +943,22 @@ public class pathXDataModel extends MiniGameDataModel
             Zombie z = itZ.next();
             if (player.containsPoint(z.getX(), z.getY()) && !z.isCollided())
             {
-                if (!isStealMode())
+                z.toggleColided();
+                if (!isNormalMode() || isIntangibilityMode())
                 {
-                    z.toggleColided();
-                    playerSpeed -= .1;
+                    if (isStealMode())
+                    {
+                        balance += z.getMoney();
+                    } else if (isInvincibilityMode())
+                    {
+                        continue;
+                    }
                 } else
                 {
-                    balance += z.getMoney();
+                    playerSpeed -= .1;
+                    game.getAudio().play(pathXPropertyType.AUDIO_CUE_ZOMBIE.toString(), false);
                 }
-            } else
+            } else if (!player.containsPoint(z.getX(), z.getY()))
             {
                 z.setCollided(false);
             }
@@ -903,14 +970,22 @@ public class pathXDataModel extends MiniGameDataModel
             Police p = itP.next();
             if (player.containsPoint(p.getX(), p.getY()) && !p.isCollided())
             {
-                if (!isStealMode())
+                p.toggleColided();
+                if (!isNormalMode() || isIntangibilityMode())
                 {
-                    endGameAsLoss();
+                    if (isStealMode())
+                    {
+                        balance += p.getMoney();
+                    } else if (isInvincibilityMode())
+                    {
+                        continue;
+                    }
                 } else
                 {
-                    balance += p.getMoney();
+                    endGameAsLoss();
+                    game.getAudio().play(pathXPropertyType.AUDIO_CUE_LOSE.toString(), false);
                 }
-            } else
+            } else if (!player.containsPoint(p.getX(), p.getY()))
             {
                 p.setCollided(false);
             }
@@ -922,14 +997,23 @@ public class pathXDataModel extends MiniGameDataModel
             Bandit b = itB.next();
             if (player.containsPoint(b.getX(), b.getY()) && !b.isCollided())
             {
-                if (!isStealMode())
+                b.toggleCollided();
+                if (!isNormalMode() || isIntangibilityMode())
                 {
-                    level.money -= (level.money / 10);
+                    if (isStealMode())
+                    {
+                        balance += b.getMoney();
+                    }
+                    else if (isInvincibilityMode())
+                    {
+                        continue;
+                    }
                 } else
                 {
-                    balance += b.getMoney();
+                    level.money -= (level.money / 10);
+                    game.getAudio().play(pathXPropertyType.AUDIO_CUE_BANDIT.toString(), false);
                 }
-            } else
+            } else if (!player.containsPoint(b.getX(), b.getY()))
             {
                 b.setCollided(false);
             }
@@ -939,6 +1023,9 @@ public class pathXDataModel extends MiniGameDataModel
     @Override
     public void endGameAsWin()
     {
+        // STOP THE MUSIC
+        game.getAudio().stop(pathXPropertyType.SONG_CUE_GAME_SCREEN.toString());
+        
         // PAUSE THE GAME FIRST
         pause();
         game.getGUIButtons().get(PAUSE_BUTTON_TYPE).setEnabled(false);
@@ -956,11 +1043,20 @@ public class pathXDataModel extends MiniGameDataModel
         
         // INCREASE YOUR BALANCE BY THE AMOUNT YOU ROBBED
         balance += level.money;
+        
+        // UNLOCK THE NEXT LEVEL
+        if (level.levelNumber == currentLevelCounter)
+            unlockNextLevel();
+        
+        game.getAudio().play(pathXPropertyType.SONG_CUE_WIN.toString(), true);
     }
     
     @Override
     public void endGameAsLoss()
     {
+        // STOP THE MUSIC
+        game.getAudio().stop(pathXPropertyType.SONG_CUE_GAME_SCREEN.toString());
+        
         // PAUSE THE GAME FIRST
         pause();
         game.getGUIButtons().get(PAUSE_BUTTON_TYPE).setEnabled(false);
@@ -975,7 +1071,6 @@ public class pathXDataModel extends MiniGameDataModel
         game.getGUIButtons().get(LEAVE_BUTTON_TYPE).setState(pathXTileState.VISIBLE_STATE.toString());
         game.getGUIButtons().get(LEAVE_BUTTON_TYPE).setEnabled(true);
         game.toggleInfoDisplay();
-        
         
         // DECREASES YOUR BALANCE BY THE AMOUNT YOU HAVE TO PAY
         balance -= (balance / 10);
@@ -1000,76 +1095,75 @@ public class pathXDataModel extends MiniGameDataModel
         // MAKE SURE THE CURSOR IS IN THE VIEWPORT
         if (x > 200)
         {
-            if (isNormalMode())
+            int newX = x + gameViewport.getViewportX();
+            int newY = y + gameViewport.getViewportY();
+            if (isNormalMode() || isStealMode() || isIntangibilityMode() || isInvincibilityMode())
             {
-                Intersection i = findIntersectionAtCanvasLocation(x+gameViewport.getViewportX(), y+gameViewport.getViewportY());
+                Intersection i = findIntersectionAtCanvasLocation(newX, newY);
                 if (i != null)
                 {
                     ArrayList<Intersection> shortestPath = findShortestPathToIntersection(player.getCurrentIntersection(), i);
                     player.resetIndex();
-                    player.initPath(shortestPath);
-                    return;
+                    player.initPath(shortestPath, game);
                 }
             } else if (isMakeLightGreenMode())
             {
-                toggleIntersectionColor(x+gameViewport.getViewportX(), y+gameViewport.getViewportY(), true);
+                pathXSpecialsTimer makeLightGreen = new pathXSpecialsTimer(this.game, this, "MAKE_LIGHT_GREEN", newX, newY);
+                makeLightGreen.start();
             } else if (isMakeLightRedMode())
             {
-                toggleIntersectionColor(x+gameViewport.getViewportX(), y+gameViewport.getViewportY(), false);
+                pathXSpecialsTimer makeLightRed = new pathXSpecialsTimer(this.game, this, "MAKE_LIGHT_RED", newX, newY);
+                makeLightRed.start();
             } else if (isDecreaseSpeedLimitMode())
             {
-                Road r = selectRoadAtCanvasLocation(x+gameViewport.getViewportX(), y+gameViewport.getViewportY());
+                Road r = selectRoadAtCanvasLocation(newX, newY);
                 if (r != null)
                 {
                     decreaseRoadSpeedLimit(r);
                 }
-            } else if (isDecreaseSpeedLimitMode())
+            } else if (isIncreaseSpeedLimitMode())
             {
-                Road r = selectRoadAtCanvasLocation(x+gameViewport.getViewportX(), y+gameViewport.getViewportY());
+                Road r = selectRoadAtCanvasLocation(newX, newY);
                 if (r != null)
                 {
                     increaseRoadSpeedLimit(r);
                 }
-            } else if (isIncreasePlayerSpeedMode())
-            {
-                playerSpeed += .2;
             } else if (isFlatTireMode())
             {
-                stopFor(x+gameViewport.getViewportX(), y+gameViewport.getViewportY(), 10);
+                pathXSpecialsTimer flatTire = new pathXSpecialsTimer(this.game, this, "FLAT_TIRE", newX, newY);
+                flatTire.start();
             } else if (isEmptyGasTankMode())
             {
-                stopFor(x+gameViewport.getViewportX(), y+gameViewport.getViewportY(), 20);
+                pathXSpecialsTimer emptyGasTank = new pathXSpecialsTimer(this.game, this, "EMPTY_GAS_TANK", newX, newY);
+                emptyGasTank.start();
             } else if (isCloseRoadMode())
             {
-                Road r = selectRoadAtCanvasLocation(x+gameViewport.getViewportX(), y+gameViewport.getViewportY());
+                Road r = selectRoadAtCanvasLocation(newX, newY);
                 if (r != null)
                 {
                     r.setOpen(false);
                 }
             } else if (isCloseIntersectionMode())
             {
-                toggleIntersection(x+gameViewport.getViewportX(), y+gameViewport.getViewportY(), true);
+                toggleIntersection(newX, newY, false);
             } else if (isOpenIntersectionMode())
             {
-                toggleIntersection(x+gameViewport.getViewportX(), y+gameViewport.getViewportY(), false);
-            } else if (isStealMode())
-            {
-                
+                toggleIntersection(newX, newY, true);
             } else if (isMindControlMode())
             {
-                
-            } else if (isIntangibilityMode())
-            {
-                
-            } else if (isMindlessTerrorMode())
-            {
-                
+                pathXSpecialsTimer mindControl = new pathXSpecialsTimer(this.game, this, "MIND_CONTROL", newX, newY);
+                mindControl.start();
             } else if (isFlyingMode())
             {
-                
-            } else if (isInvincibilityMode())
-            {
-                
+                Intersection i = findIntersectionAtCanvasLocation(newX, newY);
+                if (i != null)
+                {
+                    ArrayList<Intersection> flyPath = new ArrayList();
+                    flyPath.add(i);
+                    player.resetIndex();
+                    player.initPath(flyPath, game);
+                    switchMode(pathXSpecialsMode.NORMAL_MODE);
+                }
             }
         }
     }
@@ -1085,7 +1179,12 @@ public class pathXDataModel extends MiniGameDataModel
         gameState = MiniGameState.NOT_STARTED;
         unpause();
         level.reset();
+        
+        currentLevelCounter = 0;
+        specialsCounter = 0;
+        
         // RESET ALL LEVELS BACK TO UNSUCCESSFUL STATE
+        resetLevelStates();
     }
     
     /**
@@ -1121,12 +1220,12 @@ public class pathXDataModel extends MiniGameDataModel
                 z.update(game);
             }
             
-//            for (Bandit b : level.getBandits())
-//            {
-//                
-//            }
+            for (Bandit b : level.getBandits())
+            {
+                b.update(game);
+            }
             
-//            checkForCollisions();
+            checkForCollisions();
         } finally
         {
             game.endUsingData();

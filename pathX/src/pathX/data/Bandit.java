@@ -20,8 +20,11 @@ public class Bandit extends Sprite
     
     private boolean movingToTarget;
     private boolean collided;
+    private boolean movingBackToFirst;
     
     private Intersection currentIntersection;
+    
+    private float speed;
     
     private int money;
     
@@ -38,6 +41,9 @@ public class Bandit extends Sprite
         path = new ArrayList();
         movingToTarget = false;
         collided = false;
+        movingBackToFirst = false;
+        
+        speed = 1;
         
         money = (int) Math.round(Math.random() * 100);
     }
@@ -48,6 +54,7 @@ public class Bandit extends Sprite
     public boolean isCollided()                 {   return collided;            }
     public Intersection getCurrentIntersection(){   return currentIntersection; }
     public int getMoney()                       {   return money;               }
+    public float getSpeed()                     {   return speed;               }
     
     // MUTATOR METHODS
     public void setX(int x)
@@ -63,12 +70,28 @@ public class Bandit extends Sprite
     {   this.currentIntersection = currentIntersection; }
     public void setCollided(boolean collided)
     {   this.collided = collided;   }
+    public void setSpeed(float speed)
+    {   this.speed = speed;     }
     public void toggleCollided()
     {   collided = !collided;   }
     
+    public void initPath(ArrayList<Intersection> initPath, pathXDataModel data)
+    {
+        path = new ArrayList(initPath.size());
+        
+        for (Intersection i : initPath)
+        {
+            path.add(i);
+        }
+        
+        setTarget(path.get(pathIndex + 1).x, path.get(pathIndex + 1).y);
+        Road roadInBetween = data.getRoad(currentIntersection, path.get(++pathIndex));
+        startMovingToTarget(roadInBetween.getSpeedLimit() * data.getGameSpeed() * speed / 10);
+    }
+    
     public void startMovingToTarget(float maxVelocity)
     {
-                // LET ITS POSITIONG GET UPDATED
+        // LET ITS POSITIONG GET UPDATED
         movingToTarget = true;
         
         // CALCULATE THE ANGLE OF THE TRAJECTORY TO THE TARGET
@@ -122,24 +145,29 @@ public class Bandit extends Sprite
         movingToTarget = false;
         vX = 0;
         vY = 0;
-
-        x = targetX;
-        y = targetY;
-
+        
         currentIntersection = path.get(pathIndex);
+        
+        if (currentIntersection.open)
+        {
+            x = targetX;
+            y = targetY;
+        }
     }
     
     public void updatePath(MiniGame game)
     {
         Intersection nextIntersection = path.get(pathIndex);
-        Road roadInBetween = ((pathXDataModel)game.getDataModel()).getRoad(currentIntersection, nextIntersection);
-        float gameSpeed = ((pathXDataModel)game.getDataModel()).getGameSpeed();
-        float playerSpeed = ((pathXDataModel)game.getDataModel()).getPlayerSpeed();
+        if (nextIntersection.open)
+        {
+            Road roadInBetween = ((pathXDataModel)game.getDataModel()).getRoad(currentIntersection, nextIntersection);
+            float gameSpeed = ((pathXDataModel)game.getDataModel()).getGameSpeed();
 
-        targetX = nextIntersection.x;
-        targetY = nextIntersection.y;
+            targetX = nextIntersection.x;
+            targetY = nextIntersection.y;
 
-        startMovingToTarget(roadInBetween.getSpeedLimit() * gameSpeed * playerSpeed / 10);
+            startMovingToTarget(roadInBetween.getSpeedLimit() * gameSpeed * speed / 10);
+        }
     }
     
     @Override
@@ -149,12 +177,14 @@ public class Bandit extends Sprite
         {
             stopMovingToTarget();
             
-            if (pathIndex < path.size() - 1)
-            {   
-                pathIndex++;
-            } else
+            if (pathIndex < path.size() - 1 && !movingBackToFirst && currentIntersection.open)
             {
-                pathIndex = 0;
+                pathIndex++;
+                movingBackToFirst = pathIndex == path.size() - 1 ? true : false;
+            } else if (pathIndex > 0 && currentIntersection.open)
+            {
+                pathIndex--;
+                movingBackToFirst = pathIndex == 0 ? false : true;
             }
             updatePath(game);
         }

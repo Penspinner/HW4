@@ -10,9 +10,7 @@ import mini_game.Sprite;
 import mini_game.SpriteType;
 import pathX.data.pathXDataModel;
 import pathX.pathX;
-import static pathX.pathXConstants.SPECIALS_NAME_LIST;
-import static pathX.pathXConstants.SPECIALS_X_COORDINATE;
-import static pathX.pathXConstants.SPECIALS_Y_COORDINATE;
+import static pathX.pathXConstants.*;
 import properties_manager.PropertiesManager;
 
 /**
@@ -54,13 +52,13 @@ public class pathXSpecials
         // LOAD ALL SPECIALS FROM A SPRITE SHEET
         String specialsSpriteSheet = props.getProperty(pathX.pathXPropertyType.IMAGE_SPRITE_SHEET_SPECIALS);
         ArrayList<BufferedImage> specialImages = game.loadSpriteSheetImagesWithColorKey(imgPath + specialsSpriteSheet,
-                    16, 4, 4, 0, 0, Color.WHITE);
+                    16, 4, 4, 0, 0, Color.PINK);
         
         for (int i = 0; i < specialImages.size(); i++)
         {
             BufferedImage img = specialImages.get(i);
             
-            sT = new SpriteType(SPECIALS_NAME_LIST[i]);
+            sT = new SpriteType(SPECIALS_BUTTON_TYPE);
             
             // SET THE X AND Y COORDINATES OF THE TILE
             int x = SPECIALS_X_COORDINATE + ((i % 4) * 40);

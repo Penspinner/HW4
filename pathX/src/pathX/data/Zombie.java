@@ -25,6 +25,8 @@ public class Zombie extends Sprite
     private Intersection currentIntersection;
     private Intersection loopDestination;
     
+    private float speed;
+    
     private int money;
     
     private int pathIndex;
@@ -41,6 +43,8 @@ public class Zombie extends Sprite
         movingToTarget = false;
         collided = false;
         
+        speed = 1;
+        
         money = (int) Math.round(Math.random() * 50);
     }
     
@@ -51,6 +55,7 @@ public class Zombie extends Sprite
     public Intersection getCurrentIntersection(){   return currentIntersection; }
     public Intersection getLoopDestination()    {   return loopDestination;     }
     public int getMoney()                       {   return money;               }
+    public float getSpeed()                     {   return speed;               }
     
     // MUTATOR METHODS
     public void setX(int x)
@@ -68,6 +73,8 @@ public class Zombie extends Sprite
     {   this.loopDestination = loopDestination;         }
     public void setCollided(boolean collided)
     {   this.collided = collided;   }
+    public void setSpeed(float speed)
+    {   this.speed = speed;     }
     public void toggleColided()
     {   collided = !collided;   }
     
@@ -130,7 +137,7 @@ public class Zombie extends Sprite
         
         setTarget(path.get(pathIndex).x, path.get(pathIndex).y);
         Road roadInBetween = data.getRoad(currentIntersection, path.get(pathIndex));
-        startMovingToTarget(roadInBetween.getSpeedLimit() * data.getGameSpeed() / 10);
+        startMovingToTarget(roadInBetween.getSpeedLimit() * data.getGameSpeed() * speed / 10);
     }
     
     /**
@@ -142,10 +149,13 @@ public class Zombie extends Sprite
         vX = 0;
         vY = 0;
 
-        x = targetX;
-        y = targetY;
-
         currentIntersection = path.get(pathIndex);
+        
+        if (currentIntersection.open)
+        {
+            x = targetX;
+            y = targetY;
+        }
     }
     
     public void updatePath(MiniGame game)
@@ -153,12 +163,11 @@ public class Zombie extends Sprite
         Intersection nextIntersection = path.get(pathIndex);
         Road roadInBetween = ((pathXDataModel)game.getDataModel()).getRoad(currentIntersection, nextIntersection);
         float gameSpeed = ((pathXDataModel)game.getDataModel()).getGameSpeed();
-        float carSpeed = ((pathXDataModel)game.getDataModel()).getPlayerSpeed();
 
         targetX = nextIntersection.x;
         targetY = nextIntersection.y;
 
-        startMovingToTarget(roadInBetween.getSpeedLimit() * gameSpeed * carSpeed / 10);
+        startMovingToTarget(roadInBetween.getSpeedLimit() * gameSpeed * speed / 10);
     }
     
     @Override
@@ -168,14 +177,16 @@ public class Zombie extends Sprite
         {
             stopMovingToTarget();
             
-            if (pathIndex < path.size() - 1)
+            if (pathIndex < path.size() - 1 && currentIntersection.open)
             {   
                 pathIndex++;
-            } else
+                updatePath(game);
+            } else if (currentIntersection.open)
             {
                 pathIndex = 0;
+                updatePath(game);
             }
-            updatePath(game);
+            
         }
         super.update(game);
     }

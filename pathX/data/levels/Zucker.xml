@@ -4,12 +4,12 @@
           <intersection id="0" open="true" x="93" y="245"/>
           <intersection id="0" open="true" x="1204" y="237"/>
           <intersection id="0" open="true" x="482" y="65"/>
-          <intersection id="0" open="false" x="703" y="237"/>
-          <intersection id="0" open="false" x="834" y="156"/>
+          <intersection id="0" open="true" x="703" y="237"/>
+          <intersection id="0" open="true" x="834" y="156"/>
           <intersection id="0" open="true" x="940" y="568"/>
           <intersection id="0" open="false" x="266" y="65"/>
           <intersection id="0" open="true" x="486" y="243"/>
-          <intersection id="0" open="false" x="703" y="411"/>
+          <intersection id="0" open="true" x="703" y="411"/>
           <intersection id="0" open="true" x="492" y="411"/>
           <intersection id="0" open="true" x="939" y="407"/>
           <intersection id="0" open="true" x="943" y="232"/>
@@ -21,7 +21,7 @@
           <intersection id="0" open="false" x="824" y="487"/>
           <intersection id="0" open="true" x="936" y="72"/>
           <intersection id="0" open="true" x="602" y="331"/>
-          <intersection id="0" open="false" x="368" y="149"/>
+          <intersection id="0" open="true" x="368" y="149"/>
           <intersection id="0" open="true" x="698" y="68"/>
      </intersections>
      <zombies_list>

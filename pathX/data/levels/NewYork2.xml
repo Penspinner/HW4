@@ -6,10 +6,10 @@
           <intersection id="0" open="false" x="349" y="295"/>
           <intersection id="0" open="true" x="764" y="111"/>
           <intersection id="0" open="true" x="511" y="291"/>
-          <intersection id="0" open="false" x="1261" y="214"/>
-          <intersection id="0" open="false" x="761" y="690"/>
+          <intersection id="0" open="true" x="1261" y="214"/>
+          <intersection id="0" open="true" x="761" y="690"/>
           <intersection id="0" open="true" x="506" y="489"/>
-          <intersection id="0" open="false" x="499" y="690"/>
+          <intersection id="0" open="true" x="499" y="690"/>
           <intersection id="0" open="true" x="1264" y="574"/>
           <intersection id="0" open="false" x="761" y="293"/>
           <intersection id="0" open="true" x="1266" y="386"/>

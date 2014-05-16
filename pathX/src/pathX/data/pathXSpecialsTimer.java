@@ -1,10 +1,13 @@
 package pathX.data;
 
 import java.util.ArrayList;
+import mini_game.Sprite;
+import pathX.pathX;
 import pathX.ui.pathXMiniGame;
 import static pathX.pathXConstants.*;
 import pathX.ui.pathXSpecials;
 import pathX.ui.pathXSpecials.pathXSpecialsMode;
+import pathX.pathX.pathXPropertyType;
 
 /**
  *
@@ -17,6 +20,7 @@ public class pathXSpecialsTimer extends Thread
     private String special;
     private int x;
     private int y;
+    private Sprite s;
     
     public pathXSpecialsTimer(pathXMiniGame initGame, pathXDataModel initData, String initSpecial)
     {
@@ -25,11 +29,17 @@ public class pathXSpecialsTimer extends Thread
     
     public pathXSpecialsTimer(pathXMiniGame initGame, pathXDataModel initData, String initSpecial, int canvasX, int canvasY)
     {
+        this(initGame, initData, initSpecial, canvasX, canvasY, null);
+    }
+    
+    public pathXSpecialsTimer(pathXMiniGame initGame, pathXDataModel initData, String initSpecial, int canvasX, int canvasY, Sprite initS)
+    {
         game = initGame;
         data = initData;
         special = initSpecial;
         x = canvasX;
         y = canvasY;
+        s = initS;
     }
     
     @Override
@@ -117,7 +127,7 @@ public class pathXSpecialsTimer extends Thread
 
         for (Zombie z : data.getLevel().getZombies())
         {
-            if (z.containsPoint(x, y))
+            if (z.containsPoint(x + INTERSECTION_RADIUS, y + INTERSECTION_RADIUS))
             {
                 float oldVelocityX = z.getVx();
                 float oldVelocityY = z.getVy();
@@ -131,7 +141,7 @@ public class pathXSpecialsTimer extends Thread
 
         for (Bandit b : data.getLevel().getBandits())
         {
-            if (b.containsPoint(x, y))
+            if (b.containsPoint(x + INTERSECTION_RADIUS, y + INTERSECTION_RADIUS))
             {
                 float oldVelocityX = b.getVx();
                 float oldVelocityY = b.getVy();
@@ -154,7 +164,7 @@ public class pathXSpecialsTimer extends Thread
                 float oldVelocityY = p.getVy();
                 p.setVx(0);
                 p.setVy(0);
-                pause(10000);
+                pause(20000);
                 p.setVx(oldVelocityX);
                 p.setVy(oldVelocityY);
             }
@@ -162,13 +172,13 @@ public class pathXSpecialsTimer extends Thread
 
         for (Zombie z : data.getLevel().getZombies())
         {
-            if (z.containsPoint(x, y))
+            if (z.containsPoint(x + INTERSECTION_RADIUS, y + INTERSECTION_RADIUS))
             {
                 float oldVelocityX = z.getVx();
                 float oldVelocityY = z.getVy();
                 z.setVx(0);
                 z.setVy(0);
-                pause(10000);
+                pause(20000);
                 z.setVx(oldVelocityX);
                 z.setVy(oldVelocityY);
             }
@@ -176,13 +186,13 @@ public class pathXSpecialsTimer extends Thread
 
         for (Bandit b : data.getLevel().getBandits())
         {
-            if (b.containsPoint(x, y))
+            if (b.containsPoint(x + INTERSECTION_RADIUS, y + INTERSECTION_RADIUS))
             {
                 float oldVelocityX = b.getVx();
                 float oldVelocityY = b.getVy();
                 b.setVx(0);
                 b.setVy(0);
-                pause(10000);
+                pause(20000);
                 b.setVx(oldVelocityX);
                 b.setVy(oldVelocityY);
             }
@@ -192,20 +202,32 @@ public class pathXSpecialsTimer extends Thread
     public void steal()
     {
         pause(10000);
-        data.switchMode(pathXSpecialsMode.NORMAL_MODE);
+        playFail();
+        if (data.isStealMode())
+            data.switchMode(pathXSpecialsMode.NORMAL_MODE);
     }
     
     public void mindControl()
     {
-        if (data.selectedSprite == null)
+        if (s != null)
         {
-            data.selectedSprite = data.findSpriteAtCanvasLocation(x, y);
-        } else
-        {
-            Intersection i = data.findIntersectionAtCanvasLocation(x, y);
-            if (i != null)
+            if (s instanceof Police)
             {
-                
+                Police p = (Police) s;
+                float speed = p.getSpeed();
+                p.setSpeed(0);
+                pause(20000);
+                p.setSpeed(speed);
+            } else if (s instanceof Zombie)
+            {
+                Zombie z = (Zombie) s;
+                z.setTarget(x, y);
+                z.startMovingToTarget(10);
+            } else if (s instanceof Bandit)
+            {
+                Bandit b = (Bandit) s;
+                b.setTarget(x, y);
+                b.startMovingToTarget(10);
             }
         }
     }
@@ -213,12 +235,42 @@ public class pathXSpecialsTimer extends Thread
     public void intangibility()
     {
         pause(10000);
-        data.switchMode(pathXSpecialsMode.NORMAL_MODE);
+        playFail();
+        if (data.isIntangibilityMode())
+            data.switchMode(pathXSpecialsMode.NORMAL_MODE);
     }
     
     public void mindlessTerror()
     {
-        
+        Sprite s = data.collidedSprite;
+        if (s instanceof Police)
+        {
+            Police p = (Police) s;
+            float speed = p.getSpeed();
+            p.setSpeed(0);
+            pause(20000);
+            p.toggleColided();
+            p.setSpeed(speed);
+        } else if (s instanceof Zombie)
+        {
+            Zombie z = (Zombie) s;
+            float speed = z.getSpeed();
+            z.setSpeed(0);
+            pause(20000);
+            z.toggleColided();
+            z.setSpeed(speed);
+        } else if (s instanceof Bandit)
+        {
+            Bandit b = (Bandit) s;
+            float speed = b.getSpeed();
+            b.setSpeed(0);
+            pause(20000);
+            b.toggleCollided();
+            b.setSpeed(speed);
+        }
+        data.setCollidedSprite(null);
+        if (data.isMindlessTerrorMode())
+            data.switchMode(pathXSpecialsMode.NORMAL_MODE);
     }
     
     public void flying()
@@ -230,7 +282,14 @@ public class pathXSpecialsTimer extends Thread
     public void invincibility()
     {
         pause(10000);
-        data.switchMode(pathXSpecialsMode.NORMAL_MODE);
+        playFail();
+        if (data.isInvincibilityMode())
+            data.switchMode(pathXSpecialsMode.NORMAL_MODE);
+    }
+        
+    public void playFail()
+    {
+        game.getAudio().play(pathXPropertyType.AUDIO_CUE_FAIL.toString(), false);
     }
     
     public void pause(long milliseconds)

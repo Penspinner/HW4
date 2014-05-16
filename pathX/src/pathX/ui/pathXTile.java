@@ -70,6 +70,11 @@ public class pathXTile extends Sprite
         return path;
     }
     
+    public int getPathIndex()
+    {
+        return pathIndex;
+    }
+    
     public void setDescription(String description)
     {
         this.description = description;
@@ -84,6 +89,11 @@ public class pathXTile extends Sprite
     {
         targetX = initTargetX;
         targetY = initTargetY;
+    }
+    
+    public void setPathIndex(int pathIndex)
+    {
+        this.pathIndex = pathIndex;
     }
     
     public void resetIndex()
@@ -105,11 +115,14 @@ public class pathXTile extends Sprite
             path.add(i);
         }
         
-        Road roadInBetween = ((pathXDataModel)game.getDataModel()).getRoad(currentIntersection, path.get(++pathIndex));
-        float gameSpeed = ((pathXDataModel)game.getDataModel()).getGameSpeed();
-        float playerSpeed = ((pathXDataModel)game.getDataModel()).getPlayerSpeed();
-        setTarget(path.get(pathIndex).x - INTERSECTION_RADIUS, path.get(pathIndex).y - INTERSECTION_RADIUS);
-        startMovingToTarget(roadInBetween.getSpeedLimit() * gameSpeed * playerSpeed / 10);
+        if (currentIntersection.open)
+        {
+            Road roadInBetween = ((pathXDataModel)game.getDataModel()).getRoad(currentIntersection, path.get(++pathIndex));
+            float gameSpeed = ((pathXDataModel)game.getDataModel()).getGameSpeed();
+            float playerSpeed = ((pathXDataModel)game.getDataModel()).getPlayerSpeed();
+            setTarget(path.get(pathIndex).x - INTERSECTION_RADIUS, path.get(pathIndex).y - INTERSECTION_RADIUS);
+            startMovingToTarget(roadInBetween.getSpeedLimit() * gameSpeed * playerSpeed / 10);
+        }
     }
     
     public void startMovingToTarget(float maxVelocity)
@@ -168,11 +181,14 @@ public class pathXTile extends Sprite
         movingToTarget = false;
         vX = 0;
         vY = 0;
-
-        x = targetX;
-        y = targetY;
-
+        
         currentIntersection = path.get(pathIndex);
+
+        if (currentIntersection.open)
+        {
+            x = targetX;
+            y = targetY;
+        }
     }
     
     @Override
@@ -183,7 +199,7 @@ public class pathXTile extends Sprite
             // STOP MOVING THE 
             stopMovingToTarget();
 
-            if (pathIndex < path.size() - 1)
+            if (pathIndex < path.size() - 1 && currentIntersection.open)
             {   
                 pathIndex++;
                 

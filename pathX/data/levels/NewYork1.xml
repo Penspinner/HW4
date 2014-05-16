@@ -7,24 +7,24 @@
           <intersection id="0" open="true" x="765" y="102"/>
           <intersection id="0" open="true" x="521" y="288"/>
           <intersection id="0" open="false" x="1261" y="214"/>
-          <intersection id="0" open="false" x="761" y="690"/>
+          <intersection id="0" open="true" x="761" y="690"/>
           <intersection id="0" open="true" x="517" y="488"/>
-          <intersection id="0" open="false" x="513" y="687"/>
+          <intersection id="0" open="true" x="513" y="687"/>
           <intersection id="0" open="false" x="1264" y="574"/>
           <intersection id="0" open="true" x="765" y="287"/>
           <intersection id="0" open="true" x="1266" y="386"/>
           <intersection id="0" open="false" x="525" y="99"/>
-          <intersection id="0" open="false" x="1007" y="106"/>
+          <intersection id="0" open="true" x="1007" y="106"/>
           <intersection id="0" open="false" x="764" y="494"/>
           <intersection id="0" open="true" x="1011" y="288"/>
-          <intersection id="0" open="false" x="1016" y="491"/>
+          <intersection id="0" open="true" x="1016" y="491"/>
           <intersection id="0" open="true" x="1013" y="690"/>
      </intersections>
      <zombies_list>
           <zombie id="0" x="1009" y="285"/>
           <zombie id="0" x="1015" y="488"/>
           <zombie id="0" x="1264" y="572"/>
-          <zombie id="0" x="1261" y="212"/>
+          <!--<zombie id="0" x="1261" y="212"/>-->
      </zombies_list>
      <polices_list>
           <policee id="0" x="1264" y="383"/>

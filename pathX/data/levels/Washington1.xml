@@ -15,7 +15,7 @@
           <policee id="0" x="594" y="60"/>
      </polices_list>
      <bandits_list>
-          <bandit id="0" x="772" y="584"/>
+          <!--<bandit id="0" x="772" y="584"/>-->
      </bandits_list>
      <roads>
           <road int_id1="2" int_id2="4" one_way="false" speed_limit="10"/>

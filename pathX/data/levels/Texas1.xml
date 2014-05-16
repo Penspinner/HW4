@@ -24,7 +24,7 @@
      </polices_list>
      <bandits_list>
           <bandit id="0" x="456" y="96"/>
-          <bandit id="0" x="491" y="632"/>
+          <!--<bandit id="0" x="491" y="632"/>-->
           <bandit id="0" x="879" y="345"/>
      </bandits_list>
      <roads>

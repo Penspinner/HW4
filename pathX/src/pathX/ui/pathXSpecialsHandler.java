@@ -200,6 +200,9 @@ public class pathXSpecialsHandler
                 playSpecial();
                 data.changeBalance(-COST_CHANGE_ROADS);
                 data.switchMode(pathXSpecials.pathXSpecialsMode.CLOSE_ROAD_MODE);
+            } else
+            {
+                playFail();
             }
         }
     }
@@ -296,9 +299,12 @@ public class pathXSpecialsHandler
             {
                 playSpecial();
                 data.changeBalance(-COST_CAR_CONTROL);
+                data.setSelectedSprite(null);
+                data.setMindlessTerror(true);
                 data.switchMode(pathXSpecials.pathXSpecialsMode.MINDLESS_TERROR_MODE);
-                pathXSpecialsTimer mindlessTerror = new pathXSpecialsTimer(game, data, "MINDLESS_TERROR");
-                mindlessTerror.start();
+            } else
+            {
+                playFail();
             }
         }
     }

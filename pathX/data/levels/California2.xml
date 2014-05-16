@@ -22,7 +22,7 @@
      </polices_list>
      <bandits_list>
           <bandit id="0" x="431" y="107"/>
-          <bandit id="0" x="893" y="114"/>
+          <!--<bandit id="0" x="893" y="114"/>-->
      </bandits_list>
      <roads>
           <road int_id1="0" int_id2="6" one_way="false" speed_limit="30"/>

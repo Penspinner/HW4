@@ -43,6 +43,7 @@ public class pathXEventHandler
         if (game.isCurrentScreenState(GAME_SCREEN_STATE))
         {
             game.getAudio().play(pathXPropertyType.SONG_CUE_MENU_SCREEN.toString(), true);
+            game.getAudio().stop(pathXPropertyType.SONG_CUE_GAME_SCREEN.toString());
             data.setGameState(MiniGameState.NOT_STARTED);
             data.unpause();
             game.getScreenSwitcher().switchToLevelSelectScreen();
@@ -67,8 +68,7 @@ public class pathXEventHandler
     public void respondToLevelSelectRequest(pathXTile level)
     {
         String fileName = level.getActionCommand();
-        String id = level.getSpriteType().getSpriteTypeID();
-        int levelNumber = Integer.parseInt(id.substring(id.length() - 1));
+        int levelNumber = level.getPathIndex();
         File file = new File(LEVELS_PATH + fileName);
         boolean loadedSuccessfully = game.getXMLLevelIO().loadLevel(file, data);
         if (loadedSuccessfully)
@@ -78,8 +78,10 @@ public class pathXEventHandler
             game.initGameViewport();
             data.setCurrentLevel(fileName);
             data.initPlayerStartingLocation();
+            data.resetPlayerSpeed();
             data.generateZombiePath();
             data.generateBanditPath();
+            data.setMindlessTerror(false);
             data.getLevel().setName(level.getName());
             data.getLevel().setDescription(level.getDescription());
             data.getLevel().setLevelNumber(levelNumber);
@@ -212,12 +214,13 @@ public class pathXEventHandler
      */
     public void respondToTryAgainButtonRequest()
     {
+        if (data.won())
+            game.getAudio().stop(pathXPropertyType.SONG_CUE_WIN.toString());
+        
         // CHANGE GAME STATE
         data.setGameState(MiniGameState.NOT_STARTED);
         data.unpause();
-        
-        if (data.won())
-            game.getAudio().stop(pathXPropertyType.SONG_CUE_WIN.toString());
+     
         game.getAudio().play(pathXPropertyType.AUDIO_CUE_SELECT.toString(), false);
         game.getGUIButtons().get(TRY_AGAIN_BUTTON_TYPE).setState(pathXTileState.INVISIBLE_STATE.toString());
         game.getGUIButtons().get(TRY_AGAIN_BUTTON_TYPE).setEnabled(false);
@@ -230,7 +233,9 @@ public class pathXEventHandler
         boolean loadedSuccessfully = game.getXMLLevelIO().loadLevel(currentFile, data);
         if (loadedSuccessfully)
         {
+            game.initGameViewport();
             data.initPlayerStartingLocation();
+            data.resetPlayerSpeed();
             data.generateZombiePath();
             data.generateBanditPath();
             
@@ -393,7 +398,11 @@ public class pathXEventHandler
                 case KeyEvent.VK_RIGHT: {   scroll("RIGHT");                                    } break;
                     
                 // ESCAPE IF YOU DON'T WANT TO USE SPECIAL    
-                case KeyEvent.VK_ESCAPE:{   data.switchMode(pathXSpecialsMode.NORMAL_MODE);     } break;
+                case KeyEvent.VK_ESCAPE:
+                {   
+                    data.setMindlessTerror(false);
+                    data.switchMode(pathXSpecialsMode.NORMAL_MODE);     
+                } break;
                 
                 // SPECIALS
                     
@@ -453,7 +462,7 @@ public class pathXEventHandler
                 // CHEAT INCREASE MONEY
                 case KeyEvent.VK_I:     
                 {   
-                    data.changeBalance(100);                            
+                    data.changeBalance(100);
                     game.getAudio().play(pathXPropertyType.AUDIO_CUE_INCREASE_MONEY.toString(), false);
                 } break;
                     
@@ -461,7 +470,11 @@ public class pathXEventHandler
                 case KeyEvent.VK_J:     
                 {
                     if (game.isCurrentScreenState(LEVEL_SELECT_SCREEN_STATE))
+                    {
+                        Sprite levelToBeSuccessful = game.getGUIButtons().get(data.getLevelNames().get(data.getCurrentLevelCounter()));
+                        levelToBeSuccessful.setState(pathXTileState.SUCCESSFUL_STATE.toString());
                         data.unlockNextLevel();
+                    }
                 } break;
             }
         }

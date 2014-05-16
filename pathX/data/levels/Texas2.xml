@@ -12,7 +12,7 @@
           <intersection id="0" open="true" x="317" y="415"/>
           <intersection id="0" open="false" x="493" y="525"/>
           <intersection id="0" open="true" x="665" y="623"/>
-          <intersection id="0" open="false" x="790" y="100"/>
+          <intersection id="0" open="true" x="790" y="100"/>
      </intersections>
      <zombies_list>
           <zombie id="0" x="662" y="416"/>

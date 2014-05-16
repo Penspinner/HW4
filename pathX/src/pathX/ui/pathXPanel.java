@@ -410,18 +410,9 @@ public class pathXPanel extends JPanel
             Road road = it.next();
             if (!data.isSelectedRoad(road) && road.open)
                 renderRoad(g2, road, INT_OUTLINE_COLOR);
+            else if (!road.open)
+                renderRoad(g2, road, Color.RED);
         }
-        
-        // NOW DRAW THE LINE BEING ADDED, IF THERE IS ONE
-//        if (data.isAddingRoadEnd())
-//        {
-//            Intersection startRoadIntersection = data.getStartRoadIntersection();
-//            recyclableLine.x1 = startRoadIntersection.x-viewport.getViewportX();
-//            recyclableLine.y1 = startRoadIntersection.y-viewport.getViewportY();
-//            recyclableLine.x2 = data.getLastMouseX()-viewport.getViewportX();
-//            recyclableLine.y2 = data.getLastMouseY()-viewport.getViewportY();
-//            g2.draw(recyclableLine);
-//        }
 
         // AND RENDER THE SELECTED ONE, IF THERE IS ONE
 //        Road selectedRoad = data.getSelectedRoad();

@@ -87,9 +87,7 @@ public class pathXMiniGame extends MiniGame
      * @return true if the current state is testScreenState, false otherwise.
      */
     public boolean isCurrentScreenState(String testScreenState)
-    {
-        return testScreenState.equals(currentScreenState);
-    }
+    {   return testScreenState.equals(currentScreenState);  }
     public boolean isSoundMuted()           {   return soundMuted;      }
     public boolean isMusicMuted()           {   return musicMuted;      }
     public boolean isDisplayingInfo()       {   return displayingInfo;  }
@@ -98,11 +96,10 @@ public class pathXMiniGame extends MiniGame
     
     // MUTATOR METHOD
     public void setCurrentScreenState(String initCurrentScreenState)
-    {
-        currentScreenState = initCurrentScreenState;
-    }
+    {   currentScreenState = initCurrentScreenState;        }
     // TOGGLES INFO DISPLAY
-    public void toggleInfoDisplay()         {displayingInfo = !displayingInfo;}
+    public void toggleInfoDisplay()         
+    {   displayingInfo = !displayingInfo;                   }
     
     @Override
     /**
@@ -373,7 +370,7 @@ public class pathXMiniGame extends MiniGame
             String levelName = levelNames.get(i);
             String levelDescription = levelDescriptions.get(i);
             String levelState = levelStates.get(i);
-            sT = new SpriteType(LEVEL_BUTTON_TYPE + i);
+            sT = new SpriteType(LEVEL_BUTTON_TYPE);
             img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_LOCKED_LOCATION));
             sT.addState(pathXTileState.LOCKED_STATE.toString(), img);
             img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_SUCCESSFUL_LOCATION));
@@ -381,6 +378,7 @@ public class pathXMiniGame extends MiniGame
             img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_UNSUCCESSFUL_LOCATION));
             sT.addState(pathXTileState.UNSUCCESSFUL_STATE.toString(), img);
             px = new pathXTile(sT, LEVEL_X_COORDINATES[i],LEVEL_Y_COORDINATES[i], 0, 0, levelState, levelName);
+            px.setPathIndex(i);
             px.setActionCommand(level);
             px.setDescription(levelDescription);
             // ADD THE LISTENER NOW SO THAT WE DON'T HAVE TO ADD IT LATER
@@ -413,6 +411,7 @@ public class pathXMiniGame extends MiniGame
         img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_BUTTON_CLOSE_MOUSE_OVER));
         sT.addState(pathXTileState.MOUSE_OVER_STATE.toString(), img);
         s = new Sprite(sT, CLOSE_BUTTON_X, CLOSE_BUTTON_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
+        s.setEnabled(false);
         guiButtons.put(CLOSE_BUTTON_TYPE, s);
         
         // ADD THE TRY AGAIN BUTTON
@@ -470,13 +469,6 @@ public class pathXMiniGame extends MiniGame
         s = new Sprite(sT, CHANGE_SPEED_X, CHANGE_SPEED_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
         s.setEnabled(false);
         guiButtons.put(CHANGE_SPEED_BUTTON_TYPE, s);
-        
-        // ADD THE GAME SPEED SLIDER
-        sT = new SpriteType(GAME_SPEED_SLIDER_TYPE);
-        img = loadImage(imgPath + props.getProperty(pathXPropertyType.IMAGE_GAME_SPEED_SLIDER));
-        sT.addState(pathXTileState.VISIBLE_STATE.toString(), img);
-        s = new Sprite(sT, GAME_SPEED_SLIDER_X, GAME_SPEED_SLIDER_Y, 0, 0, pathXTileState.INVISIBLE_STATE.toString());
-        guiDecor.put(GAME_SPEED_SLIDER_TYPE, s);
         
         specials.initSpecials();
     }
@@ -673,18 +665,6 @@ public class pathXMiniGame extends MiniGame
             public void actionPerformed(ActionEvent e)
             {
                 eventHandler.respondToLeaveButtonRequest();
-            }
-        });
-        
-        guiDecor.get(GAME_SPEED_SLIDER_TYPE).setActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                if (isCurrentScreenState(SETTINGS_SCREEN_STATE))
-                {
-                    Sprite gameSpeedSlider = guiDecor.get(GAME_SPEED_SLIDER_TYPE);
-                }
             }
         });
         

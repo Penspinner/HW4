@@ -9,7 +9,7 @@
           <intersection id="0" open="true" x="332" y="269"/>
      </intersections>
      <zombies_list>
-          <zombie id="0" x="594" y="662"/>
+          <!--<zombie id="0" x="594" y="662"/>-->
      </zombies_list>
      <polices_list>
           <policee id="0" x="590" y="60"/>

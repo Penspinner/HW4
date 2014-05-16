@@ -5,22 +5,22 @@
           <intersection id="0" open="true" x="1426" y="1307"/>
           <intersection id="0" open="true" x="292" y="261"/>
           <intersection id="0" open="false" x="487" y="72"/>
-          <intersection id="0" open="false" x="745" y="847"/>
+          <intersection id="0" open="true" x="745" y="847"/>
           <intersection id="0" open="true" x="739" y="72"/>
           <intersection id="0" open="true" x="1220" y="72"/>
           <intersection id="0" open="true" x="1372" y="1059"/>
           <intersection id="0" open="true" x="482" y="840"/>
           <intersection id="0" open="true" x="485" y="450"/>
-          <intersection id="0" open="false" x="984" y="846"/>
-          <intersection id="0" open="false" x="1369" y="849"/>
+          <intersection id="0" open="true" x="984" y="846"/>
+          <intersection id="0" open="true" x="1369" y="849"/>
           <intersection id="0" open="false" x="744" y="659"/>
           <intersection id="0" open="true" x="482" y="659"/>
           <intersection id="0" open="true" x="1372" y="658"/>
           <intersection id="0" open="true" x="742" y="454"/>
-          <intersection id="0" open="false" x="1220" y="450"/>
+          <intersection id="0" open="true" x="1220" y="450"/>
           <intersection id="0" open="true" x="981" y="454"/>
           <intersection id="0" open="true" x="1219" y="271"/>
-          <intersection id="0" open="false" x="741" y="263"/>
+          <intersection id="0" open="true" x="741" y="263"/>
           <intersection id="0" open="true" x="975" y="261"/>
           <intersection id="0" open="true" x="977" y="72"/>
           <intersection id="0" open="false" x="486" y="260"/>

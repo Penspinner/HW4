@@ -43,8 +43,9 @@ public class pathXScreenSwitcher
             game.getGUIButtons().get(HOME_BUTTON_TYPE).setY(0);
             game.getGUIButtons().get(EXIT_BUTTON_TYPE).setX(EXIT_BUTTON_X);
             game.getGUIButtons().get(EXIT_BUTTON_TYPE).setY(0);
-            enableSpecialButtons(false, data.getSpecialsCounter());
-        } 
+        }
+        
+        enableSpecialButtons(false, data.getSpecialsCounter());
         
         // CHANGE THE BACKGROUND
         game.getGUIDecor().get(BACKGROUND_TYPE).setState(LEVEL_SELECT_SCREEN_STATE);

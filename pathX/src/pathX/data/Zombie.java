@@ -137,7 +137,10 @@ public class Zombie extends Sprite
         
         setTarget(path.get(pathIndex).x, path.get(pathIndex).y);
         Road roadInBetween = data.getRoad(currentIntersection, path.get(pathIndex));
-        startMovingToTarget(roadInBetween.getSpeedLimit() * data.getGameSpeed() * speed / 10);
+        if (roadInBetween.open)
+        {
+            startMovingToTarget(roadInBetween.getSpeedLimit() * data.getGameSpeed() * speed / 10);
+        }
     }
     
     /**
@@ -162,12 +165,15 @@ public class Zombie extends Sprite
     {
         Intersection nextIntersection = path.get(pathIndex);
         Road roadInBetween = ((pathXDataModel)game.getDataModel()).getRoad(currentIntersection, nextIntersection);
-        float gameSpeed = ((pathXDataModel)game.getDataModel()).getGameSpeed();
+        if (roadInBetween != null && roadInBetween.open)
+        {
+            float gameSpeed = ((pathXDataModel)game.getDataModel()).getGameSpeed();
 
-        targetX = nextIntersection.x;
-        targetY = nextIntersection.y;
+            targetX = nextIntersection.x;
+            targetY = nextIntersection.y;
 
-        startMovingToTarget(roadInBetween.getSpeedLimit() * gameSpeed * speed / 10);
+            startMovingToTarget(roadInBetween.getSpeedLimit() * gameSpeed * speed / 10);
+        }
     }
     
     @Override
@@ -179,12 +185,20 @@ public class Zombie extends Sprite
             
             if (pathIndex < path.size() - 1 && currentIntersection.open)
             {   
-                pathIndex++;
-                updatePath(game);
+                Road roadInBetween = ((pathXDataModel)game.getDataModel()).getRoad(currentIntersection, path.get(pathIndex+1));
+                if (roadInBetween != null && roadInBetween.open);
+                {
+                    pathIndex++;
+                    updatePath(game);
+                }
             } else if (currentIntersection.open)
             {
-                pathIndex = 0;
-                updatePath(game);
+//                Road roadInBetween = ((pathXDataModel)game.getDataModel()).getRoad(currentIntersection, path.get(pathIndex));
+//                if (roadInBetween != null && roadInBetween.open)
+//                {
+                    pathIndex = 0;
+                    updatePath(game);
+//                }
             }
             
         }

@@ -86,7 +86,10 @@ public class Bandit extends Sprite
         
         setTarget(path.get(pathIndex + 1).x, path.get(pathIndex + 1).y);
         Road roadInBetween = data.getRoad(currentIntersection, path.get(++pathIndex));
-        startMovingToTarget(roadInBetween.getSpeedLimit() * data.getGameSpeed() * speed / 10);
+        if (roadInBetween.open)
+        {
+            startMovingToTarget(roadInBetween.getSpeedLimit() * data.getGameSpeed() * speed / 10);
+        }
     }
     
     public void startMovingToTarget(float maxVelocity)
@@ -161,12 +164,15 @@ public class Bandit extends Sprite
         if (nextIntersection.open)
         {
             Road roadInBetween = ((pathXDataModel)game.getDataModel()).getRoad(currentIntersection, nextIntersection);
-            float gameSpeed = ((pathXDataModel)game.getDataModel()).getGameSpeed();
+            if (roadInBetween != null && roadInBetween.open)
+            {
+                float gameSpeed = ((pathXDataModel)game.getDataModel()).getGameSpeed();
 
-            targetX = nextIntersection.x;
-            targetY = nextIntersection.y;
+                targetX = nextIntersection.x;
+                targetY = nextIntersection.y;
 
-            startMovingToTarget(roadInBetween.getSpeedLimit() * gameSpeed * speed / 10);
+                startMovingToTarget(roadInBetween.getSpeedLimit() * gameSpeed * speed / 10);
+            }
         }
     }
     
@@ -177,10 +183,16 @@ public class Bandit extends Sprite
         {
             stopMovingToTarget();
             
+            
+            
             if (pathIndex < path.size() - 1 && !movingBackToFirst && currentIntersection.open)
             {
-                pathIndex++;
-                movingBackToFirst = pathIndex == path.size() - 1 ? true : false;
+                Road roadInBetween = ((pathXDataModel)game.getDataModel()).getRoad(currentIntersection, path.get(pathIndex+1));
+                if (roadInBetween.open)
+                {
+                    pathIndex++;
+                    movingBackToFirst = pathIndex == path.size() - 1 ? true : false;
+                }
             } else if (pathIndex > 0 && currentIntersection.open)
             {
                 pathIndex--;
